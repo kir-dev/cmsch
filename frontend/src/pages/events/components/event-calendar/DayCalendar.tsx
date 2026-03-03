@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { formatHu, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import { formatHu } from '@/util/core-functions.util'
 import type { EventListView } from '@/util/views/event.view'
 import { addDays, endOfDay, startOfDay } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -15,11 +15,8 @@ interface DayCalendarProps {
 }
 
 export function DayCalendar({ events }: DayCalendarProps) {
-  const brandColor = useBrandColor()
   const [scale, setScale] = useState(1)
   const [startDate, setStartDate] = useState(startOfDay(new Date()))
-
-  const bg = useColorModeValue('bg-black/[0.02]', 'dark:bg-white/[0.02]')
 
   const eventsForThisDay = useMemo(() => mapEventsForDay(events, startDate), [events, startDate])
 
@@ -42,18 +39,18 @@ export function DayCalendar({ events }: DayCalendarProps) {
   return (
     <div className="my-5 w-full block md:hidden">
       <div className="flex justify-between items-center">
-        <Button variant="ghost" size="icon" aria-label="Előző nap" onClick={decrementDay} style={{ color: brandColor }}>
+        <Button variant="ghost" className="text-primary" size="icon" aria-label="Előző nap" onClick={decrementDay}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
         <h2 className="text-xl font-bold">{formatHu(startDate, 'EEEE, MMMM dd.')}</h2>
-        <Button variant="ghost" size="icon" aria-label="Következő nap" onClick={incrementDay} style={{ color: brandColor }}>
+        <Button variant="ghost" className="text-primary" size="icon" aria-label="Következő nap" onClick={incrementDay}>
           <ChevronRight className="h-5 w-5" />
         </Button>
       </div>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
       <div className="flex flex-row max-h-[820px] mt-5 overflow-y-auto overflow-x-hidden pt-5 items-start space-x-2">
         <HourColumn h={scale * 800} />
-        <div className={`rounded-md relative w-full p-2 ${bg}`} style={{ height: scale * 800 }}>
+        <div className="rounded-md relative w-full p-2 bg-black/[0.02] dark:bg-white/[0.02]" style={{ height: scale * 800 }}>
           <CurrentDateBar minTimestamp={startDate.getTime()} maxTimestamp={endOfDay(startDate).getTime()} />
           {eventsForThisDay.map((event) => (
             <EventBox event={event} key={event.url} />

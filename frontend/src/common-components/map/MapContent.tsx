@@ -49,7 +49,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
       ))}
       {coords && (
         <Marker hover width={200} height={3} anchor={[coords.latitude, coords.longitude]}>
-          <MapMarker color="blue.500" text="Te" markerShape={MapMarkerShape.PERSON} />
+          <MapMarker color="lightblue" text="Te" markerShape={MapMarkerShape.PERSON} />
         </Marker>
       )}
     </Map>

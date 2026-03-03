@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useBrandColor } from '@/util/core-functions.util.ts'
+import { cn } from '@/lib/utils.ts'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
@@ -57,14 +57,12 @@ type CurrentImageIndicatorDotProps = {
 }
 
 const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImageIndicatorDotProps) => {
-  const brandColor = useBrandColor()
   return (
     <button
-      className="h-[10px] w-[10px] p-0 border-2 border-solid rounded-full cursor-pointer transition-all hover:border-[5px]"
-      style={{
-        borderColor: brandColor,
-        backgroundColor: index === currentIndex ? brandColor : 'transparent'
-      }}
+      className={cn(
+        'h-[10px] w-[10px] p-0 border-2 border-solid rounded-full cursor-pointer transition-all hover:border-[5px] border-primary',
+        index === currentIndex ? 'bg-primary' : 'bg-transparent'
+      )}
       onClick={() => {
         onClick(index)
       }}
@@ -84,14 +82,12 @@ const Directions = {
 type Directions = (typeof Directions)[keyof typeof Directions]
 
 const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => {
-  const brandColor = useBrandColor()
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={onClick}
-      className="p-0"
-      style={{ color: brandColor }}
+      className="p-0 text-primary"
       aria-label={direction === Directions.LEFT ? 'Előző kép' : 'következő kép'}
     >
       {direction === Directions.LEFT ? <ChevronLeft /> : <ChevronRight />}

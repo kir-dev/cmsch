@@ -113,7 +113,3 @@ export function useOpaqueBackground(intensity: number = 1 | 2 | 3 | 4 | 5 | 6 | 
   }
   return useColorModeValue('rgba(0,0,0,' + intensity / 10 + ')', 'rgba(255,255,255,' + intensity / 10 + ')')
 }
-
-export const useBrandColor = () => 'var(--primary)'
-
-export const useSemanticColor = (type: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'secondary') => `var(--${type})`

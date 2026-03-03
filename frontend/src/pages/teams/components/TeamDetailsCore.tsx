@@ -15,7 +15,7 @@ import { PageStatus } from '@/common-components/PageStatus'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { joinPath, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import { joinPath } from '@/util/core-functions.util'
 import { AbsolutePaths, Paths } from '@/util/paths'
 import { RoleType, RoleTypeString } from '@/util/views/profile.view'
 import { TeamResponseMessages, TeamResponses, type TeamView } from '@/util/views/team.view'
@@ -44,10 +44,8 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
   const raceComponent = components?.race
   const userRole = config?.role
   const navigate = useNavigate()
-  const bannerBlanket = useColorModeValue('bg-background/60', 'dark:bg-background/50')
   const [isEditingMembers, setIsEditingMembers] = useState(false)
   const isUserGroupAdmin = RoleType[userRole || RoleTypeString.GUEST] >= RoleType.PRIVILEGED
-  const brandColor = useBrandColor()
 
   const actionResponseCallback = (response: TeamResponses) => {
     if (response == TeamResponses.OK) {
@@ -93,7 +91,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
         className="bg-center bg-cover rounded-lg overflow-hidden relative"
         style={{ backgroundImage: team.coverUrl ? `url(${team.coverUrl})` : undefined }}
       >
-        <div className={`p-4 flex flex-col md:flex-row justify-between ${bannerBlanket}`}>
+        <div className="p-4 flex flex-col md:flex-row justify-between bg-background/60 dark:bg-background/50">
           <div className="pb-4">
             <h2 className="text-2xl font-bold my-0">{team.name}</h2>
             <div className="flex flex-wrap gap-2 pt-2">
@@ -116,7 +114,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
           className="mt-5 bg-center bg-cover rounded-lg overflow-hidden relative"
           style={{ backgroundImage: team.coverUrl ? `url(${team.coverUrl})` : undefined }}
         >
-          <div className={`p-4 ${bannerBlanket}`}>
+          <div className="p-4 bg-background/60 dark:bg-background/50">
             <h2 className="text-2xl font-bold my-0">A csapat leírása elutasításra került</h2>
             <p>Az adminisztrátor üzenete: {team.descriptionRejectionReason ?? ''}</p>
           </div>
@@ -133,9 +131,8 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
         <div className="flex flex-col space-y-2 mt-5">
           {team.joinEnabled && (
             <Button
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-primary text-primary-foreground"
               disabled={joinTeamLoading}
-              style={{ backgroundColor: brandColor }}
               onClick={() => {
                 joinTeam(team?.id)
                 refetch()
@@ -163,7 +160,7 @@ export function TeamDetailsCore({ team, isLoading, error, myTeam = false, refetc
             </Button>
           )}
           {teamComponent.showRaceButton && (
-            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} style={{ backgroundColor: brandColor }}>
+            <LinkButton href={joinPath(AbsolutePaths.TEAMS, 'details', team.id, Paths.RACE)} className="bg-primary text-primary-foreground">
               {raceComponent?.title ?? 'Verseny'} eredmények
             </LinkButton>
           )}

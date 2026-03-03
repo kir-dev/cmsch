@@ -1,5 +1,4 @@
 import { useConfigContext } from '@/api/contexts/config/ConfigContext'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { AbsolutePaths } from '@/util/paths'
 import type { EventListView } from '@/util/views/event.view'
 import { Link } from 'react-router'
@@ -27,11 +26,10 @@ type EventDisplayProps = {
 }
 
 const EventDisplay = ({ event, verbose, useLink }: EventDisplayProps) => {
-  const color = useBrandColor()
   return (
     <div className="grid grid-cols-[auto_1fr] gap-10 mt-10 relative group">
       <div className="text-right">
-        <span className="text-2xl font-bold" style={{ color }}>
+        <span className="text-2xl font-bold text-primary">
           {verbose ? parseDate(event.timestampStart) : parseTime(event.timestampStart)}-{parseTime(event.timestampEnd)}
         </span>
       </div>

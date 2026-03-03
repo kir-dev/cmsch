@@ -1,6 +1,5 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { useFormContext } from 'react-hook-form'
 
 type Props = {
@@ -13,7 +12,6 @@ type Props = {
 
 export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, radio }: Props) {
   const { setValue, watch } = useFormContext()
-  const brandColor = useBrandColor()
 
   if (radio) {
     const currentValue = watch(fieldName)?.[questionKey]
@@ -23,7 +21,7 @@ export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, rad
         onValueChange={(val) => setValue(fieldName, { ...watch(fieldName), [questionKey]: val })}
         disabled={disabled}
       >
-        <RadioGroupItem value={optionKey} style={currentValue === optionKey ? { borderColor: brandColor, color: brandColor } : {}} />
+        <RadioGroupItem value={optionKey} className={currentValue === optionKey ? 'border-primary text-primary' : ''} />
       </RadioGroup>
     )
   }
@@ -34,7 +32,7 @@ export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, rad
       checked={isChecked}
       onCheckedChange={(checked) => setValue(fieldName, { ...watch(fieldName), [`${questionKey}_${optionKey}`]: checked })}
       disabled={disabled}
-      style={isChecked ? { borderColor: brandColor, backgroundColor: brandColor } : {}}
+      className={isChecked ? 'border-primary bg-primary' : ''}
     />
   )
 }

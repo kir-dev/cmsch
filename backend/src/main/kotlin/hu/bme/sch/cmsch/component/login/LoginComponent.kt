@@ -113,16 +113,20 @@ class LoginComponent(
     var passwordEnabled by BooleanSettingRef(false, fieldName = "Emailes belépés látszik",
         description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az emailes belépés")
 
-    var emailConfirmationEnabled by BooleanSettingRef(false, fieldName = "Email megerősítés szükséges",
+    var emailConfirmationEnabled by BooleanSettingRef(true, fieldName = "Email megerősítés szükséges",
         description = "Ha ez be van kapcsolva, akkor regisztráció után emailt kell megerősíteni")
 
-    var forgotPasswordEnabled by BooleanSettingRef(false, fieldName = "Elfelejtett jelszó",
+    var forgotPasswordEnabled by BooleanSettingRef(true, fieldName = "Elfelejtett jelszó",
         description = "Ha ez be van kapcsolva, akkor lehet jelszó-visszaállítást kérni")
 
-    var emailConfirmationTemplate by StringSettingRef("confirm-email", serverSideOnly = true, fieldName = "Megerősítő email sablon",
+    var emailConfirmationTemplate by StringSettingRef("confirm-email",
+        serverSideOnly = true,
+        fieldName = "Megerősítő email sablon",
         description = "Az EmailComponentben lévő sablon selectorja")
 
-    var passwordResetTemplate by StringSettingRef("reset-password", serverSideOnly = true, fieldName = "Jelszó visszaállító email sablon",
+    var passwordResetTemplate by StringSettingRef("reset-password",
+        serverSideOnly = true,
+        fieldName = "Jelszó visszaállító email sablon",
         description = "Az EmailComponentben lévő sablon selectorja")
 
     var externalUrl by StringSettingRef("https://cmsch.hu", serverSideOnly = true, fieldName = "Külső URL",
@@ -175,7 +179,7 @@ class LoginComponent(
     var topMessage by StringSettingRef("### Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Felső szöveg", description = "Ha üres akkor nincs ilyen")
 
-    var bottomMessage by StringSettingRef("Mind a két belépési móddal külön felhasználód keletkezik",
-        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Alsó szöveg", description = "Ha üres akkor nincs ilyen")
+    var bottomMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "A belépési felület alján lévő szöveg", description = "Ha üres akkor nincs ilyen")
 
 }

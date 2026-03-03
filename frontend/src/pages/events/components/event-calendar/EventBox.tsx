@@ -1,7 +1,7 @@
 import { useConfigContext } from '@/api/contexts/config/ConfigContext'
 import { LinkButton } from '@/common-components/LinkButton'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { formatHu, stringifyTimeRange, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import { formatHu, stringifyTimeRange } from '@/util/core-functions.util'
 import { AbsolutePaths } from '@/util/paths'
 import type { EventListView } from '@/util/views/event.view'
 import type { RefObject } from 'react'
@@ -15,23 +15,22 @@ interface EventBoxProps {
 
 export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext()?.components?.event
-  const eventBg = useBrandColor()
-  const borderColor = useBrandColor()
-  const eventTextColor = useColorModeValue('text-primary-foreground', 'text-primary-foreground')
   const isShort = 100 - event.top - event.bottom < 5
   return (
     <Popover>
       <PopoverTrigger asChild>
         <div
           ref={boxRef}
-          className={`overflow-hidden absolute rounded-md p-1 border cursor-pointer ${eventTextColor}`}
+          className={
+            'overflow-hidden absolute rounded-md p-1 border cursor-pointer ' +
+            'text-primary-foreground dark:text-primary-foreground border-primary bg-primary'
+          }
           style={{
             left: event.left + '%',
             width: event.width + '%',
             top: event.top + '%',
             bottom: event.bottom + '%',
-            backgroundColor: eventBg,
-            borderColor: borderColor,
+
             paddingTop: isShort ? 0 : 4
           }}
         >

@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { isCheckbox, isGridField, useBrandColor } from '@/util/core-functions.util'
+import { isCheckbox, isGridField } from '@/util/core-functions.util'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '@/util/views/form.view'
 import { AutoFormField } from './components/autoFormField'
 import { FormStatusBadge } from './components/formStatusBadge'
@@ -27,7 +27,6 @@ const FormPage = () => {
   const { data, isLoading, isError, refetch } = useFormPage(params.slug || '')
   const tokenRefresh = useTokenRefresh()
   const { isLoggedIn } = useAuthContext()
-  const brandColor = useBrandColor()
 
   useEffect(() => {
     if (result) {
@@ -109,7 +108,7 @@ const FormPage = () => {
                 </div>
               ))}
               <div className="flex justify-end mt-10">
-                <Button style={{ backgroundColor: brandColor }} disabled={!available || submitLoading} type="submit">
+                <Button className="bg-primary text-primary-foreground" disabled={!available || submitLoading} type="submit">
                   {status === FormStatus.NO_SUBMISSION ? 'Beküldés' : 'Mentés'}
                 </Button>
               </div>

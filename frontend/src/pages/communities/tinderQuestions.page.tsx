@@ -9,7 +9,6 @@ import { CmschPage } from '@/common-components/layout/CmschPage.tsx'
 import { PageStatus } from '@/common-components/PageStatus.tsx'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { AbsolutePaths } from '@/util/paths.ts'
 import { SendAnswerResponseMessage, SendAnswerResponseStatus } from '@/util/views/tinder.ts'
 import { useEffect } from 'react'
@@ -17,7 +16,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 
 const TinderQuestionsPage = () => {
-  const brandColor = useBrandColor()
   const { toast } = useToast()
   const formMethods = useForm<Record<string, string>>()
   const { setValue, watch } = formMethods
@@ -121,7 +119,7 @@ const TinderQuestionsPage = () => {
                           size="sm"
                           onClick={() => setValue(fieldKey, opt)}
                           variant={selected === opt ? 'default' : 'outline'}
-                          style={selected === opt ? { backgroundColor: brandColor } : undefined}
+                          className={selected === opt ? 'bg-primary text-primary-foreground' : ''}
                           aria-pressed={selected === opt}
                         >
                           {opt}
@@ -133,7 +131,7 @@ const TinderQuestionsPage = () => {
               )
             })}
 
-            <Button style={{ backgroundColor: brandColor }} disabled={isLoading} type="submit" className="mt-6">
+            <Button disabled={isLoading} type="submit" className="mt-6 bg-primary text-primary-foreground">
               Mentés
             </Button>
           </form>

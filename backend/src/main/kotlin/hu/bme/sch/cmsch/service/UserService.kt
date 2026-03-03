@@ -46,8 +46,8 @@ open class UserService(
     }
 
     @Transactional(readOnly = true)
-    open fun findByEmail(email: String): Optional<UserEntity> {
-        return users.findByEmail(email)
+    open fun findByEmailIgnoreCase(email: String): Optional<UserEntity> {
+        return users.findByEmailIgnoreCase(email)
     }
 
     @Transactional(readOnly = true)

@@ -5,7 +5,6 @@ import { CmschPage } from '@/common-components/layout/CmschPage'
 import { LinkButton } from '@/common-components/LinkButton'
 import Markdown from '@/common-components/Markdown'
 import { PageStatus } from '@/common-components/PageStatus'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { AbsolutePaths } from '@/util/paths'
 import { ArrowLeft } from 'lucide-react'
 import { DayCalendar } from './components/event-calendar/DayCalendar'
@@ -13,7 +12,6 @@ import { WeekCalendar } from './components/event-calendar/WeekCalendar'
 
 function EventCalendarPage() {
   const event = useConfigContext()?.components?.event
-  const brandColor = useBrandColor()
 
   const { isLoading, isError, data } = useEventListQuery()
 
@@ -22,7 +20,7 @@ function EventCalendarPage() {
 
   return (
     <CmschPage title="Naptár">
-      <LinkButton style={{ backgroundColor: brandColor }} href={AbsolutePaths.EVENTS} className="flex items-center gap-2">
+      <LinkButton href={AbsolutePaths.EVENTS} className="flex items-center gap-2 bg-primary text-primary-foreground">
         <ArrowLeft className="h-4 w-4" /> Vissza a listához
       </LinkButton>
       <div className="mb-10">

@@ -84,6 +84,7 @@ const LoginPage = () => {
         setIsRegistering(false)
         setCaptchaToken(null)
         recaptchaRef.current?.reset()
+        refetch()
       } else {
         toast({ title: 'Hiba', description: response.data.message, variant: 'destructive' })
         recaptchaRef.current?.reset()
@@ -121,7 +122,7 @@ const LoginPage = () => {
   return (
     <CmschPage title={l('login-helmet')}>
       <div className="flex flex-col items-center space-y-10 mb-10">
-        {component.topMessage ? (
+        {component.topMessage && !component.passwordEnabled ? (
           <div className="text-center">
             <Markdown text={component.topMessage} />
           </div>
@@ -138,43 +139,47 @@ const LoginPage = () => {
             </CardHeader>
             <CardContent>
               {isForgotPassword ? (
-                <form onSubmit={handleForgotPassword} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    Visszaállítás kérése
-                  </Button>
-                  <Button variant="link" className="w-full" onClick={() => setIsForgotPassword(false)}>
+                <div className="space-y-4">
+                  <form onSubmit={handleForgotPassword}>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      Visszaállítás kérése
+                    </Button>
+                  </form>
+                  <Button variant="link" className="w-full mt-4" onClick={() => setIsForgotPassword(false)}>
                     Vissza a bejelentkezéshez
                   </Button>
-                </form>
+                </div>
               ) : (
-                <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-4">
-                  {isRegistering && (
+                <div>
+                  <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-4">
+                    {isRegistering && (
+                      <div className="space-y-2">
+                        <Label htmlFor="fullname">Teljes név</Label>
+                        <Input id="fullname" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                      </div>
+                    )}
                     <div className="space-y-2">
-                      <Label htmlFor="fullname">Teljes név</Label>
-                      <Input id="fullname" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
-                  )}
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Jelszó</Label>
-                    <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                  </div>
-                  {isRegistering && component.captchaEnabled && (
-                    <div className="flex justify-center py-2">
-                      <ReCAPTCHA ref={recaptchaRef} sitekey={component.captchaSiteKey} onChange={(token) => setCaptchaToken(token)} />
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Jelszó</Label>
+                      <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-                  )}
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isRegistering ? 'Regisztráció' : 'Bejelentkezés'}
-                  </Button>
-                  <div className="flex flex-col items-center space-y-2">
+                    {isRegistering && component.captchaEnabled && (
+                      <div className="flex justify-center py-2">
+                        <ReCAPTCHA ref={recaptchaRef} sitekey={component.captchaSiteKey} onChange={(token) => setCaptchaToken(token)} />
+                      </div>
+                    )}
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isRegistering ? 'Regisztráció' : 'Bejelentkezés'}
+                    </Button>
+                  </form>
+                  <div className="flex flex-col items-center space-y-2 mt-4">
                     <Button variant="link" onClick={() => setIsRegistering(!isRegistering)}>
                       {isRegistering ? 'Van már fiókom' : 'Nincs még fiókom, regisztrálok'}
                     </Button>
@@ -184,7 +189,7 @@ const LoginPage = () => {
                       </Button>
                     )}
                   </div>
-                </form>
+                </div>
               )}
             </CardContent>
           </Card>

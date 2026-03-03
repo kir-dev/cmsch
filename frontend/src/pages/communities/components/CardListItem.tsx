@@ -16,13 +16,12 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
   } else {
     logoSource = data.darkLogo
   }
-  const bg = useColorModeValue('bg-secondary text-secondary-foreground', 'dark:bg-secondary dark:text-secondary-foreground')
   return (
     <Link to={link}>
       <div
         className={
-          'rounded-lg p-3 md:p-4 mt-3 md:mt-5 transition-all duration-200 ease-in-out ' +
-          `hover:translate-x-2 border hover:bg-secondary/80 ${bg}`
+          'rounded-lg p-3 md:p-4 mt-3 md:mt-5 transition-all duration-200 ease-in-out hover:translate-x-2 border ' +
+          'hover:bg-secondary/80 bg-secondary text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground'
         }
       >
         <div className="flex flex-row items-center space-x-3 md:space-x-4">
@@ -31,7 +30,7 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
               <img
                 src={logoSource}
                 alt={data.name}
-                className="min-w-[2.5rem] sm:min-w-[3rem] md:min-w-[4rem] h-10 sm:h-12 md:h-16 w-10 sm:h-12 md:h-16 object-contain"
+                className="min-w-[2.5rem] sm:min-w-[3rem] md:min-w-[4rem] h-10 sm:h-12 md:h-16 w-10 object-contain"
               />
             </div>
           )}

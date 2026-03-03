@@ -2,7 +2,6 @@ import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
 import { useEventListQuery } from '@/api/hooks/event/useEventListQuery.ts'
 import { LinkButton } from '@/common-components/LinkButton.tsx'
 import { Separator } from '@/components/ui/separator'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { AbsolutePaths } from '@/util/paths.ts'
 import { useMemo } from 'react'
 import { Schedule } from './Schedule.tsx'
@@ -12,7 +11,6 @@ const isToday = (timeStamp: number) => new Date(timeStamp).toDateString() === ne
 export default function HomePageEventList() {
   const config = useConfigContext()
   const eventList = useEventListQuery()
-  const brandColor = useBrandColor()
 
   const events = useMemo(() => {
     const timestampCorrectedEventList = eventList.data?.map((li) => {
@@ -40,7 +38,7 @@ export default function HomePageEventList() {
         ) : (
           <p className="text-center opacity-70 mt-10">Nincs több esemény.</p>
         )}
-        <LinkButton style={{ backgroundColor: brandColor }} href={AbsolutePaths.EVENTS}>
+        <LinkButton className="bg-primary" href={AbsolutePaths.EVENTS}>
           Részletek
         </LinkButton>
       </div>

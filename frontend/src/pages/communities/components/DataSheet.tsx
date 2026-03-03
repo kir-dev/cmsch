@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router'
 import { LinkButton } from '@/common-components/LinkButton'
 import Markdown from '@/common-components/Markdown'
 import { Badge } from '@/components/ui/badge'
-import { joinPath, useBrandColor, useColorModeValue } from '@/util/core-functions.util'
+import { joinPath, useColorModeValue } from '@/util/core-functions.util'
 import { AbsolutePaths } from '@/util/paths'
 import type { Community, Organization } from '@/util/views/organization'
 
@@ -19,7 +19,6 @@ type DataSheetProps = {
  * @constructor
  */
 export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
-  const brandColor = useBrandColor()
   const isDataAvailable = organization.established || organization.email || organization.members || organization.interests
   return (
     <>
@@ -75,7 +74,7 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
           </LinkButton>
         )}
         {organization.application && (
-          <LinkButton href={organization.application} external style={{ backgroundColor: brandColor }} className="flex items-center gap-2">
+          <LinkButton href={organization.application} external className="flex items-center gap-2 bg-primary">
             <Edit className="h-4 w-4" /> Jelentkezés
           </LinkButton>
         )}

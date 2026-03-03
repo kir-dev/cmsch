@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useBrandColor } from '@/util/core-functions.util.ts'
+import { cn } from '@/lib/utils.ts'
 import type { VotingFieldOption } from '@/util/views/form.view'
 
 interface VotingFieldProps {
@@ -41,13 +41,13 @@ interface VotingFieldElementProps {
 }
 
 function VotingFieldElement({ onChange, selected, option }: VotingFieldElementProps) {
-  const brandColor = useBrandColor()
-
   return (
     <div
       onClick={onChange}
-      className="flex flex-col md:flex-row items-center cursor-pointer gap-5 rounded-md border p-4 relative w-full transition-colors"
-      style={{ borderColor: selected ? brandColor : undefined }}
+      className={cn(
+        'flex flex-col md:flex-row items-center cursor-pointer gap-5 rounded-md border p-4 relative w-full transition-colors',
+        selected && 'bg-primary'
+      )}
     >
       {option.img && <img className="rounded-md w-40 object-contain" src={option.img} alt={option.title} />}
       <div className="flex flex-col items-start">

@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { API_BASE_URL } from '@/util/configs/environment.config'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { ApiPaths } from '@/util/paths'
 import axios from 'axios'
 import { useState } from 'react'
@@ -14,7 +13,6 @@ import { Navigate, useSearchParams } from 'react-router'
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
-  const brandColor = useBrandColor()
   const { toast } = useToast()
 
   const [password, setPassword] = useState('')
@@ -77,7 +75,7 @@ const ResetPasswordPage = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full text-white" style={{ backgroundColor: brandColor }} disabled={isLoading}>
+              <Button type="submit" className="w-full bg-primary text-primary-foreground" disabled={isLoading}>
                 Jelszó mentése
               </Button>
             </form>

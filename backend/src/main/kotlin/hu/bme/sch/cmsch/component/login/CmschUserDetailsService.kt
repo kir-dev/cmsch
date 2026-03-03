@@ -29,7 +29,7 @@ class CmschUserDetails(
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean {
-        return if (loginComponent.emailConfirmationEnabled && userEntity.provider == "password") {
+        return if (loginComponent.emailConfirmationEnabled && userEntity.provider == "password" && loginComponent.passwordEnabled) {
             userEntity.emailConfirmed
         } else {
             true
@@ -44,7 +44,7 @@ class CmschUserDetailsService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByEmail(username)
+        val user = userRepository.findByEmailIgnoreCase(username)
             .orElseThrow { UsernameNotFoundException("User not found with email: $username") }
         return CmschUserDetails(user, loginComponent)
     }

@@ -3,10 +3,12 @@ package hu.bme.sch.cmsch.component.email
 import com.github.mustachejava.DefaultMustacheFactory
 import hu.bme.sch.cmsch.component.login.CmschUser
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.StringWriter
+import java.sql.SQLException
 
 @Service
 @ConditionalOnBean(EmailComponent::class)
@@ -25,11 +27,13 @@ class EmailService(
         }
 
     @Async
+    @Retryable(maxRetries = 5, delay = 500L, multiplier = 1.5)
     fun sendTextEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider.sendTextEmail(responsible, subject, content, to)
     }
 
     @Async
+    @Retryable(maxRetries = 5, delay = 500L, multiplier = 1.5)
     fun sendHtmlEmail(responsible: CmschUser?, subject: String, content: String, to: List<String>) {
         selectedProvider.sendHtmlEmail(responsible, subject, content, to)
     }

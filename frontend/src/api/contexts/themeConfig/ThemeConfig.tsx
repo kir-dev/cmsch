@@ -119,8 +119,6 @@ export const ThemeConfig = ({ children }: PropsWithChildren) => {
     [persistentStyle, toggleColorMode]
   )
 
-  console.log(contextData)
-
   return (
     <PersistentStyleSettingContext.Provider value={contextData}>
       <StyleInjector style={persistentStyle} />

@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 
 import { CmschPage } from '@/common-components/layout/CmschPage'
 import Markdown from '@/common-components/Markdown'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import Clock from '../countdown/components/clock'
 import { EmbeddedVideo } from './components/EmbeddedVideo'
 import HomePageEventList from './components/HomePageEventList.tsx'
@@ -15,7 +14,6 @@ const HomePage = () => {
   const config = useConfigContext()
   const countdownConfig = config?.components?.countdown
   const homeConfig = config?.components?.home
-  const brandColor = useBrandColor()
 
   const countTo = useMemo(() => {
     try {
@@ -40,7 +38,7 @@ const HomePage = () => {
           {homeConfig?.welcomeMessage.split('{}')[0] + ' '}
           {homeConfig?.welcomeMessage.split('{}').length > 1 && (
             <>
-              <span style={{ color: brandColor }}>{config?.components?.app?.siteName || 'CMSch'}</span>{' '}
+              <span className="text-primary">{config?.components?.app?.siteName || 'CMSch'}</span>{' '}
               {homeConfig?.welcomeMessage.split('{}')[1]}
             </>
           )}

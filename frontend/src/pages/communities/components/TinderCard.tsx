@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useColorModeValue } from '@/util/core-functions.util'
 import type { TinderCommunity } from '@/util/views/tinder'
 import { Heart, X } from 'lucide-react'
 import type { CSSProperties } from 'react'
@@ -19,19 +18,13 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
   const description = data?.shortDescription || ''
   const image = data?.logo || ''
   const tags = data?.tinderAnswers || []
-  const tagColor = useColorModeValue('bg-info/10 text-info border-info/20', 'dark:bg-info/20 dark:text-info-foreground border-info/30')
-
-  const bg = useColorModeValue('bg-card', 'dark:bg-card')
-  const infoColor = useColorModeValue('text-muted-foreground', 'dark:text-muted-foreground')
-  const placeholderBg = useColorModeValue('bg-foreground/10', 'dark:bg-foreground/10')
 
   return (
     <div
       className={cn(
         'flex flex-col w-[calc(100vw-2rem)] sm:w-[380px] md:w-[416px] max-w-[416px] ' +
           'h-[min(598px,calc(100vh-200px))] md:h-[598px] rounded-2xl shadow-lg ' +
-          'overflow-hidden transition-transform duration-150 ease-in select-none',
-        bg,
+          'overflow-hidden transition-transform duration-150 ease-in select-none bg-card text-card-foreground',
         className
       )}
       role="article"
@@ -43,14 +36,14 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
         <img
           src={image}
           alt={title}
-          className={cn('w-full h-full mt-4 md:mt-10 object-contain', placeholderBg)}
+          className={cn('w-full h-full mt-4 md:mt-10 object-contain bg-card-foreground')}
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
           style={{ WebkitUserDrag: 'none' } as CSSProperties}
         />
       ) : (
         <div
-          className={cn('w-full h-full', placeholderBg)}
+          className={cn('w-full h-full bg-card-foreground')}
           // also prevent dragging the placeholder box
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
@@ -63,16 +56,13 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
           <div className="flex-1 overflow-y-auto min-h-0">
             <h3 className="text-lg md:text-xl font-bold leading-tight">{title}</h3>
 
-            <p className={cn('text-xs md:text-sm mt-2', infoColor)}>
+            <p className="text-xs md:text-sm mt-2 text-muted-foreground">
               Alapítva: {data?.established ?? '—'}
               <br />
               Reszort: {data?.resortName ?? '—'}
             </p>
 
-            <div
-              className={cn('mt-2 text-xs md:text-sm leading-relaxed', useColorModeValue('text-[#555]', 'text-[#ccc]'))}
-              aria-hidden={description.length === 0}
-            >
+            <div className="mt-2 text-xs md:text-sm leading-relaxed text-[#555] dark:text-[#ccc]" aria-hidden={description.length === 0}>
               {description ? <p className="whitespace-normal">{description}</p> : <p className="text-gray-400">No description</p>}
             </div>
           </div>
@@ -81,7 +71,13 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
             {tags.length > 0 && (
               <div className="flex flex-col items-start gap-1 mt-2">
                 {tags.slice(0, 5).map((tag, index) => (
-                  <div key={index} className={cn('px-2 py-1 rounded-md text-[10px] md:text-xs', tagColor)}>
+                  <div
+                    key={index}
+                    className={
+                      'px-2 py-1 rounded-md text-[10px] md:text-xs bg-info/10 text-info border-info/20 ' +
+                      'dark:bg-info/20 dark:text-info-foreground dark:border-info/30'
+                    }
+                  >
                     {tag}
                   </div>
                 ))}

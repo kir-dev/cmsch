@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { ChevronRight } from 'lucide-react'
 import type { FC } from 'react'
+import React from 'react'
 import { Link } from 'react-router'
 
 type BreadcrumbProps = {
@@ -13,7 +13,6 @@ type BreadcrumbProps = {
 }
 
 export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, className }) => {
-  const color = useBrandColor()
   return (
     <Breadcrumb className={className}>
       <BreadcrumbList>
@@ -21,20 +20,14 @@ export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, className }) => {
           <React.Fragment key={idx}>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  to={item.to ? item.to : '#'}
-                  className="text-sm font-medium transition-colors hover:no-underline"
-                  style={{ '--hover-color': color } as React.CSSProperties}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = color)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
-                >
+                <Link to={item.to ? item.to : '#'} className="text-sm font-medium transition-colors hover:no-underline hover:text-primary">
                   {item.title}
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             {idx < items.length - 1 && (
               <BreadcrumbSeparator>
-                <ChevronRight className="h-4 w-4" style={{ color }} />
+                <ChevronRight className="h-4 w-4 text-primary" />
               </BreadcrumbSeparator>
             )}
           </React.Fragment>
@@ -43,5 +36,3 @@ export const CustomBreadcrumb: FC<BreadcrumbProps> = ({ items, className }) => {
     </Breadcrumb>
   )
 }
-
-import React from 'react'

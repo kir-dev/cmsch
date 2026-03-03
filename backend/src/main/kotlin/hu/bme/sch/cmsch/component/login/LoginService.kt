@@ -51,7 +51,7 @@ class LoginService(
                 user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as authsch user")
             } else {
-                val existingByEmail = if (!profile.email.isNullOrBlank()) users.findByEmail(profile.email!!) else Optional.empty()
+                val existingByEmail = if (!profile.email.isNullOrBlank()) users.findByEmailIgnoreCase(profile.email!!) else Optional.empty()
                 if (existingByEmail.isPresent) {
                     user = existingByEmail.get()
                     log.info("Logging in with existing user ${user.fullName} (found by email) as authsch user, internalId updated from ${user.internalId} to ${profile.internalId}")
@@ -91,7 +91,7 @@ class LoginService(
                 user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as google user")
             } else {
-                val existingByEmail = users.findByEmail(profile.email)
+                val existingByEmail = users.findByEmailIgnoreCase(profile.email)
                 if (existingByEmail.isPresent) {
                     user = existingByEmail.get()
                     log.info("Logging in with existing user ${user.fullName} (found by email) as google user, internalId updated from ${user.internalId} to ${profile.internalId}")
@@ -400,7 +400,7 @@ class LoginService(
             user = existingByInternalId.get()
             log.info("Logging in with existing user ${user.fullName} as keycloak user")
         } else {
-            val existingByEmail = if (!profile.email.isBlank()) users.findByEmail(profile.email) else Optional.empty()
+            val existingByEmail = if (!profile.email.isBlank()) users.findByEmailIgnoreCase(profile.email) else Optional.empty()
             if (existingByEmail.isPresent) {
                 user = existingByEmail.get()
                 log.info("Logging in with existing user ${user.fullName} (found by email) as keycloak user, internalId updated from ${user.internalId} to ${profile.sid}")

@@ -1,5 +1,4 @@
 import { Separator } from '@/components/ui/separator'
-import { useBrandColor } from '@/util/core-functions.util.ts'
 import { Facebook, Instagram } from 'lucide-react'
 
 interface OrganizerLogoProps {
@@ -14,7 +13,6 @@ interface OrganizerLogoProps {
 export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, instagramUrl, facebookUrl }: OrganizerLogoProps) {
   const hasSocialUrls = facebookUrl || instagramUrl
   const hasUrls = websiteUrl || contactUrl || facebookUrl || instagramUrl || hasSocialUrls
-  const color = useBrandColor()
   return (
     <div className="flex flex-row items-center space-x-4">
       {imageSrc && <img src={imageSrc} className="w-32 h-32 object-center object-contain" alt="Organizer logo" />}
@@ -26,10 +24,7 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
               <a
                 target="_blank"
                 rel="noreferrer"
-                className="text-xl hover:underline transition-colors"
-                style={{ '--hover-color': color } as React.CSSProperties}
-                onMouseEnter={(e) => (e.currentTarget.style.color = color)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
+                className="text-xl hover:underline transition-colors hover:text-primary"
                 href={websiteUrl}
               >
                 Weboldal
@@ -39,10 +34,7 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
               <a
                 target="_blank"
                 rel="noreferrer"
-                className="text-xl hover:underline transition-colors"
-                style={{ '--hover-color': color } as React.CSSProperties}
-                onMouseEnter={(e) => (e.currentTarget.style.color = color)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
+                className="text-xl hover:underline transition-colors hover:text-primary"
                 href={contactUrl}
               >
                 Kapcsolat
@@ -68,5 +60,3 @@ export function OrganizerLogo({ imageSrc, minimalistic, websiteUrl, contactUrl, 
     </div>
   )
 }
-
-import React from 'react'

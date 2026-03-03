@@ -39,7 +39,7 @@ interface UserRepository : CrudRepository<UserEntity, Int>,
     fun findByCmschId(cmschId: String): Optional<UserEntity>
     fun findByNeptun(neptun: String): Optional<UserEntity>
     fun findAllByGroupName(groupName: String): List<UserEntity>
-    fun findByEmail(email: String): Optional<UserEntity>
+    fun findByEmailIgnoreCase(email: String): Optional<UserEntity>
     fun countAllByGroup(group: GroupEntity): Long
     fun findAllByRoleOrRoleOrPermissionsNot(role1: RoleType, role2: RoleType, emptyString: String): MutableList<UserEntity>
     fun findAllByRoleOrRole(role1: RoleType, role2: RoleType): MutableList<UserEntity>
