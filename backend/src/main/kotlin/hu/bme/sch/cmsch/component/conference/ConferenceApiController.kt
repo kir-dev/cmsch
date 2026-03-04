@@ -46,10 +46,10 @@ class ConferenceApiController(
                 companies = confEntities.sponsors,
             ),
             organisers = confEntities.organisers,
-            featuredPresentation = FeaturedPresentation(
+            featuredPresentations = FeaturedPresentation(
                 sectionTitle = conferenceComponent.featuredPresentationSectionTitle,
                 description = conferenceComponent.featuredPresentationDescription,
-                presentation = confEntities.featuredPresentation,
+                presentations = confEntities.featuredPresentations,
             ),
             presentations = confEntities.presentations
         )
