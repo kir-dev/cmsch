@@ -33,7 +33,7 @@ class ConferenceService(
             .map{ it.trim() }.filter { it.isNotBlank() }
             .mapNotNull { presentation ->
             conferencePresentationRepository
-            .findTop1BySelector(presentation.trim())
+            .findTop1BySelector(presentation)
             .firstOrNull()
             ?.let { fetchPresentation(it) }}
 
