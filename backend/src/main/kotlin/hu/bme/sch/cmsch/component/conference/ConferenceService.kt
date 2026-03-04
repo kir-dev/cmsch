@@ -29,12 +29,13 @@ class ConferenceService(
         val sponsors = conferenceCompanyRepository.findAllByVisibleTrue()
         val organisers = conferenceOrganizerRepository.findAllByVisibleTrue()
 
-        val featuredPresentations = conferenceComponent.featuredPresentationSelectors.split(",").map { presentation ->
+        val featuredPresentations = conferenceComponent.featuredPresentationSelectors.split(",")
+            .map{ it.trim() }.filter { it.isNotBlank() }
+            .mapNotNull { presentation ->
             conferencePresentationRepository
             .findTop1BySelector(presentation.trim())
             .firstOrNull()
             ?.let { fetchPresentation(it) }}
-            .filterNotNull()
 
         val presentations = conferencePresentationRepository.findAllByVisibleTrue()
         presentations.forEach { fetchPresentation(it) }
