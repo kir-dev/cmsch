@@ -106,6 +106,6 @@ class ConferenceComponent(
     var featuredPresentationDescription by StringSettingRef("Promóciós Videó leírása ide jön",
         type = SettingType.LONG_TEXT, fieldName = "featuredPresentation.description mező")
 
-    var featuredPresentationSelector by StringSettingRef("presentation-1", fieldName = "Kiemelt előadás selectorja")
+    var featuredPresentationSelectors by StringSettingRef("", fieldName = "Kiemelt előadások selectorjai, vesszővel elválasztva")
 
 }

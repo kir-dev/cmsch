@@ -37,7 +37,7 @@ data class Sponsors(
 data class FeaturedPresentation(
     var sectionTitle: String,
     var description: String,
-    var presentation: ConferencePresentationEntity?,
+    var presentations: List<ConferencePresentationEntity>,
 )
 
 data class IndexPageData(
@@ -48,6 +48,6 @@ data class IndexPageData(
     var promoVideo: PromoVideo,
     var sponsors: Sponsors,
     var organisers: List<ConferenceOrganizerEntity>,
-    var featuredPresentation: FeaturedPresentation,
+    var featuredPresentations: FeaturedPresentation,
     var presentations: List<ConferencePresentationEntity>,
 )
