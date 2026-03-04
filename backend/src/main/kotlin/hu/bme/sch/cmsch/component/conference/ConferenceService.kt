@@ -31,11 +31,12 @@ class ConferenceService(
 
         val featuredPresentations = conferenceComponent.featuredPresentationSelectors.split(",")
             .map{ it.trim() }.filter { it.isNotBlank() }
-            .mapNotNull { presentation ->
-            conferencePresentationRepository
-            .findTop1BySelector(presentation)
-            .firstOrNull()
-            ?.let { fetchPresentation(it) }}
+            .mapNotNull { presentationSelector ->
+                conferencePresentationRepository
+                .findTop1BySelector(presentationSelector)
+                .firstOrNull()
+                ?.let { fetchPresentation(it) }
+            }
 
         val presentations = conferencePresentationRepository.findAllByVisibleTrue()
         presentations.forEach { fetchPresentation(it) }
