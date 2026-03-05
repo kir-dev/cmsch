@@ -29,17 +29,17 @@ class LocationComponent(
 
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val appearanceGroup by SettingGroup(fieldName = "Megjelenés")
 
     var topMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var bottomMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal alján megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal alján megjelenő szöveg", description = "Az oldal alján megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

@@ -1,9 +1,7 @@
-import { Box, Center, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import { Rocket, Stamp } from 'lucide-react'
 import type { FC } from 'react'
-import { FaRocket, FaStamp } from 'react-icons/fa'
-import type { IconType } from 'react-icons/lib'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
 
 interface StampComponentProps {
   title?: string
@@ -11,24 +9,19 @@ interface StampComponentProps {
 }
 
 export const StampComponent: FC<StampComponentProps> = ({ title, type }: StampComponentProps) => {
-  const backgroundBase = useColorModeValue('gray.100', 'gray.700')
-  const stampCorner = useColorModeValue('gray.800', 'gray.200')
   const component = useConfigContext()?.components?.token
+  const brandColor = useBrandColor()
 
-  const icon: IconType = type === component?.collectRequiredType ? FaStamp : FaRocket
+  const Icon = type === component?.collectRequiredType ? Stamp : Rocket
 
   return (
-    <Box maxW="md" minW={['100%', 'md']} borderRadius="lg" bg={backgroundBase}>
-      <Flex>
-        <Center bg={stampCorner} padding="2" borderStartRadius="lg">
-          <Icon as={icon} boxSize="2em" fontSize="3xl" color={useBrandColor(500, 600)} />
-        </Center>
-        <Center width="100%" paddingStart="3" textAlign="center">
-          <Text fontSize="xl" fontWeight="bold">
-            {title}
-          </Text>
-        </Center>
-      </Flex>
-    </Box>
+    <div className="max-w-md min-w-full md:min-w-[28rem] rounded-lg bg-secondary text-secondary-foreground flex border">
+      <div className="bg-foreground/5 p-2 rounded-l-lg flex items-center justify-center border-r">
+        <Icon className="h-8 w-8" style={{ color: brandColor }} />
+      </div>
+      <div className="w-full pl-3 flex items-center justify-center text-center">
+        <span className="text-xl font-bold">{title}</span>
+      </div>
+    </div>
   )
 }

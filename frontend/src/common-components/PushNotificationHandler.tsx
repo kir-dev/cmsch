@@ -1,15 +1,15 @@
-import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { Alert, AlertDescription, AlertTitle, Box, Button, CloseButton, useToast } from '@chakra-ui/react'
-import type { MessagePayload } from '@firebase/messaging'
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext.ts'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { ToastAction } from '@/components/ui/toast'
+import { useToast } from '@/hooks/use-toast'
+import { areNotificationsSupported, disableNotifications, getCloudMessaging, initNotifications } from '@/util/configs/firebase.config.ts'
+import { ExternalLink } from 'lucide-react'
 import { type FC, type PropsWithChildren, useEffect } from 'react'
-import { useAuthContext } from '../api/contexts/auth/useAuthContext.ts'
-import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
-import { areNotificationsSupported, disableNotifications, getCloudMessaging, initNotifications } from '../util/configs/firebase.config.ts'
 
 export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => {
   const authContext = useAuthContext()
   const config = useConfigContext()
-  const toast = useToast()
+  const { toast } = useToast()
 
   const hasPermission = areNotificationsSupported() && Notification.permission === 'granted'
   useEffect(() => {
@@ -19,38 +19,29 @@ export const PushNotificationHandler: FC<PropsWithChildren> = ({ children }) => 
     if (shouldShowNotifications) {
       const messaging = getCloudMessaging()
       if (messaging === null) return
-      initNotifications(messaging, (payload) =>
+      initNotifications(messaging, (payload) => {
+        const { body, image, title } = payload.notification ?? {}
+        const link = payload.fcmOptions?.link
         toast({
-          render: (options) => <NotificationToast payload={payload} onClose={options.onClose} />,
-          duration: 5000,
-          isClosable: true
+          title: title,
+          description: (
+            <div className="flex flex-col space-y-2 mt-2">
+              {image && <img width={120} height={120} src={image} alt={title} className="rounded-md" />}
+              {body && <p>{body}</p>}
+            </div>
+          ),
+          action: link ? (
+            <ToastAction altText="Megnyitás" asChild>
+              <a href={link} target="_blank" rel="noreferrer" className="flex items-center">
+                Megnyitás <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </ToastAction>
+          ) : undefined
         })
-      )
+      })
     } else {
       disableNotifications()
     }
   }, [authContext.isLoggedIn, config?.components?.pushnotification?.notificationsEnabled, hasPermission, toast])
   return <>{children}</>
-}
-
-function NotificationToast({ payload, onClose }: { payload: MessagePayload; onClose?: () => void }) {
-  const { body, image, title } = payload.notification ?? {}
-  const link = payload.fcmOptions?.link
-  return (
-    <Alert status="info" variant="solid" flexDirection="column" textAlign="center" borderRadius={[0, null, 'xl']} position="relative">
-      <CloseButton onClick={onClose} position="absolute" top={4} right={4} />
-      {image && <img width={120} height={120} src={image} alt={title} />}
-      {title && (
-        <AlertTitle mt={4} mb={1} fontSize="lg">
-          {title}
-        </AlertTitle>
-      )}
-      {body && <AlertDescription maxWidth="sm">{body}</AlertDescription>}
-      {link && (
-        <Button as={'a'} variant="ghost" textColor="000" href={link} mt={4} target="_blank">
-          <Box pr={2}>Megnyitás</Box> <ExternalLinkIcon />
-        </Button>
-      )}
-    </Alert>
-  )
 }

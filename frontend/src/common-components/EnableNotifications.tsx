@@ -1,9 +1,14 @@
-import { Alert, AlertDescription, AlertIcon, Box, Button, HStack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useConfigContext } from '../api/contexts/config/ConfigContext.tsx'
-import { areNotificationsSupported } from '../util/configs/firebase.config.ts'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { areNotificationsSupported } from '@/util/configs/firebase.config.ts'
+import { Info } from 'lucide-react'
+import { useState } from 'react'
 
 export const EnableNotifications = () => {
-  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
+  const [isOpen, setIsOpen] = useState(true)
+  const onClose = () => setIsOpen(false)
+
   const config = useConfigContext()
   if (!areNotificationsSupported()) return
   if (Notification.permission !== 'default') return null // we cannot ask again
@@ -13,33 +18,32 @@ export const EnableNotifications = () => {
 
   const { permissionPromptText, permissionAcceptText, permissionDenyText } = component
   return (
-    <Box>
+    <div className="w-full">
       <Alert
-        borderRadius={[0, null, 'xl']}
-        opacity={1}
-        status={'info'}
-        variant="solid"
-        mx="auto"
-        w="100%"
-        maxWidth={['100%', '64rem']}
-        mb={5}
+        className={'mx-auto w-full max-w-full md:max-w-[64rem] mb-5 rounded-none md:rounded-xl bg-info text-info-foreground border-none'}
       >
-        <HStack justify="space-between" flex={1}>
-          <AlertIcon display={['none', 'none', 'block']} />
-          <VStack align="flex-start" flex={1}>
-            <AlertDescription wordBreak="break-word">{permissionPromptText}</AlertDescription>
-          </VStack>
-          <Button variant="ghost" textColor="000" mr={2} onClick={() => enableNotifications(onClose, () => window.location.reload())}>
-            {permissionAcceptText || 'Igen'}
-          </Button>
-          {!!permissionDenyText && (
-            <Button variant="ghost" textColor="000" mr={2} onClick={() => disableNotifications(onClose)}>
-              {permissionDenyText}
+        <div className="flex flex-row items-center justify-between w-full space-x-4">
+          <Info className="hidden md:block h-5 w-5 shrink-0" />
+          <div className="flex-1">
+            <AlertDescription className="break-words">{permissionPromptText}</AlertDescription>
+          </div>
+          <div className="flex flex-row space-x-2 shrink-0">
+            <Button
+              variant="ghost"
+              className="hover:bg-info-foreground/10"
+              onClick={() => enableNotifications(onClose, () => window.location.reload())}
+            >
+              {permissionAcceptText || 'Igen'}
             </Button>
-          )}
-        </HStack>
+            {!!permissionDenyText && (
+              <Button variant="ghost" className="hover:bg-info-foreground/10" onClick={() => disableNotifications(onClose)}>
+                {permissionDenyText}
+              </Button>
+            )}
+          </div>
+        </div>
       </Alert>
-    </Box>
+    </div>
   )
 }
 

@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { useConfigContext } from './api/contexts/config/ConfigContext.tsx'
 import { CmschLayout } from './common-components/layout/CmschLayout'
+import { Toaster } from './components/ui/toaster'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
 import CommunityListPage from './pages/communities/communityList.page.tsx'
@@ -24,6 +25,7 @@ import ImpressumPage from './pages/impressum/impressum.page.tsx'
 import IndexPage from './pages/index/index.page'
 import LeaderboardPage from './pages/leaderboard/leaderboard.page.tsx'
 import LoginPage from './pages/login/login.page'
+import ResetPasswordPage from './pages/login/resetPassword.page.tsx'
 import MapPage from './pages/map/map.page.tsx'
 import NewsPage from './pages/news/news.page.tsx'
 import NewsListPage from './pages/news/newsList.page.tsx'
@@ -147,6 +149,7 @@ export function App() {
                 </Route>
                 <Route index element={<IndexPage />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route path={Paths.RESET_PASSWORD} element={<ResetPasswordPage />} />
                 <Route path="logout" element={<HomePage />} />
                 {/** Error handling pages */}
                 <Route path="error" element={<ErrorPage />} />
@@ -154,6 +157,7 @@ export function App() {
               </Route>
             </Routes>
           </Suspense>
+          <Toaster />
         </CmschLayout>
       </CountdownPage>
     </TitleProvider>

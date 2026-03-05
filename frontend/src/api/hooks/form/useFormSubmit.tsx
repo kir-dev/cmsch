@@ -1,8 +1,8 @@
+import { joinPath } from '@/util/core-functions.util'
+import { ApiPaths } from '@/util/paths'
+import { FormSubmitResult } from '@/util/views/form.view'
 import axios from 'axios'
 import { useState } from 'react'
-import { joinPath } from '../../../util/core-functions.util'
-import { ApiPaths } from '../../../util/paths'
-import { FormSubmitResult } from '../../../util/views/form.view'
 
 export const useFormSubmit = (slug: string) => {
   const [loading, setLoading] = useState<boolean>(false)

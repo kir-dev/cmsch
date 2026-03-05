@@ -1,13 +1,13 @@
-import { Divider, Flex, Heading } from '@chakra-ui/react'
+import type { Race } from '@/api/contexts/config/types'
+import { BoardStat } from '@/common-components/BoardStat'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LeaderBoardTable } from '@/common-components/LeaderboardTable'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Separator } from '@/components/ui/separator'
+import type { RaceView } from '@/util/views/race.view'
 import { useMemo } from 'react'
-import type { Race } from '../../../api/contexts/config/types'
-import { BoardStat } from '../../../common-components/BoardStat'
-import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../../common-components/layout/CmschPage'
-import { LeaderBoardTable } from '../../../common-components/LeaderboardTable'
-import Markdown from '../../../common-components/Markdown'
-import { PageStatus } from '../../../common-components/PageStatus'
-import type { RaceView } from '../../../util/views/race.view'
 
 type Props = {
   data: RaceView | undefined
@@ -24,15 +24,13 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
 
   return (
     <CmschPage title={data.categoryName}>
-      <Heading as="h1" variant="main-title" mb={3}>
-        {data.categoryName}
-      </Heading>
+      <h1 className="text-3xl font-bold font-heading mb-3">{data.categoryName}</h1>
       <Markdown text={data.description || component.defaultCategoryDescription} />
-      <Flex my={5} gap={5} flexWrap="wrap">
+      <div className="flex flex-wrap my-5 gap-5">
         <BoardStat label="Helyezésed" value={data.place || '-'} />
         <BoardStat label="Legjobb időd" value={(data.bestTime || '-') + ' mp'} />
-      </Flex>
-      <Divider mb={10} />
+      </div>
+      <Separator className="mb-10" />
       <LeaderBoardTable
         searchEnabled={component.searchEnabled}
         data={data.board || []}

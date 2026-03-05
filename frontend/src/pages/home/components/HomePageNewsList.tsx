@@ -1,8 +1,7 @@
-import { Grid } from '@chakra-ui/react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
-import { useHomeNews } from '../../../api/hooks/home/useHomeNews.tsx'
-import type { NewsArticleView } from '../../../util/views/news.view.ts'
-import { NewsListItem } from '../../news/components/NewsListItem.tsx'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { useHomeNews } from '@/api/hooks/home/useHomeNews.tsx'
+import { NewsListItem } from '@/pages/news/components/NewsListItem.tsx'
+import type { NewsArticleView } from '@/util/views/news.view.ts'
 
 const sortByHighlighted = (news: NewsArticleView[]) => {
   return news.sort((a, b) => {
@@ -23,10 +22,10 @@ export default function HomePageNewsList() {
   if (!homeNews.data || !homeNews.data.length) return null
 
   return (
-    <Grid mt={10} templateColumns="1fr" gap={4}>
+    <div className="mt-10 grid grid-cols-1 gap-4">
       {sortByHighlighted(homeNews.data).map((n: NewsArticleView) => (
         <NewsListItem news={n} fontSize="xl" useLink={config?.components?.news?.showDetails} key={n.title + n.timestamp} />
       ))}
-    </Grid>
+    </div>
   )
 }

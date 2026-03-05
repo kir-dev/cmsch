@@ -1,7 +1,9 @@
-import { Box, Heading, HStack, IconButton, Image, Text, useColorModeValue, VStack } from '@chakra-ui/react'
-import { FaHeart, FaTimes } from 'react-icons/fa'
-
-import type { TinderCommunity } from '../../../util/views/tinder'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { useColorModeValue } from '@/util/core-functions.util'
+import type { TinderCommunity } from '@/util/views/tinder'
+import { Heart, X } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
 type Props = {
   data: TinderCommunity
@@ -17,135 +19,102 @@ export const TinderCard = ({ data, depth = 0, onLike, onDislike, className }: Pr
   const description = data?.shortDescription || ''
   const image = data?.logo || ''
   const tags = data?.tinderAnswers || []
-  const tagColor = useColorModeValue('cyan.100', 'cyan.700')
+  const tagColor = useColorModeValue('bg-info/10 text-info border-info/20', 'dark:bg-info/20 dark:text-info-foreground border-info/30')
 
-  const bg = useColorModeValue('white', 'gray.800')
-  const infoColor = useColorModeValue('gray.600', 'gray.300')
-  const placeholderBg = useColorModeValue('#efefef', '#efefef') // 2a2a2a should be, but no dark mode image rn
+  const bg = useColorModeValue('bg-card', 'dark:bg-card')
+  const infoColor = useColorModeValue('text-muted-foreground', 'dark:text-muted-foreground')
+  const placeholderBg = useColorModeValue('bg-foreground/10', 'dark:bg-foreground/10')
 
   return (
-    <Box
-      className={className}
+    <div
+      className={cn(
+        'flex flex-col w-[calc(100vw-2rem)] sm:w-[380px] md:w-[416px] max-w-[416px] ' +
+          'h-[min(598px,calc(100vh-200px))] md:h-[598px] rounded-2xl shadow-lg ' +
+          'overflow-hidden transition-transform duration-150 ease-in select-none',
+        bg,
+        className
+      )}
       role="article"
       aria-label={title}
       data-depth={depth}
-      bg={bg}
-      w={{ base: 'calc(100vw - 2rem)', sm: '380px', md: '416px' }}
-      maxW="416px"
-      h={{ base: 'min(598px, calc(100vh - 200px))', md: '598px' }}
-      borderRadius="16px" /* ~12 * 1.3 */
-      boxShadow="lg"
-      overflow="hidden"
-      sx={{ WebkitOverflowScrolling: 'touch' }}
-      userSelect="none"
-      transition="transform 160ms ease"
-      display="flex"
-      flexDirection="column"
     >
       {image ? (
         // Prevent the browser from starting a native drag from the image so card drag gestures work.
-        <Image
+        <img
           src={image}
           alt={title}
-          width="100%"
-          height="100%"
-          marginTop={{ base: 4, md: 10 }}
-          objectFit="contain"
-          bg={placeholderBg}
-          p={{ base: 3, md: 6 }}
+          className={cn('w-full h-full mt-4 md:mt-10 object-contain', placeholderBg)}
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
-          sx={{ WebkitUserDrag: 'none' }}
+          style={{ WebkitUserDrag: 'none' } as CSSProperties}
         />
       ) : (
-        <Box
-          bg={placeholderBg}
-          width="100%"
-          height="100%"
+        <div
+          className={cn('w-full h-full', placeholderBg)}
           // also prevent dragging the placeholder box
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
-          sx={{ WebkitUserDrag: 'none' }}
+          style={{ WebkitUserDrag: 'none' } as CSSProperties}
         />
       )}
 
-      {/* VStack becomes a column flex container. The top part scrolls, buttons stay outside the scroll area. */}
-      <VStack align="stretch" p={{ base: 2, md: 3 }} flex="1" display="flex" flexDirection="column">
-        <HStack justify="space-around" mt={2}>
-          <Box flex="1" overflowY="auto">
-            <Heading as="h3" size={{ base: 'sm', md: 'md' }}>
-              {title}
-            </Heading>
+      <div className="flex flex-col p-2 md:p-3 flex-1 overflow-hidden">
+        <div className="flex justify-around mt-2 overflow-hidden gap-2">
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <h3 className="text-lg md:text-xl font-bold leading-tight">{title}</h3>
 
-            <Text fontSize={{ base: 'xs', md: 'sm' }} color={infoColor} mt={2}>
+            <p className={cn('text-xs md:text-sm mt-2', infoColor)}>
               Alapítva: {data?.established ?? '—'}
               <br />
               Reszort: {data?.resortName ?? '—'}
-            </Text>
+            </p>
 
-            <Box
-              mt={2}
-              /* let the description area size naturally inside the scrollable box */
-              color={useColorModeValue('#555', '#ccc')}
-              fontSize={{ base: 'xs', md: 'sm' }}
-              lineHeight="1.4"
+            <div
+              className={cn('mt-2 text-xs md:text-sm leading-relaxed', useColorModeValue('text-[#555]', 'text-[#ccc]'))}
               aria-hidden={description.length === 0}
             >
-              {description ? <Text whiteSpace="normal">{description}</Text> : <Text color="gray.400">No description</Text>}
-            </Box>
-          </Box>
+              {description ? <p className="whitespace-normal">{description}</p> : <p className="text-gray-400">No description</p>}
+            </div>
+          </div>
 
-          <Box>
+          <div className="shrink-0">
             {tags.length > 0 && (
-              <VStack align="flex-start" spacing={1} mt={2}>
+              <div className="flex flex-col items-start gap-1 mt-2">
                 {tags.slice(0, 5).map((tag, index) => (
-                  <Box key={index} bg={tagColor} px={2} py={1} borderRadius="md" fontSize={{ base: '2xs', md: 'xs' }}>
+                  <div key={index} className={cn('px-2 py-1 rounded-md text-[10px] md:text-xs', tagColor)}>
                     {tag}
-                  </Box>
+                  </div>
                 ))}
-              </VStack>
+              </div>
             )}
-          </Box>
-        </HStack>
+          </div>
+        </div>
 
-        {/* Buttons stay outside the scrollable Box so they're always visible */}
-        <HStack justify="space-around" mt={2}>
-          <IconButton
+        <div className="flex justify-around mt-auto py-2">
+          <Button
             data-no-drag
             onPointerDown={(e) => e.stopPropagation()}
             aria-label="Dislike"
             title="Dislike"
-            icon={<FaTimes />}
             onClick={() => onDislike && onDislike(data)}
             variant="outline"
-            colorScheme="red"
-            borderRadius="full"
-            w={{ base: '48px', md: '56px' }}
-            h={{ base: '48px', md: '56px' }}
-            minW={{ base: '48px', md: '56px' }}
-            minH={{ base: '48px', md: '56px' }}
-            p={0}
-          />
+            className="rounded-full w-12 md:w-14 h-12 md:h-14 p-0 text-danger hover:bg-danger/10 border-danger/20"
+          >
+            <X className="h-6 w-6" />
+          </Button>
 
-          <IconButton
+          <Button
             data-no-drag
             onPointerDown={(e) => e.stopPropagation()}
             aria-label="Like"
             title="Like"
-            icon={<FaHeart />}
             onClick={() => onLike && onLike(data)}
-            bg="cyan.500"
-            color="white"
-            _hover={{ bg: 'cyan.600' }}
-            borderRadius="full"
-            w={{ base: '48px', md: '56px' }}
-            h={{ base: '48px', md: '56px' }}
-            minW={{ base: '48px', md: '56px' }}
-            minH={{ base: '48px', md: '56px' }}
-            p={0}
-          />
-        </HStack>
-      </VStack>
-    </Box>
+            className="rounded-full w-12 md:w-14 h-12 md:h-14 p-0 bg-info text-info-foreground hover:bg-info/90"
+          >
+            <Heart className="h-6 w-6" />
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-import { RoleTypeString } from '../../../util/views/profile.view'
+import { RoleTypeString } from '@/util/views/profile.view.ts'
 
 export interface ConfigDto {
   role: RoleTypeString
@@ -92,7 +92,7 @@ export interface GroupSelection {
 
 export interface Event {
   title: string
-  seekToCurrentCurrent: boolean
+  seekToCurrent: boolean
   separateDays: boolean
   topMessage: string
   enableDetailedView: boolean
@@ -222,9 +222,21 @@ export interface Style {
   lightContainerFilter: string
   lightTextColor: string
   lightBrandingColor: string
+  lightPrimaryForeground: string
   lightBackgroundUrl: string
   lightMobileBackgroundUrl: string
   lightLogoUrl: string
+  lightBorderColor: string
+  lightNeutralColor: string
+  lightNeutralForeground: string
+  lightSuccessColor: string
+  lightSuccessForeground: string
+  lightWarningColor: string
+  lightWarningForeground: string
+  lightDangerColor: string
+  lightDangerForeground: string
+  lightInfoColor: string
+  lightInfoForeground: string
   darkModeEnabled: boolean
   deviceTheme: boolean
   forceDarkMode: boolean
@@ -233,9 +245,21 @@ export interface Style {
   darkContainerFilter: string
   darkTextColor: string
   darkBrandingColor: string
+  darkPrimaryForeground: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
   darkLogoUrl: string
+  darkBorderColor: string
+  darkNeutralColor: string
+  darkNeutralForeground: string
+  darkSuccessColor: string
+  darkSuccessForeground: string
+  darkWarningColor: string
+  darkWarningForeground: string
+  darkDangerColor: string
+  darkDangerForeground: string
+  darkInfoColor: string
+  darkInfoForeground: string
   mainFontName: string
   displayFontName: string
   lightNavbarFilter: string
@@ -287,6 +311,12 @@ export interface Location {
 
 export interface Login {
   authschPromoted: boolean
+  passwordEnabled: boolean
+  emailConfirmationEnabled: boolean
+  forgotPasswordEnabled: boolean
+  captchaEnabled: boolean
+  captchaSiteKey: string
+  loginRateLimit: number
   topMessage: string
   bottomMessage: string
   googleSsoEnabled: boolean

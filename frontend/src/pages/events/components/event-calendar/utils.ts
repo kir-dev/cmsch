@@ -1,5 +1,5 @@
+import type { EventListView } from '@/util/views/event.view'
 import { endOfDay, isSameDay } from 'date-fns'
-import type { EventListView } from '../../../../util/views/event.view'
 import type { EventBoxItem } from './EventBox'
 
 export function calculatePosition(minTimestamp: number, maxTimestamp: number, timestamp: number) {

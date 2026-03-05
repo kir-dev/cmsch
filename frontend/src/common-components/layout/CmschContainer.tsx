@@ -1,32 +1,31 @@
-import { Card, CardBody, CardHeader, type CardProps, Heading, useColorModeValue } from '@chakra-ui/react'
-import { useStyle } from '../../api/contexts/config/ConfigContext.tsx'
+import { useStyle } from '@/api/contexts/config/ConfigContext.tsx'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { useColorModeValue } from '@/util/core-functions.util.ts'
 
-export interface CmschContainerProps extends CardProps {
+export interface CmschContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string
   disablePadding?: boolean
 }
 
-export const CmschContainer = ({ children, title, disablePadding, ...props }: CmschContainerProps) => {
+export const CmschContainer = ({ children, title, disablePadding, className, ...props }: CmschContainerProps) => {
   const theme = useStyle()
+
   return (
     <Card
-      flexDirection="column"
-      p={[0, null, 0]}
-      mx="auto"
-      maxW="100%"
-      borderRadius={[0, null, 'xl']}
-      w={['100%', '64rem']}
-      color={useColorModeValue(theme?.lightTextColor, theme?.darkTextColor)}
-      backdropFilter={useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter)}
-      bg={useColorModeValue('lightContainerBg', 'darkContainerBg')}
+      className={cn(
+        'mx-auto w-full max-w-full flex-col border-none bg-card text-card-foreground shadow-sm md:w-[64rem] md:rounded-xl',
+        className
+      )}
+      style={{ backdropFilter: useColorModeValue(theme?.lightContainerFilter, theme?.darkContainerFilter) }}
       {...props}
     >
       {title && (
         <CardHeader>
-          <Heading>{title}</Heading>
+          <h2 className="text-2xl font-bold leading-none tracking-tight">{title}</h2>
         </CardHeader>
       )}
-      <CardBody p={disablePadding ? 0 : undefined}>{children}</CardBody>
+      <CardContent className={cn(disablePadding ? 'p-0' : 'p-6')}>{children}</CardContent>
     </Card>
   )
 }

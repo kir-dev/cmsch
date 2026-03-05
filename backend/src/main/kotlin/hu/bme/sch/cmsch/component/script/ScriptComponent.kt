@@ -28,7 +28,7 @@ class ScriptComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     // -------------------------------------------------------------------------------------------------------------------
 

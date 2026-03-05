@@ -28,5 +28,29 @@ class LocationComponentController(
     componentMenuName = "Helymegosztás",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Helymeghatározás** (Térkép) komponens lehetővé teszi a felhasználók és csoportok valós idejű követését egy térképen. Ehhez egy külső tracker alkalmazás (pl. OwnTracks) használata szükséges.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a térképet:
+
+- **Térkép menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el a térkép.
+- **Megjelenés** – egyedi üzenetek a térkép oldalán.
+- **Csoportszínek** – beállítható, hogy melyik csoport (pl. SENIOR, KIRDEV, LEAD) milyen színnel jelenjen meg a térképen.
+- **Tracker alkalmazás** – a felhasználók számára megjelenő telepítési útmutató és az appok letöltési linkjei.
+- **Megjelenítés** – szabályozható, hogy mi szerepeljen a térképen lévő jelölők (markerek) alatt (név, becenév, csoportnév), és mennyi ideig maradjanak láthatóak a markerek frissítés nélkül.
+
+## Funkciók
+
+- **Valós idejű követés** – a rendszer fogadja a tracker-alkalmazásokból érkező GPS-koordinátákat és megjeleníti azokat egy interaktív térképen.
+- **Csoportosítás** – a különböző színek segítenek gyorsan megkülönböztetni a szervezői egységeket.
+
+## Használati tippek
+
+- Ezt a funkciót leginkább külsős, nagy területen zajló rendezvényeknél érdemes használni, ahol fontos a szervezők koordinációja.
+- A **Láthatóság ideje** opcióval elrejtheted azokat a felhasználókat, akiknek a készüléke régóta nem küldött frissítést (pl. lemerült vagy nincs térerő).
+"""
 )

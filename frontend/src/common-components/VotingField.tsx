@@ -1,6 +1,7 @@
-import { Button, Collapse, Heading, HStack, Image, Radio, Stack, Text, VStack } from '@chakra-ui/react'
-import { useBrandColor } from '../util/core-functions.util.ts'
-import type { VotingFieldOption } from '../util/views/form.view'
+import { Button } from '@/components/ui/button'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useBrandColor } from '@/util/core-functions.util.ts'
+import type { VotingFieldOption } from '@/util/views/form.view'
 
 interface VotingFieldProps {
   onChange: (value?: string) => void
@@ -12,20 +13,24 @@ interface VotingFieldProps {
 
 export function VotingField({ options, onChange, value, required, disabled }: VotingFieldProps) {
   return (
-    <VStack spacing={5} align="flex-start">
-      <HStack justify="flex-end" w={'100%'}>
-        <Collapse in={!required && !!value && !disabled}>
+    <div className="flex flex-col space-y-5 items-start w-full">
+      <div className="flex justify-end w-full min-h-[40px]">
+        {!required && !!value && !disabled && (
           <Button variant="outline" onClick={() => onChange('')}>
             Választásom törlése
           </Button>
-        </Collapse>
-      </HStack>
-      {options
-        .filter((item) => value === item.value || !disabled)
-        .map((opt) => (
-          <VotingFieldElement key={opt.value} onChange={() => onChange(opt.value)} selected={value === opt.value} option={opt} />
-        ))}
-    </VStack>
+        )}
+      </div>
+      <RadioGroup value={value} onValueChange={onChange} disabled={disabled} className="w-full space-y-4">
+        {options
+          .filter((item) => value === item.value || !disabled)
+          .map((opt) => (
+            <div key={opt.value} className="w-full">
+              <VotingFieldElement onChange={() => onChange(opt.value)} selected={value === opt.value} option={opt} />
+            </div>
+          ))}
+      </RadioGroup>
+    </div>
   )
 }
 
@@ -36,28 +41,22 @@ interface VotingFieldElementProps {
 }
 
 function VotingFieldElement({ onChange, selected, option }: VotingFieldElementProps) {
-  const brandColor = useBrandColor(200, 200)
+  const brandColor = useBrandColor()
 
   return (
-    <Stack
-      alignItems="center"
-      cursor="pointer"
-      gap={5}
+    <div
       onClick={onChange}
-      borderRadius="md"
-      borderColor={selected ? brandColor : 'whiteAlpha.200'}
-      borderWidth={1}
-      position="relative"
-      p={4}
-      direction={['column', 'row']}
-      w={'100%'}
+      className="flex flex-col md:flex-row items-center cursor-pointer gap-5 rounded-md border p-4 relative w-full transition-colors"
+      style={{ borderColor: selected ? brandColor : undefined }}
     >
-      {option.img && <Image borderRadius="md" width={40} objectFit="contain" src={option.img} alt={option.title} />}
-      <VStack alignItems="flex-start">
-        <Heading fontSize="3xl">{option.title}</Heading>
-        <Text>{option.text}</Text>
-      </VStack>
-      <Radio position="absolute" top={5} right={5} size="lg" isChecked={selected} colorScheme={useBrandColor()} />
-    </Stack>
+      {option.img && <img className="rounded-md w-40 object-contain" src={option.img} alt={option.title} />}
+      <div className="flex flex-col items-start">
+        <h3 className="text-3xl font-bold">{option.title}</h3>
+        <p>{option.text}</p>
+      </div>
+      <div className="absolute top-5 right-5">
+        <RadioGroupItem value={option.value} id={option.value} className="h-6 w-6" />
+      </div>
+    </div>
   )
 }

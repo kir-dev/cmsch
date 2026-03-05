@@ -28,5 +28,32 @@ class StaticPageComponentController(
     "Oldalak testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Statikus oldalak** komponens segítségével tetszőleges tartalmú oldalakat hozhatsz létre, amelyek Markdown formátumban szerkeszthetők.
+
+## Beállítások
+
+A komponensnek nincsenek globális beállításai, az oldalakat egyenként kell konfigurálni.
+
+## Oldalak kezelése
+
+A **Statikus oldalak** menüpont alatt:
+
+- **Új oldal létrehozása** – új tartalom rögzítése.
+- **Szerkesztés / Törlés** – meglévő oldalak módosítása.
+
+## Oldal létrehozása / szerkesztése
+
+- **URL** – az oldal címe a böngészőben (pl. `info`). A frontenden a `/page/{url}` címen lesz elérhető.
+- **Cím** – az oldal neve.
+- **Tartalom** – a megjelenített szöveg Markdown formátumban.
+- **Látható** – ha be van kapcsolva, az oldal elérhető a felhasználók számára.
+- **Minimum szerepkör a megtekintéshez** – korlátozhatod az oldal láthatóságát.
+
+## Használati tippek
+
+- Használd a statikus oldalakat szabályzatok, általános tájékoztatók vagy GYIK megjelenítésére.
+- A Markdown formázással képeket, táblázatokat és linkeket is elhelyezhetsz a szövegben.
+"""
 )

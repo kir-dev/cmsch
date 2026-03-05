@@ -1,6 +1,6 @@
+import { ApiPaths } from '@/util/paths'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../util/paths'
 import { QueryKeys } from './queryKeys.ts'
 
 const queriesToInvalidate = [{ queryKey: [QueryKeys.USER] }, { queryKey: [QueryKeys.CONFIG] }]

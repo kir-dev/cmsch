@@ -1,9 +1,12 @@
-import { Box, FormLabel, Input, Textarea, useToast } from '@chakra-ui/react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
+import { AbsolutePaths } from '@/util/paths'
+import type { TaskFormatDescriptor } from '@/util/views/task.view'
 import { useEffect } from 'react'
 import { type Control, Controller, type FieldArrayWithId, type UseFieldArrayReplace } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { AbsolutePaths } from '../../../util/paths'
-import type { TaskFormatDescriptor } from '../../../util/views/task.view'
 import type { FormInput } from '../task.page'
 import { InputWithAddon } from './InputWithAddon'
 
@@ -15,7 +18,7 @@ type CustomFormProps = {
 }
 
 export const CustomForm = ({ formatDescriptor, control, fields, replace }: CustomFormProps) => {
-  const toast = useToast()
+  const { toast } = useToast()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -28,8 +31,7 @@ export const CustomForm = ({ formatDescriptor, control, fields, replace }: Custo
         toast({
           title: 'Érvénytelen feladat',
           description: 'A feladat űrlapjának formátuma érvénytelen.',
-          status: 'error',
-          isClosable: true
+          variant: 'destructive'
         })
         navigate(AbsolutePaths.TASKS)
       }
@@ -38,28 +40,22 @@ export const CustomForm = ({ formatDescriptor, control, fields, replace }: Custo
   return (
     <>
       {fields.map((f, idx) => (
-        <Box mt={5} key={f.id}>
-          <FormLabel htmlFor={`customForm.${idx}.value`}>{f.title}</FormLabel>
+        <div className="mt-5 flex flex-col gap-2" key={f.id}>
+          <Label htmlFor={`customForm.${idx}.value`}>{f.title}</Label>
           <Controller
             name={`customForm.${idx}.value`}
             control={control}
             render={({ field }) => (
               <InputWithAddon suffix={f.suffix}>
                 {f.type === 'textarea' ? (
-                  <Textarea id={`customForm.${idx}.value`} placeholder={f.title} _placeholder={{ color: 'inherit' }} {...field} />
+                  <Textarea id={`customForm.${idx}.value`} placeholder={f.title} {...field} />
                 ) : (
-                  <Input
-                    id={`customForm.${idx}.value`}
-                    placeholder={f.title}
-                    {...field}
-                    _placeholder={{ color: 'inherit' }}
-                    type={f.type}
-                  />
+                  <Input id={`customForm.${idx}.value`} placeholder={f.title} {...field} type={f.type} />
                 )}
               </InputWithAddon>
             )}
           />
-        </Box>
+        </div>
       ))}
     </>
   )

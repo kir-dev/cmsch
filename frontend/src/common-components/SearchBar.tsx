@@ -1,34 +1,28 @@
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
-import { Input, InputGroup, type InputGroupProps, InputLeftElement, InputRightElement } from '@chakra-ui/react'
-import { useSearch } from '../util/useSearch'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import { useSearch } from '@/util/useSearch'
+import { Search, X } from 'lucide-react'
 
-interface SearchBarProps extends ReturnType<typeof useSearch>, InputGroupProps {}
+interface SearchBarProps extends ReturnType<typeof useSearch> {
+  className?: string
+  mb?: number | string
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function SearchBar({ inputRef, handleInput, setSearch, search, filteredData, ...inputGroupProps }: SearchBarProps) {
+export function SearchBar({ inputRef, handleInput, setSearch, search, className }: SearchBarProps) {
   const clearSearch = () => {
     handleInput()
     setSearch('')
-    if (inputRef.current?.value) inputRef.current.value = ''
+    if (inputRef.current) inputRef.current.value = ''
   }
   return (
-    <InputGroup {...inputGroupProps}>
-      <InputLeftElement h="100%">
-        <SearchIcon />
-      </InputLeftElement>
-      <Input
-        ref={inputRef}
-        placeholder="Keresés..."
-        size="lg"
-        onChange={handleInput}
-        _placeholder={{ color: 'inherit' }}
-        autoFocus={true}
-      />
+    <div className={cn('relative flex items-center', className)}>
+      <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+      <Input ref={inputRef} placeholder="Keresés..." className="h-12 pl-10 pr-10" onChange={handleInput} autoFocus={true} />
       {search && (
-        <InputRightElement h="100%" onClick={clearSearch}>
-          <CloseIcon />
-        </InputRightElement>
+        <button onClick={clearSearch} className="absolute right-3 focus:outline-none">
+          <X className="h-4 w-4 text-muted-foreground" />
+        </button>
       )}
-    </InputGroup>
+    </div>
   )
 }

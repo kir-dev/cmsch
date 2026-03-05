@@ -1,6 +1,5 @@
-import { Box, chakra } from '@chakra-ui/react'
-import type { Menu } from '../../../api/contexts/config/types'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
+import type { Menu } from '@/api/contexts/config/types'
+import { useBrandColor } from '@/util/core-functions.util.ts'
 import LinkComponent from '../LinkComponent'
 
 type Props = {
@@ -8,21 +7,22 @@ type Props = {
 }
 
 export const NavItemNoChildren = ({ menu }: Props) => {
+  const hoverColor = useBrandColor()
   return (
-    <Box key={menu.name} p={2}>
+    <div key={menu.name} className="p-2 navitem">
       <LinkComponent url={menu.url || '#'} external={menu.external}>
-        <chakra.span
-          _hover={{
-            textDecoration: 'none',
-            color: useBrandColor(500, 400)
+        <span
+          className="whitespace-nowrap text-md font-medium transition-colors cursor-pointer"
+          style={{
+            // We use style here because brand colors are dynamic from config
+            color: 'inherit'
           }}
-          whiteSpace="nowrap"
-          fontSize="md"
-          fontWeight={500}
+          onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'inherit')}
         >
           {menu.name}
-        </chakra.span>
+        </span>
       </LinkComponent>
-    </Box>
+    </div>
   )
 }
