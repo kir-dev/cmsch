@@ -73,7 +73,18 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
   'access-token-missing': 'Adja meg a kódot!',
   'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.',
   'form-not-available': 'Űrlap nem található, vagy nincs joga hozzá.',
-  'form-disabled': 'Űrlap nincs engedélyezve.'
+  'form-disabled': 'Űrlap nincs engedélyezve.',
+  'login-status-ok': 'Sikeres művelet!',
+  'login-status-error': 'Hiba történt!',
+  'login-status-invalid-captcha': 'Érvénytelen captcha!',
+  'login-status-missing-fields': 'Minden mező kitöltése kötelező!',
+  'login-status-email-already-exists': 'Ez az e-mail cím már regisztrálva van!',
+  'login-status-email-not-confirmed': 'Az e-mail cím még nincs megerősítve!',
+  'login-status-invalid-credentials': 'Érvénytelen e-mail cím vagy jelszó!',
+  'login-status-disabled': 'Ez a funkció le van tiltva!',
+  'login-status-rate-limited': 'Túl sok próbálkozás, kérlek várj egy kicsit!',
+  'login-status-invalid-token': 'Érvénytelen vagy lejárt token!',
+  'login-status-token-expired': 'A token lejárt!'
 }
 
 const friendlyLanguageData = {
@@ -140,7 +151,18 @@ const friendlyLanguageData = {
   'access-token-missing': 'Add meg a kódot!',
   'access-token-not-available': 'Jelenleg nem lehet kódot beváltani.',
   'form-not-available': 'Űrlap nem található, vagy nincs jogod hozzá.',
-  'form-disabled': 'Űrlap nincs engedélyezve.'
+  'form-disabled': 'Űrlap nincs engedélyezve.',
+  'login-status-ok': 'Sikeres művelet!',
+  'login-status-error': 'Hiba történt!',
+  'login-status-invalid-captcha': 'Érvénytelen captcha!',
+  'login-status-missing-fields': 'Minden mező kitöltése kötelező!',
+  'login-status-email-already-exists': 'Ez az e-mail cím már regisztrálva van!',
+  'login-status-email-not-confirmed': 'Az e-mail címed még nincs megerősítve!',
+  'login-status-invalid-credentials': 'Érvénytelen e-mail cím vagy jelszó!',
+  'login-status-disabled': 'Ez a funkció le van tiltva!',
+  'login-status-rate-limited': 'Túl sok próbálkozás, kérlek várj egy kicsit!',
+  'login-status-invalid-token': 'Érvénytelen vagy lejárt token!',
+  'login-status-token-expired': 'A token lejárt!'
 }
 
 const parameters: Partial<Record<keyof typeof friendlyLanguageData, Record<string, string | undefined>>> = {
