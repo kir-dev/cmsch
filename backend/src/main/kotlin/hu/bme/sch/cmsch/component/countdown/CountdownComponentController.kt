@@ -32,5 +32,5 @@ class CountdownComponentController(
     componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
     componentMenuPriority = 20,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

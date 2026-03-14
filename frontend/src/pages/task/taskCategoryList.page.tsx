@@ -1,11 +1,10 @@
-import { Heading, Text, VStack } from '@chakra-ui/react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useTaskCategoriesQuery } from '../../api/hooks/task/useTaskCategoriesQuery'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { TaskCategoryType } from '../../util/views/task.view'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useTaskCategoriesQuery } from '@/api/hooks/task/useTaskCategoriesQuery'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { TaskCategoryType } from '@/util/views/task.view'
 import { TaskCategoryListItem } from './components/TaskCategoryListIem'
 
 const TaskCategoryListPage = () => {
@@ -21,34 +20,30 @@ const TaskCategoryListPage = () => {
   const prCategories = data.filter((c) => c.type == TaskCategoryType.PROFILE_REQUIRED)
 
   const required = prCategories.length > 0 && (
-    <>
-      <Heading as="h1" variant="main-title">
-        {component.profileRequiredTitle}
-      </Heading>
+    <div className="mb-10">
+      <h1 className="mb-5 text-4xl font-bold tracking-tight">{component.profileRequiredTitle}</h1>
       {component.profileRequiredMessage && <Markdown text={component.profileRequiredMessage} />}
-      <VStack spacing={4} mt={5} align="stretch">
+      <div className="mt-5 flex flex-col gap-4">
         {prCategories.map((category) => (
           <TaskCategoryListItem key={category.categoryId} category={category} />
         ))}
-      </VStack>
-    </>
+      </div>
+    </div>
   )
 
   return (
     <CmschPage loginRequired={true} title={component?.title}>
       {required}
-      <Heading as="h1" variant="main-title">
-        {component.regularTitle}
-      </Heading>
+      <h1 className="mb-5 text-4xl font-bold tracking-tight">{component.regularTitle}</h1>
       {component.regularMessage && <Markdown text={component.regularMessage} />}
       {normalCategories.length > 0 ? (
-        <VStack spacing={4} mt={5} align="stretch">
+        <div className="mt-5 flex flex-col gap-4">
           {normalCategories.map((category) => (
             <TaskCategoryListItem key={category.categoryId} category={category} />
           ))}
-        </VStack>
+        </div>
       ) : (
-        <Text>Nincs egyetlen feladat sem.</Text>
+        <p>Nincs egyetlen feladat sem.</p>
       )}
     </CmschPage>
   )

@@ -36,6 +36,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kotlin.uuid.Uuid
 
 const val LOREM_IPSUM_SHORT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in justo ac arcu placerat posuere eget at purus. Donec porta lorem in semper semper. Phasellus volutpat sapien et ultricies tristique. In ornare libero vel dignissim ultrices."
 const val LOREM_IPSUM_SHORT_2 = "Pellentesque non interdum leo. Mauris egestas augue vel lorem dignissim ullamcorper. Suspendisse tempus ex dolor, in sagittis lorem fermentum ut. Morbi dignissim sollicitudin ornare."
@@ -895,7 +896,7 @@ class TestConfig(
     private fun addUsers(): MutableList<UserEntity> {
         val users = mutableListOf<UserEntity>()
         user1 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "HITMAN",
                 email = "hitman@beme.hu",
                 major = MajorType.EE,
@@ -910,7 +911,7 @@ class TestConfig(
         users.add(user1!!)
 
         val u2 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "BATMAN",
                 email = "batman@beme.hu",
                 major = MajorType.IT,
@@ -925,7 +926,7 @@ class TestConfig(
         users.add(u2)
 
         val u3 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "FITYMA",
                 email = "fityma@beme.hu",
                 major = MajorType.BPROF,
@@ -940,7 +941,7 @@ class TestConfig(
         val random = Random()
         for (i in 0..2000) {
             val un = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "NE" + i,
                 email = "${random.nextLong()}@beme.hu",
                 major = MajorType.BPROF,

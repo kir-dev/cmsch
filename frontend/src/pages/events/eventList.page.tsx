@@ -1,34 +1,19 @@
-import {
-  Box,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useBreakpoint,
-  useBreakpointValue,
-  useDisclosure
-} from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useEventListQuery } from '@/api/hooks/event/useEventListQuery'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CustomTabButton } from '@/common-components/CustomTabButton'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs'
+import { Paths } from '@/util/paths'
+import type { EventListView } from '@/util/views/event.view'
 import uniq from 'lodash/uniq'
-import { FaCalendar } from 'react-icons/fa'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-
-import { SearchIcon } from '@chakra-ui/icons'
+import { Search } from 'lucide-react'
 import { createRef, useEffect, useMemo, useState } from 'react'
-import { useEventListQuery } from '../../api/hooks/event/useEventListQuery'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CustomTabButton } from '../../common-components/CustomTabButton'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { Paths } from '../../util/paths'
-import type { EventListView } from '../../util/views/event.view'
+import { FaCalendar } from 'react-icons/fa'
 import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
@@ -37,12 +22,9 @@ import { Filter, mapper } from './util/filter'
 const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
   const event = useConfigContext()?.components?.event
-  const { isOpen, onToggle } = useDisclosure()
-  const tabsSize = useBreakpointValue({ base: 'sm', md: 'md' })
-  const breakpoint = useBreakpoint()
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
   const inputRef = createRef<HTMLInputElement>()
   const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
-  const brandColor = useBrandColor()
 
   const availableFilters = []
   if (event?.filterByCategory) availableFilters.push(Filter.CATEGORY)
@@ -71,63 +53,54 @@ const EventListPage = () => {
 
   if (!event) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={event.title} />
+
   return (
     <CmschPage title={event.title ?? 'Események'}>
-      <Box mb={5}>
-        <Heading as="h1" variant="main-title" mb={5}>
-          {event.title}
-        </Heading>
+      <div className="mb-5">
+        <h1 className="mb-5 text-4xl font-bold tracking-tight">{event.title}</h1>
         {event.topMessage && <Markdown text={event.topMessage} />}
-      </Box>
-      <LinkButton colorScheme={brandColor} mb={5} leftIcon={<FaCalendar />} href={Paths.CALENDAR}>
+      </div>
+      <LinkButton className="mb-5" href={Paths.CALENDAR}>
+        <FaCalendar className="mr-2" />
         Megtekintés a naptárban
       </LinkButton>
-      <Tabs size={tabsSize} isFitted={breakpoint !== 'base'} variant="soft-rounded" colorScheme={brandColor}>
+
+      <Tabs defaultValue="all" className="w-full">
         {availableFilters.length > 0 && (
-          <TabList>
-            <CustomTabButton>Mind</CustomTabButton>
-            {event.filterByCategory && <CustomTabButton>Kategória szerint</CustomTabButton>}
-            {event.filterByLocation && <CustomTabButton>Helyszín szerint</CustomTabButton>}
-            {event.filterByDay && <CustomTabButton>Időpont szerint</CustomTabButton>}
-          </TabList>
+          <TabsList className="mb-5 flex w-full flex-wrap justify-start">
+            <CustomTabButton value="all">Mind</CustomTabButton>
+            {event.filterByCategory && <CustomTabButton value="category">Kategória szerint</CustomTabButton>}
+            {event.filterByLocation && <CustomTabButton value="location">Helyszín szerint</CustomTabButton>}
+            {event.filterByDay && <CustomTabButton value="day">Időpont szerint</CustomTabButton>}
+          </TabsList>
         )}
 
-        <TabPanels>
-          <TabPanel p={0}>
-            {event.searchEnabled && (
-              <InputGroup mt={5}>
-                <InputLeftElement h="100%">
-                  <SearchIcon />
-                </InputLeftElement>
-                <Input
-                  ref={inputRef}
-                  placeholder="Keresés..."
-                  size="lg"
-                  onChange={handleInput}
-                  _placeholder={{ color: 'inherit' }}
-                  autoFocus={true}
+        <TabsContent value="all">
+          {event.searchEnabled && (
+            <div className="relative mb-5 mt-5 flex items-center">
+              <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+              <Input ref={inputRef} placeholder="Keresés..." className="h-12 pl-10 pr-10" onChange={handleInput} autoFocus={true} />
+            </div>
+          )}
+          <EventList eventList={filteredEvents || data || []} groupByDay />
+        </TabsContent>
+
+        {availableFilters.map((filter) => (
+          <TabsContent key={filter} value={filter.toLowerCase()}>
+            <div className="flex flex-col gap-0">
+              <CardListItem title="Mind" open={isFilterOpen} toggle={() => setIsFilterOpen(!isFilterOpen)} />
+              {filter === Filter.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isFilterOpen} />}
+              {uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option: string) => (
+                <EventFilterOption
+                  key={option}
+                  name={option}
+                  events={upcomingEvents?.filter((e) => mapper(filter, e) === option) || []}
+                  forceOpen={isFilterOpen}
                 />
-              </InputGroup>
-            )}
-            <EventList eventList={filteredEvents || data || []} groupByDay />
-          </TabPanel>
-          {availableFilters.map((filter) => (
-            <TabPanel key={filter} p={0}>
-              <Stack>
-                <CardListItem title="Mind" open={isOpen} toggle={onToggle} />
-                {filter === Filter.DAY && <EventFilterOption name="Korábbi" events={pastEvents || []} forceOpen={isOpen} />}
-                {uniq(upcomingEvents?.map((event) => mapper(filter, event))).map((option) => (
-                  <EventFilterOption
-                    key={option}
-                    name={option}
-                    events={upcomingEvents?.filter((e) => mapper(filter, e) === option) || []}
-                    forceOpen={isOpen}
-                  />
-                ))}
-              </Stack>
-            </TabPanel>
-          ))}
-        </TabPanels>
+              ))}
+            </div>
+          </TabsContent>
+        ))}
       </Tabs>
     </CmschPage>
   )

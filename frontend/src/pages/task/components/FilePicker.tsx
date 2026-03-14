@@ -1,7 +1,6 @@
-// from https://github.com/PedroDBFlores/chakra-ui-file-picker
-
-import { Button, Input, InputGroup, type InputGroupProps, InputRightElement } from '@chakra-ui/react'
-import { type ChangeEvent, Component, createRef, type FC } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { type ChangeEvent, Component, createRef } from 'react'
 
 interface FilePickerProps {
   onFileChange: (fileList: Array<File>) => void
@@ -10,8 +9,10 @@ interface FilePickerProps {
   hideClearButton?: boolean | undefined
   multipleFiles?: boolean | undefined
   accept?: string | undefined
-  inputProps?: InputGroupProps | undefined
-  inputGroupProps?: InputGroupProps | undefined
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inputProps?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inputGroupProps?: any
 }
 
 interface FilePickerState {
@@ -55,10 +56,10 @@ export class FilePicker extends Component<FilePickerProps, FilePickerState> {
   public reset = (): void => this.handleOnClearClick()
 
   render = () => {
-    const { placeholder, clearButtonLabel, hideClearButton, multipleFiles, accept, inputProps, inputGroupProps } = this.props
+    const { placeholder, clearButtonLabel, hideClearButton, multipleFiles, accept, inputProps } = this.props
 
     return (
-      <InputGroup {...inputGroupProps}>
+      <div className="relative flex w-full items-center">
         <input
           type="file"
           ref={this.inputRef}
@@ -66,20 +67,25 @@ export class FilePicker extends Component<FilePickerProps, FilePickerState> {
           style={{ display: 'none' }}
           multiple={multipleFiles}
           onChange={this.handleOnFileChange}
-          data-testid={inputProps?._placeholder ?? placeholder}
         />
         <Input
           placeholder={placeholder}
           {...{
             ...inputProps,
             readOnly: true,
-            isReadOnly: true,
             value: this.state.fileName,
             onClick: this.handleOnInputClick
           }}
+          className="pr-20"
         />
-        {!hideClearButton && <ClearButton clearButtonLabel={clearButtonLabel ?? 'Clear'} onButtonClick={this.handleOnClearClick} />}
-      </InputGroup>
+        {!hideClearButton && (
+          <div className="absolute right-1 top-1/2 -translate-y-1/2">
+            <Button type="button" size="sm" variant="secondary" onClick={this.handleOnClearClick}>
+              {clearButtonLabel ?? 'Clear'}
+            </Button>
+          </div>
+        )}
+      </div>
     )
   }
 
@@ -106,14 +112,3 @@ export class FilePicker extends Component<FilePickerProps, FilePickerState> {
     }
   }
 }
-
-type ClearButtonProps = Pick<FilePickerProps, 'clearButtonLabel'> & {
-  onButtonClick: () => void
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-const ClearButton: FC<ClearButtonProps> = ({ clearButtonLabel, onButtonClick }) => (
-  <InputRightElement width="4.5rem">
-    <Button onClick={onButtonClick}>{clearButtonLabel ?? 'Clear'}</Button>
-  </InputRightElement>
-)

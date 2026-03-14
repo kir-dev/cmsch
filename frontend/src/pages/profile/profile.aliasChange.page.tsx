@@ -1,31 +1,32 @@
-import { Box, Button, ButtonGroup, FormControl, FormLabel, Heading, Input, useToast } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useAliasChangeMutation } from '@/api/hooks/alias/useAliasChangeMutation'
+import { useProfileQuery } from '@/api/hooks/profile/useProfileQuery.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useToast } from '@/hooks/use-toast'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
 import { type FormEvent, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useAliasChangeMutation } from '../../api/hooks/alias/useAliasChangeMutation'
-import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
 
 export const AliasChangePage = () => {
   const navigate = useNavigate()
-  const toast = useToast()
+  const { toast } = useToast()
   const submissionMutation = useAliasChangeMutation()
   const { isLoading: profileLoading, data: profile, error: profileError } = useProfileQuery()
   const [alias, setAlias] = useState<string>(profile?.alias || '')
   const component = useConfigContext()?.components?.profile
-  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
   if (profileError || profileLoading || !profile) return <PageStatus isLoading={profileLoading} isError={!!profileError} />
 
   if (!component.aliasChangeEnabled) {
-    toast({ title: l('alias-change-not-allowed'), status: 'error' })
+    toast({ title: l('alias-change-not-allowed'), variant: 'destructive' })
     return <Navigate to={AbsolutePaths.PROFILE} />
   }
 
@@ -34,14 +35,14 @@ export const AliasChangePage = () => {
     submissionMutation.mutate(alias, {
       onSuccess: (result) => {
         if (result) {
-          toast({ title: l('alias-change-successful'), status: 'success' })
+          toast({ title: l('alias-change-successful') })
           navigate(AbsolutePaths.PROFILE)
         } else {
-          toast({ title: l('alias-change-failure'), status: 'error' })
+          toast({ title: l('alias-change-failure'), variant: 'destructive' })
         }
       },
       onError: (err) => {
-        toast({ title: l('alias-change-failure'), status: 'error', description: err.message })
+        toast({ title: l('alias-change-failure'), variant: 'destructive', description: err.message })
       }
     })
   }
@@ -50,24 +51,24 @@ export const AliasChangePage = () => {
     submissionMutation.mutate('', {
       onSuccess: (result) => {
         if (result) {
-          toast({ title: l('alias-change-successful'), status: 'success' })
+          toast({ title: l('alias-change-successful') })
           navigate(AbsolutePaths.PROFILE)
         } else {
-          toast({ title: l('alias-change-failure'), status: 'error' })
+          toast({ title: l('alias-change-failure'), variant: 'destructive' })
         }
       },
       onError: (err) => {
-        toast({ title: l('alias-change-failure'), status: 'error', description: err.message })
+        toast({ title: l('alias-change-failure'), variant: 'destructive', description: err.message })
       }
     })
   }
 
   return (
     <CmschPage title="Becenév módosítása">
-      <Heading my={5}>Becenév módosítása</Heading>
-      <Box display="flex" flexDirection="column" as="form" onSubmit={onSubmitAlias}>
-        <FormControl>
-          <FormLabel htmlFor="alias">Add meg a beceneved:</FormLabel>
+      <h1 className="my-5 text-4xl font-bold tracking-tight">Becenév módosítása</h1>
+      <form onSubmit={onSubmitAlias} className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="alias">Add meg a beceneved:</Label>
           <Input
             id="alias"
             name="alias"
@@ -76,16 +77,14 @@ export const AliasChangePage = () => {
             value={alias}
             onChange={(e) => setAlias(e.target.value)}
           />
-        </FormControl>
-        <ButtonGroup mt={8} spacing={3} alignSelf="center">
-          <Button type="submit" colorScheme={brandColor}>
-            Mentés
-          </Button>
-          <Button type="button" onClick={removeAlias} colorScheme="red" variant="outline">
+        </div>
+        <div className="flex gap-3 justify-center">
+          <Button type="submit">Mentés</Button>
+          <Button type="button" onClick={removeAlias} variant="destructive">
             Törlés
           </Button>
-        </ButtonGroup>
-      </Box>
+        </div>
+      </form>
     </CmschPage>
   )
 }

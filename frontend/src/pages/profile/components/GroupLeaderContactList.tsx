@@ -1,42 +1,39 @@
-import { Box, Heading, HStack, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { LinkButton } from '@/common-components/LinkButton'
+import type { ProfileView } from '@/util/views/profile.view'
 import { FaFacebook, FaPhone } from 'react-icons/fa'
-import { LinkButton } from '../../../common-components/LinkButton'
-import type { ProfileView } from '../../../util/views/profile.view'
 
 export const GroupLeaderContactList = ({ profile }: { profile: ProfileView }) => {
-  const bg = useColorModeValue('#00000005', '#FFFFFF05')
   if (!profile?.groupLeaders?.length || profile.groupLeaders.length === 0) return null
   return (
-    <Box mt={5}>
-      <VStack gap={5} align="flex-start">
-        <Heading size="md">Csoporthoz tartozó elérhetőségek</Heading>
+    <div className="mt-5">
+      <div className="flex flex-col gap-5 items-start">
+        <h2 className="text-xl font-bold">Csoporthoz tartozó elérhetőségek</h2>
         {profile.groupLeaders.map((gl, index) => (
-          <HStack
-            borderRadius="md"
-            bg={bg}
-            p={3}
-            gap={3}
+          <div
             key={index}
-            w="full"
-            justify="space-between"
-            flexDirection={['column', null, 'row']}
+            className={
+              'flex w-full flex-col items-center justify-between gap-3 rounded-md ' +
+              'bg-secondary text-secondary-foreground border p-3 lg:flex-row'
+            }
           >
-            <Text>{gl.name}</Text>
-            <HStack gap={3} flexDirection={['column', 'row']}>
+            <p>{gl.name}</p>
+            <div className="flex flex-col gap-3 md:flex-row">
               {gl.facebookUrl && (
-                <LinkButton leftIcon={<FaFacebook />} href={gl.facebookUrl} external newTab>
+                <LinkButton href={gl.facebookUrl} external newTab>
+                  <FaFacebook className="mr-2" />
                   Facebook
                 </LinkButton>
               )}
               {gl.mobilePhone && (
-                <LinkButton leftIcon={<FaPhone />} href={'tel:' + gl.mobilePhone} external>
+                <LinkButton href={'tel:' + gl.mobilePhone} external>
+                  <FaPhone className="mr-2" />
                   {gl.mobilePhone}
                 </LinkButton>
               )}
-            </HStack>
-          </HStack>
+            </div>
+          </div>
         ))}
-      </VStack>
-    </Box>
+      </div>
+    </div>
   )
 }

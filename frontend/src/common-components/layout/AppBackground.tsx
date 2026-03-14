@@ -1,30 +1,18 @@
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { useStyle } from '@/api/contexts/config/ConfigContext.tsx'
+import { useColorModeValue } from '@/util/core-functions.util'
 import type { FC, PropsWithChildren } from 'react'
-import { usePersistentStyleSetting } from '../../util/configs/themeStyle.config.ts'
 
 export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
-  const { persistentStyle: theme } = usePersistentStyleSetting()
-  const textColor = useColorModeValue(theme?.lightTextColor, theme?.darkTextColor)
-  const background = useColorModeValue(theme?.lightBackgroundColor, theme?.darkBackgroundColor)
-
+  const theme = useStyle()
   const backgroundImage = useColorModeValue(`url(${theme?.lightBackgroundUrl})`, `url(${theme?.darkBackgroundUrl})`)
   const mobileBackgroundImage = useColorModeValue(`url(${theme?.lightMobileBackgroundUrl})`, `url(${theme?.darkMobileBackgroundUrl})`)
-
   return (
     <>
-      <Box
-        position="fixed"
-        zIndex={-9999999}
-        height="100vh"
-        width="100vw"
-        bg={background}
-        color={textColor}
-        bgImage={{ base: mobileBackgroundImage, md: backgroundImage }}
-        bgRepeat={'no-repeat'}
-        bgSize={'cover'}
-        bgPosition={'center'}
-      ></Box>
-      <Box color={textColor}>{children}</Box>
+      <div
+        className="fixed inset-0 -z-[9999999] h-screen w-screen bg-no-repeat bg-cover bg-center bg-background text-foreground"
+        style={{ backgroundImage: window.innerWidth < 768 ? mobileBackgroundImage : backgroundImage }}
+      ></div>
+      <div className="text-foreground">{children}</div>
     </>
   )
 }

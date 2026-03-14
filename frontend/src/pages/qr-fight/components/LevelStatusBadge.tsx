@@ -1,5 +1,6 @@
-import { Badge } from '@chakra-ui/react'
-import { LevelStatus } from '../../../util/views/qrFight.view'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { LevelStatus } from '@/util/views/qrFight.view'
 
 interface LevelStatusBadgeProps {
   levelStatus: LevelStatus
@@ -7,19 +8,21 @@ interface LevelStatusBadgeProps {
 
 export function LevelStatusBadge({ levelStatus }: LevelStatusBadgeProps) {
   let label = 'Ismeretlen'
-  let color = 'gray'
+  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary'
+  let customClass = ''
+
   switch (levelStatus) {
     case LevelStatus.OPEN:
       label = 'Elérhető'
-      color = 'yellow'
+      customClass = 'bg-warning text-warning-foreground hover:bg-warning/90'
       break
     case LevelStatus.COMPLETED:
       label = 'Teljesítve'
-      color = 'green'
+      customClass = 'bg-success text-success-foreground hover:bg-success/90'
       break
     case LevelStatus.NOT_UNLOCKED:
       label = 'Zárt'
-      color = 'red'
+      variant = 'destructive'
       break
     case LevelStatus.NOT_LOGGED_IN:
       label = 'Kijelentkezve'
@@ -29,7 +32,7 @@ export function LevelStatusBadge({ levelStatus }: LevelStatusBadgeProps) {
       break
   }
   return (
-    <Badge w="fit-content" colorScheme={color}>
+    <Badge variant={variant} className={cn('w-fit', customClass)}>
       {label}
     </Badge>
   )

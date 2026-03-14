@@ -1,9 +1,8 @@
-import { Image } from '@chakra-ui/react'
+import AppleWalletImage from '@/assets/AppleWalletHu.svg'
+import GoogleWalletImage from '@/assets/GoogleWalletHu.svg'
+import { PASS_SERVER_URL, PASS_TEMPLATE } from '@/util/configs/environment.config'
+import { joinPath } from '@/util/core-functions.util'
 import { useMemo } from 'react'
-import AppleWalletImage from '../assets/AppleWalletHu.svg'
-import GoogleWalletImage from '../assets/GoogleWalletHu.svg'
-import { PASS_SERVER_URL, PASS_TEMPLATE } from '../util/configs/environment.config'
-import { joinPath } from '../util/core-functions.util'
 
 interface WalletButtonProps {
   userId: string
@@ -23,12 +22,10 @@ export function WalletButton({ userId, type, name }: WalletButtonProps) {
   if (!url) return null
 
   return (
-    <Image
-      cursor="pointer"
-      maxW="100%"
-      w={48}
-      mb={3}
+    <img
+      className="cursor-pointer max-w-full w-48 mb-3"
       src={type === 'apple' ? AppleWalletImage : GoogleWalletImage}
+      alt={type === 'apple' ? 'Apple Wallet' : 'Google Wallet'}
       onClick={() => {
         window.open(url)
       }}

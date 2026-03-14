@@ -1,11 +1,12 @@
-import { Box, Checkbox, Heading, Text } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useLocationQuery } from '@/api/hooks/location/useLocationQuery'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { MapContent } from '@/common-components/map/MapContent'
+import Markdown from '@/common-components/Markdown'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { l } from '@/util/language'
 import { useState } from 'react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useLocationQuery } from '../../api/hooks/location/useLocationQuery'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { MapContent } from '../../common-components/map/MapContent'
-import Markdown from '../../common-components/Markdown'
-import { l } from '../../util/language'
 
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)
@@ -14,20 +15,25 @@ export default function MapPage() {
 
   return (
     <CmschPage title={component?.title || 'Térkép'}>
-      <Heading as="h1" variant="main-title">
-        Térkép
-      </Heading>
-      {component?.topMessage && <Markdown text={component.topMessage} />}
-      <Checkbox my={3} checked={showUserLocation} onChange={(e) => setShowUserLocation(e.target.checked)}>
-        {l('location-show-own')}
-      </Checkbox>
+      <h1 className="text-3xl font-bold font-heading">Térkép</h1>
+      {component?.topMessage && (
+        <div className="mt-5">
+          <Markdown text={component.topMessage} />
+        </div>
+      )}
+      <div className="flex items-center space-x-2 my-3">
+        <Checkbox id="show-user-location" checked={showUserLocation} onCheckedChange={(checked) => setShowUserLocation(!!checked)} />
+        <Label htmlFor="show-user-location" className="cursor-pointer">
+          {l('location-show-own')}
+        </Label>
+      </div>
       <MapContent mapData={locationQuery.data ?? []} showUserLocation={showUserLocation} />
-      <Text>{l('location-description')}</Text>
-      <Text>{l('location-privacy')}</Text>
+      <p className="mt-4">{l('location-description')}</p>
+      <p>{l('location-privacy')}</p>
       {component?.bottomMessage && (
-        <Box pt={4}>
+        <div className="pt-4">
           <Markdown text={component.bottomMessage} />
-        </Box>
+        </div>
       )}
     </CmschPage>
   )

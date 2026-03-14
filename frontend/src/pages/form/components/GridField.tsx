@@ -1,8 +1,7 @@
-import { Grid, GridItem, Input } from '@chakra-ui/react'
+import { PageStatus } from '@/common-components/PageStatus'
+import type { FormField, GridFieldValues } from '@/util/views/form.view'
 import { Fragment, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { PageStatus } from '../../../common-components/PageStatus'
-import type { FormField, GridFieldValues } from '../../../util/views/form.view'
 import { GridFieldItem } from './GridFieldItem'
 
 type Props = {
@@ -43,30 +42,30 @@ export function GridField({ field, choice, disabled, dirty }: Props) {
   }
 
   return (
-    <Grid
-      justifyItems="center"
-      alignItems="center"
-      templateRows={`repeat(${format.questions.length + 1}, 1fr)`}
-      templateColumns={`repeat(${format.options.length + 1}, 1fr)`}
-      gap={2}
+    <div
+      className="grid gap-2 items-center justify-items-center"
+      style={{
+        gridTemplateRows: `repeat(${format.questions.length + 1}, 1fr)`,
+        gridTemplateColumns: `repeat(${format.options.length + 1}, 1fr)`
+      }}
     >
-      <Input {...register(field.fieldName)} disabled hidden />
-      <GridItem />
+      <input {...register(field.fieldName)} disabled hidden />
+      <div></div>
       {format.options.map((opt) => (
-        <GridItem key={opt.key}>{opt.label}</GridItem>
+        <div key={opt.key}>{opt.label}</div>
       ))}
 
       {format.questions.map((q) => (
         <Fragment key={q.key}>
-          <GridItem>{q.label}</GridItem>
+          <div>{q.label}</div>
           {format.options.map((o) => (
-            <GridItem key={o.key}>
+            <div key={o.key}>
               <GridFieldItem radio={choice} disabled={disabled} questionKey={q.key} optionKey={o.key} fieldName={field.fieldName} />
-            </GridItem>
+            </div>
           ))}
         </Fragment>
       ))}
-    </Grid>
+    </div>
   )
 }
 

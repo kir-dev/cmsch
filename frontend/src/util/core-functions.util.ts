@@ -1,8 +1,24 @@
-import { useColorModeValue } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
+import { useEffect, useState } from 'react'
 import Values from 'values.js'
 import { FormFieldVariants } from './views/form.view'
+
+export const useIsLightMode = () => useColorModeValue(true, false)
+
+export function useColorModeValue<T>(light: T, dark: T): T {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  return isDark ? dark : light
+}
 
 export const TIMESTAMP_OPTIONS: Intl.DateTimeFormatOptions = {
   month: 'short',
@@ -95,8 +111,5 @@ export function useOpaqueBackground(intensity: number = 1 | 2 | 3 | 4 | 5 | 6 | 
   if (intensityHex.length === 1) {
     intensityHex = '0' + intensityHex
   }
-  return useColorModeValue('#000000' + intensityHex, '#FFFFFF' + intensityHex)
+  return useColorModeValue('rgba(0,0,0,' + intensity / 10 + ')', 'rgba(255,255,255,' + intensity / 10 + ')')
 }
-
-export const useBrandColor = (lightShade?: number, darkShade?: number) =>
-  useColorModeValue(lightShade ? 'lightBrand.' + lightShade : 'lightBrand', darkShade ? 'darkBrand.' + darkShade : 'darkBrand')

@@ -48,7 +48,7 @@ class LeaderBoardComponent(
         description = "A részletes toplista leküldésre kerül (Kategóriánként)")
 
     var leaderBoardCategoryName by StringSettingRef("Kategóriánként",
-        fieldName = "Kategória megnevezése", description = "A kategória megnevezése a részletes toplistán: Kategóriánként, Feleadatonként stb.")
+        fieldName = "Kategória megnevezése", description = "A kategória megnevezése a részletes toplistán: Kategóriánként, Feladatonként stb.")
 
     var leaderboardFrozen by BooleanSettingRef(true, fieldName = "Toplista befagyasztott",
         description = "A toplista értéke be van fagyasztva")
@@ -104,13 +104,13 @@ class LeaderBoardComponent(
         description = "Legyen-e kereső az oldal tetején")
 
     var showTokenCountByRarity by BooleanSettingRef(fieldName = "Begyűjtött tokenek száma ritkaság szerint",
-        description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint, módosítás után nyomj egy újraszámolást")
+        description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint. A módosítás után újraszámolás szükséges.")
 
     var showTokenMaxCountByRarity by BooleanSettingRef(fieldName = "Összes token szám ritkaság szerint",
         description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint")
 
     var topMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Felső szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres akkor nincs ilyen.")
+        fieldName = "Felső szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
 
 }

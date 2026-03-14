@@ -1,13 +1,13 @@
-import { EditIcon, LinkIcon } from '@chakra-ui/icons'
-import { Box, Flex, Heading, HStack, Image, Link, Tag, useColorModeValue, VStack, Wrap } from '@chakra-ui/react'
+import { AtSign, Building, Clock, Edit, Facebook, Instagram, Link, Users } from 'lucide-react'
 import type { FC, ReactNode } from 'react'
-import { FaAt, FaBuilding, FaBusinessTime, FaFacebook, FaInstagram, FaUsers } from 'react-icons/fa'
+import { Link as RouterLink } from 'react-router'
 
-import { LinkButton } from '../../../common-components/LinkButton'
-import Markdown from '../../../common-components/Markdown'
-import { joinPath, useBrandColor } from '../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../util/paths'
-import type { Community, Organization } from '../../../util/views/organization'
+import { LinkButton } from '@/common-components/LinkButton'
+import Markdown from '@/common-components/Markdown'
+import { Badge } from '@/components/ui/badge'
+import { joinPath, useColorModeValue } from '@/util/core-functions.util'
+import { AbsolutePaths } from '@/util/paths'
+import type { Community, Organization } from '@/util/views/organization'
 
 type DataSheetProps = {
   organization: Organization | Community
@@ -19,73 +19,76 @@ type DataSheetProps = {
  * @constructor
  */
 export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
-  const brandColor = useBrandColor()
   const isDataAvailable = organization.established || organization.email || organization.members || organization.interests
   return (
     <>
-      {!organization.hideName && <Heading textAlign={{ base: 'center', sm: 'left' }}>{organization.name}</Heading>}
-      <Flex flexDir={{ base: 'column-reverse', sm: 'row' }} justify="space-between" align="center" mt={{ base: 2, sm: 5 }}>
+      {!organization.hideName && (
+        <h2 className="text-3xl font-bold text-center sm:text-left mt-5 mb-5 font-heading">{organization.name}</h2>
+      )}
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-center mt-2 sm:mt-5 gap-4">
         {isDataAvailable && (
-          <VStack alignItems="flex-start" alignSelf={{ base: 'flex-start', sm: 'center' }}>
+          <div className="flex flex-col items-start self-start sm:self-center space-y-2">
             {'resortName' in organization && (
-              <DataField icon={<FaBuilding />} label="Reszort">
-                <Link href={joinPath(AbsolutePaths.ORGANIZATION, organization.resortId)}>{organization.resortName}</Link>
+              <DataField icon={<Building className="h-4 w-4" />} label="Reszort">
+                <RouterLink to={joinPath(AbsolutePaths.ORGANIZATION, organization.resortId)} className="underline">
+                  {organization.resortName}
+                </RouterLink>
               </DataField>
             )}
             {organization.established && (
-              <DataField icon={<FaBusinessTime />} label="Alapítva">
-                <Box>{organization.established}</Box>
+              <DataField icon={<Clock className="h-4 w-4" />} label="Alapítva">
+                <div>{organization.established}</div>
               </DataField>
             )}
             {organization.email && (
-              <DataField icon={<FaAt />} label="E-mail">
-                <Link href={`mailto:${organization.email}`}>{organization.email}</Link>
+              <DataField icon={<AtSign className="h-4 w-4" />} label="E-mail">
+                <a href={`mailto:${organization.email}`} className="underline">
+                  {organization.email}
+                </a>
               </DataField>
             )}
             {organization.members && (
-              <DataField icon={<FaUsers />} label="Létszám">
-                <Box>{organization.members} fő</Box>
+              <DataField icon={<Users className="h-4 w-4" />} label="Létszám">
+                <div>{organization.members} fő</div>
               </DataField>
             )}
             {organization.interests && (
-              <Flex flexWrap="wrap">
+              <div className="flex flex-wrap gap-1">
                 {organization.interests.map((interest) => (
-                  <Box key={interest} p={0.5}>
-                    <Tag colorScheme={organization.color} variant="solid">
-                      {interest}
-                    </Tag>
-                  </Box>
+                  <Badge key={interest} variant="secondary">
+                    {interest}
+                  </Badge>
                 ))}
-              </Flex>
+              </div>
             )}
-          </VStack>
+          </div>
         )}
         <OrgLogo {...organization} />
-      </Flex>
-      {organization.descriptionParagraphs && <Markdown text={organization.descriptionParagraphs} />}
+      </div>
+      <div className="mt-5">{organization.descriptionParagraphs && <Markdown text={organization.descriptionParagraphs} />}</div>
 
-      <Wrap marginTop={10} justify={{ base: 'center', md: 'flex-start' }}>
+      <div className="flex flex-wrap gap-4 mt-10 justify-center md:justify-start">
         {organization.website && (
-          <LinkButton href={organization.website} external leftIcon={<LinkIcon />} colorScheme={organization.color}>
-            Weboldal
+          <LinkButton href={organization.website} external className="flex items-center gap-2">
+            <Link className="h-4 w-4" /> Weboldal
           </LinkButton>
         )}
         {organization.application && (
-          <LinkButton href={organization.application} external leftIcon={<EditIcon />} colorScheme={brandColor}>
-            Jelentkezés
+          <LinkButton href={organization.application} external className="flex items-center gap-2 bg-primary">
+            <Edit className="h-4 w-4" /> Jelentkezés
           </LinkButton>
         )}
         {organization.facebook && (
-          <LinkButton href={organization.facebook} external leftIcon={<FaFacebook />} colorScheme="blue">
-            Facebook
+          <LinkButton href={organization.facebook} external className="flex items-center gap-2 bg-[#1877F2] hover:bg-[#1877F2]/90">
+            <Facebook className="h-4 w-4" /> Facebook
           </LinkButton>
         )}
         {organization.instagram && (
-          <LinkButton href={organization.instagram} external leftIcon={<FaInstagram />} colorScheme="purple">
-            Instagram
+          <LinkButton href={organization.instagram} external className="flex items-center gap-2 bg-[#E4405F] hover:bg-[#E4405F]/90">
+            <Instagram className="h-4 w-4" /> Instagram
           </LinkButton>
         )}
-      </Wrap>
+      </div>
     </>
   )
 }
@@ -97,11 +100,11 @@ type DataFieldProps = {
 }
 
 const DataField: FC<DataFieldProps> = ({ icon, label, children }) => (
-  <HStack color={useColorModeValue('gray.700', 'gray.200')}>
-    <Box>{icon}</Box>
-    <Box fontWeight={700}>{label}</Box>
+  <div className="flex flex-row items-center space-x-2 text-muted-foreground">
+    <div>{icon}</div>
+    <div className="font-bold">{label}</div>
     {children}
-  </HStack>
+  </div>
 )
 
 const OrgLogo = ({ logo, darkLogo, name }: Organization | Community) => {
@@ -115,14 +118,13 @@ const OrgLogo = ({ logo, darkLogo, name }: Organization | Community) => {
 
   if (logoSource) {
     return (
-      <Image
-        my={2}
-        alignSelf={{ base: 'center', sm: 'flex-start' }}
+      <img
+        className={
+          'my-2 self-center sm:self-start max-h-40 sm:max-h-40 md:max-h-48 ' +
+          'max-w-[16rem] sm:max-w-[10rem] md:max-w-[16rem] object-contain'
+        }
         src={logoSource}
         alt={name}
-        maxH={{ base: '10rem', sm: '10rem', md: '12rem' }}
-        maxW={{ base: '16rem', sm: '10rem', md: '16rem' }}
-        objectFit="contain"
       />
     )
   }

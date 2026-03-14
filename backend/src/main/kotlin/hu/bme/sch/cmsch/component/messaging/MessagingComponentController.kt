@@ -28,5 +28,5 @@ class MessagingComponentController(
     "Értesítések beállítása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

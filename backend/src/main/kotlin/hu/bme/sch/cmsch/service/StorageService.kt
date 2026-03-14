@@ -1,12 +1,12 @@
 package hu.bme.sch.cmsch.service
 
-import com.fasterxml.uuid.Generators
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Path
 import java.util.*
+import kotlin.uuid.Uuid
 
 interface StorageService {
 
@@ -55,7 +55,7 @@ interface StorageService {
 
     fun readObject(fullName: String): Optional<ByteArray>
 
-    private fun generateName(name: String) = (Generators.timeBasedEpochRandomGenerator().generate().toString()
+    private fun generateName(name: String) = (Uuid.generateV7().toString()
             + name.substring(if (name.contains(".")) name.lastIndexOf('.') else 0))
 
     fun readBundledAsset(assetName: String): Optional<ByteArray> {

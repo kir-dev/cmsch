@@ -28,13 +28,29 @@ class BmejegyComponentController(
     adminMenuService,
     BmejegyComponent::class.java,
     component,
-    ControlPermissions.PERMISSION_CONTROL_BMEJEGY,
-    "BME JEGY",
-    "Jegyek testreszabása",
-    auditLogService = auditLogService,
-    menuService = menuService,
-    storageService = storageService
-) {
+        ControlPermissions.PERMISSION_CONTROL_BMEJEGY,
+        "BME JEGY",
+        "Jegyek testreszabása",
+        auditLogService = auditLogService,
+        menuService = menuService,
+        storageService = storageService,
+        documentationMarkdown = """
+    A **BME Jegy** komponens a bmejegy.hu rendszerével való integrációt valósítja meg. Lehetővé teszi a kifizetett jegyek automatikus szinkronizálását és a sikeres vásárlás utáni jogosultságkiosztást.
+    
+    ## Beállítások
+    
+    A **Komponens beállításai** menüpontban konfigurálhatod a szinkronizációt:
+    
+    - **Működés** – engedélyezhető az automatikus szinkronizáció és beállítható annak gyakorisága.
+    - **Fizetés utáni műveletek** – meghatározható, hogy egy adott termék (pl. "Gólyatábor jegy") megvásárlása után a felhasználó milyen jogosultságot (ATTENDEE, PRIVILEGED) kapjon, vagy melyik belső csoportba kerüljön át.
+    
+    ## Funkciók
+    
+    - **Automatikus szinkronizáció** – a rendszer rendszeres időközönként lekéri a bmejegy.hu-ról a friss vásárlásokat.
+    - **Voucher-kezelés** – a szinkronizált jegyek adatai (voucher-kód, típus) tárolódnak a rendszerben, és felhasználhatók beléptetésnél.
+    """
+    )
+     {
 
     @GetMapping("/action/clean")
     fun actionClean(auth: Authentication?): String {

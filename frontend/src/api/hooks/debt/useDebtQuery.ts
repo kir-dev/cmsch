@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths'
+import type { DebtDto } from '@/util/views/debt.view.ts'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths'
-import type { DebtDto } from '../../../util/views/debt.view.ts'
-import { QueryKeys } from '../queryKeys'
 
 export const useDebtQuery = () => {
   return useQuery<DebtDto, Error>({

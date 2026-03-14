@@ -1,10 +1,10 @@
-import { Box, GridItem, Heading, HStack, Icon, Image, LinkBox, LinkOverlay } from '@chakra-ui/react'
+import Markdown from '@/common-components/Markdown'
+import { cn } from '@/lib/utils'
+import { stringifyTimeStamp } from '@/util/core-functions.util'
+import { AbsolutePaths } from '@/util/paths'
+import type { NewsArticleView } from '@/util/views/news.view'
 import { FaExclamation } from 'react-icons/fa'
 import { Link } from 'react-router'
-import Markdown from '../../../common-components/Markdown'
-import { stringifyTimeStamp, useBrandColor } from '../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../util/paths'
-import type { NewsArticleView } from '../../../util/views/news.view'
 
 type Props = {
   news: NewsArticleView
@@ -13,40 +13,41 @@ type Props = {
 }
 
 export const NewsListItem = ({ news, fontSize, useLink }: Props) => {
-  const brandColor = useBrandColor(200, 200)
   return (
-    <GridItem as={LinkBox} borderRadius="base" borderColor={news.highlighted ? brandColor : 'whiteAlpha.200'} borderWidth="1px" p={4}>
-      <Box display="flex" flexDirection={['column-reverse', 'column-reverse', 'row']} gap={4}>
-        {news.imageUrl && <Image borderRadius="md" w={32} h={32} objectFit="cover" objectPosition="center" src={news.imageUrl} />}
-        <Box w="full">
-          <HStack justifyContent="space-between">
-            {!!news.timestamp && (
-              <Box fontSize="sm" mb={2} fontWeight={300}>
-                Közzétéve: {stringifyTimeStamp(news.timestamp)}
-              </Box>
-            )}
+    <div
+      className={cn(
+        'rounded-md border p-4 transition-colors',
+        news.highlighted ? 'border-primary' : 'border-border',
+        useLink ? 'hover:bg-accent/50' : ''
+      )}
+    >
+      <div className="flex flex-col-reverse gap-4 md:flex-row">
+        {news.imageUrl && <img className="h-32 w-32 rounded-md object-cover object-center" src={news.imageUrl} alt={news.title} />}
+        <div className="w-full">
+          <div className="flex items-center justify-between">
+            {!!news.timestamp && <div className="mb-2 text-sm font-light">Közzétéve: {stringifyTimeStamp(news.timestamp)}</div>}
             {news.highlighted && (
-              <Box>
-                <Icon as={FaExclamation} color={brandColor} w={8} h={8} />
-              </Box>
+              <div>
+                <FaExclamation className="h-8 w-8 text-primary" />
+              </div>
             )}
-          </HStack>
-          <Heading size={fontSize} my={2}>
+          </div>
+          <h2 className={cn('my-2 font-bold tracking-tight', fontSize === '2xl' ? 'text-2xl' : 'text-xl')}>
             {useLink ? (
-              <LinkOverlay as={Link} to={`${AbsolutePaths.NEWS}/${news.url}`}>
+              <Link to={`${AbsolutePaths.NEWS}/${news.url}`} className="hover:underline">
                 {news.title}
-              </LinkOverlay>
+              </Link>
             ) : (
               news.title
             )}
-          </Heading>
-        </Box>
-      </Box>
+          </h2>
+        </div>
+      </div>
       {news.briefContent && (
-        <Box mt={3}>
+        <div className="mt-3">
           <Markdown text={news.briefContent} />
-        </Box>
+        </div>
       )}
-    </GridItem>
+    </div>
   )
 }

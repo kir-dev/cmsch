@@ -25,16 +25,17 @@ class ApplicationComponentController(
     adminMenuService,
     ApplicationComponent::class.java,
     component,
-    PERMISSION_CONTROL_APP,
-    "Admin",
-    "Oldal beállítások",
-    componentMenuIcon = "functions",
-    menuService = menuService,
-    insertComponentCategory = false,
-    componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
-    auditLogService = auditLogService,
-    storageService = storageService
-) {
+        PERMISSION_CONTROL_APP,
+        "Admin",
+        "Oldal beállítások",
+        componentMenuIcon = "functions",
+        menuService = menuService,
+        insertComponentCategory = false,
+        componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
+        auditLogService = auditLogService,
+        storageService = storageService,
+    )
+     {
 
     override fun onUpdate() {
         adminMenuService.invalidateSiteContext()

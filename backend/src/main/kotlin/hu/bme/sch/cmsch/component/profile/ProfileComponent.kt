@@ -54,10 +54,10 @@ class ProfileComponent(
         description = "Legyen-e látható a token számláló?")
 
     var tokenCounterName by StringSettingRef("QR kódok",
-        fieldName = "Token számláló neve", description = "Ez a felirata a riddle számlálónak")
+        fieldName = "Token számláló neve", description = "Ez a felirata a token számlálónak")
 
     var tokenCounterCategory by StringSettingRef("default", serverSideOnly = true,
-        fieldName = "Token számláló kategóriái", description = "Ebből a kategóriából látszódnak a tokenek, * = minden")
+        fieldName = "Token számláló kategóriái", description = "Ebből a kategóriából számolja a tokeneket. A '*' minden kategóriát jelent.")
 
     var showRaceStats by BooleanSettingRef(fieldName = "Mérés eredmény látható",
         description = "Legyen-e látható a mérés eredmény?")
@@ -68,110 +68,110 @@ class ProfileComponent(
         description = "Milyen adatok jelenjenek meg a felhasználóról a profilban")
 
     var showFullName by BooleanSettingRef(true, fieldName = "Teljes név látható",
-        description = "Ha ez hamis, akkor a neve helyett a profil menü címe jelenik meg")
+        description = "Ha ez hamis, akkor a név helyett az oldal címe jelenik meg")
 
-    var showGuild by BooleanSettingRef(fieldName = "Gárda látható", description = "Ki van írva, hogy melyik gárda")
+    var showGuild by BooleanSettingRef(fieldName = "Gárda látható", description = "Megjelenjen-e a felhasználó gárdája")
 
-    var showMajor by BooleanSettingRef(fieldName = "Szak látható", description = "Ki van írva, hogy melyik szakra jár")
+    var showMajor by BooleanSettingRef(fieldName = "Szak látható", description = "Megjelenjen-e a felhasználó szakja")
 
     var showAlias by BooleanSettingRef(fieldName = "Becenév látható",
-        description = "Ha van nickneve, akkor ki legyen-e írva")
+        description = "Megjelenjen-e a felhasználó beceneve")
 
     var aliasChangeEnabled by BooleanSettingRef(fieldName = "Becenév szerkeszthető",
-        description = "Lehet-e megváltoztatni a becenevet")
+        description = "Módosíthatja-e a felhasználó a becenevét")
 
     var aliasRegex by StringSettingRef("^[A-Za-z0-9 \\-_ÁáÉéÍíÓóÖöŐőÚúÜüŰű\\/]*$", serverSideOnly = true,
-        fieldName = "Becenév minta", description = "Ennek a regex mintának kell megfeleljen a beceneveknek")
+        fieldName = "Becenév minta", description = "A becenévnek erre a reguláris kifejezésre kell illeszkednie")
 
     var showGroup by BooleanSettingRef(fieldName = "Csoport tagság látható",
-        description = "Ki van írva, hogy melyik csoportnak a tagja")
+        description = "Megjelenjen-e a felhasználó csoporttagsága")
 
-    var showNeptun by BooleanSettingRef(fieldName = "Neptun kód látható", description = "Ki van írva a neptunkódja")
+    var showNeptun by BooleanSettingRef(fieldName = "Neptun kód látható", description = "Megjelenjen-e a felhasználó Neptun kódja")
 
-    var showEmail by BooleanSettingRef(fieldName = "Emailcím látható", description = "Legyen kiírva az emailcíme")
+    var showEmail by BooleanSettingRef(fieldName = "Email-cím látható", description = "Megjelenjen-e a felhasználó email-címe")
 
-    var showProfilePicture by BooleanSettingRef(fieldName = "Profil QR látható")
+    var showProfilePicture by BooleanSettingRef(fieldName = "Profilkép látható")
 
     var showQr by BooleanSettingRef(fieldName = "Egyedi QR kód látható",
-        description = "Jelenlen meg a jegy. Ezt lehet használni a fizetéshez, meg belépés szabályozáshoz")
+        description = "Jelenjen meg az egyedi azonosító QR kód. Használható fizetéshez és beléptetéshez.")
 
     var showQrMinRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Egyedi QR kód láthatóság jogosultságai", description = "Egyedi QR kód látható ezeknek a roleoknak")
+        fieldName = "Egyedi QR kód láthatóság jogosultságai", description = "Mely szerepkörök számára legyen látható az egyedi QR kód")
 
     var showQrOnlyIfTicketPresent by BooleanSettingRef(serverSideOnly = true, fieldName = "QR csak ha van jegye",
-        description = "A profil QR csak akkor látszik ha van jegye az illetőnek (Nem BMEJEGY)")
+        description = "A profil QR kód csak akkor látszik, ha a felhasználónak van érvényes jegye (nem BMEJEGY)")
 
     var qrTitle by StringSettingRef("CMSCH ID",
-        fieldName = "QR kód fejléc", description = "Ez a fejléc jelenik meg a QR kód felett")
+        fieldName = "QR kód fejléc", description = "A QR kód felett megjelenő felirat")
 
     var bmejegyQrIfPresent by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "BMEJEGY kód küldése", description = "A bmejegyes voucher kód leküldése, ha van valid jegye")
+        fieldName = "BMEJEGY kód küldése", description = "A BMEJEGY voucher kódjának küldése, ha van érvényes jegy")
 
     var noQrIfNoBmejegy by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "Csak BMEJEGY kód küldése", description = "Ha nics bmejegyes voucher kód, akkor nem jelenik meg QR")
+        fieldName = "Csak BMEJEGY kód küldése", description = "Ha nincs BMEJEGY voucher kód, akkor nem jelenik meg QR kód")
 
     var showGroupMessage by BooleanSettingRef(serverSideOnly = true,
-        fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet kijelzése a profilban")
+        fieldName = "Csoporthoz üzenet mutatása", description = "A csoporthoz tartozó üzenet megjelenítése a profilban")
 
     var showUserMessage by BooleanSettingRef(serverSideOnly = true, fieldName = "Felhasználói üzenet mutatása",
-        description = "A felhasználóhoz tartozó üzenet kijelzése a profilban")
+        description = "A felhasználóhoz tartozó üzenet megjelenítése a profilban")
 
-    var groupTitle by StringSettingRef("Tankör", fieldName = "Csoport név",
-        description = "Csoport, csapat vagy tankör a csoport. Így fog megjelenni.")
+    var groupTitle by StringSettingRef("Tankör", fieldName = "Csoport neve",
+        description = "A csoport megnevezése (pl. tankör, csapat, szakma).")
 
     var messageBoxContent by StringSettingRef(type = SettingType.LONG_TEXT,
-        fieldName = "Üzenet doboz", description = "Ha üres, nem látszik")
+        fieldName = "Üzenet doboz", description = "Ha üres, nem jelenik meg")
 
     var messageBoxLevel by StringSettingRef(fieldName = "Üzenet doboz típusa",
         description = "success, info, warning, error")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val groupLeadersGroup by SettingGroup(fieldName = "Csoport vezetők adatai")
+    val groupLeadersGroup by SettingGroup(fieldName = "Csoportvezetők adatai")
 
-    var showGroupLeaders by BooleanSettingRef(fieldName = "Csoport mutatása",
-        description = "Csoport vezetők elérhetősége")
+    var showGroupLeaders by BooleanSettingRef(fieldName = "Vezetők mutatása",
+        description = "A csoportvezetők elérhetőségének megjelenítése")
 
     var groupLeadersHeader by StringSettingRef("Tankörseniorok",
-        fieldName = "Csoport modul fejléce", description = "Ez a felirata a csoport vezetőinek elérhetőségeinek")
+        fieldName = "Vezetők modul fejléce", description = "A csoportvezetők elérhetőségeit tartalmazó modul címe")
 
-    var showGroupLeadersLocations by BooleanSettingRef(fieldName = "Csoport helyzetének mutatása",
-        description = "Csoport vezetők pozíciójának mutatása")
+    var showGroupLeadersLocations by BooleanSettingRef(fieldName = "Vezetők helyzetének mutatása",
+        description = "A csoportvezetők aktuális pozíciójának megjelenítése")
 
     var locationTimeout by NumberSettingRef(600, serverSideOnly = true,
         fieldName = "Helyzet lejárata", strictConversion = false,
-        description = "Ennyi ideig (másodpercben) mutassa a helyzeteket ha nem érkezik újabb frissítés")
+        description = "Ennyi ideig (másodpercben) jelenjen meg a helyzet az utolsó frissítés után")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val tokenGoalGroup by SettingGroup(fieldName = "A token célt kiírja üzenetként",
-        description = "Tipikusan tanköri jelenétre használt funkció; a szám meghatározása a token komponens része (A token komponensnek is be kell kapcsolva legyen, hogy ez működjön)")
+    val tokenGoalGroup by SettingGroup(fieldName = "Token cél megjelenítése",
+        description = "A token komponensben meghatározott cél elérésére vonatkozó üzenet (a token komponensnek aktívnak kell lennie)")
 
     var showMinimumTokenMessage by BooleanSettingRef(fieldName = "Minimum token üzenet aktív",
-        description = "A szükséges összegyűjthető tokenekről legyen-e üzenet?")
+        description = "Megjelenjen-e üzenet a szükséges tokenek gyűjtéséről?")
 
     var minTokenNotEnoughMessage by StringSettingRef("Még {} darab kell a tanköri jelenléthez",
         type = SettingType.LONG_TEXT, fieldName = "'Nincs elég' üzenet",
-        description = "Az üzenet ha még nincs elérve a cél, {} = a szám amennyi kell még")
+        description = "Üzenet, ha a cél még nincs elérve. A {} helyére a hátralévő darabszám kerül.")
 
     var minTokenDoneMessage by StringSettingRef("Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
-        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem látszik")
+        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem jelenik meg")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val fillProfileGroup by SettingGroup(fieldName = "Profil kitöltöttsége",
-        description = "Ha egy Feladat Kategória PROFILE_REQUIRED-re van állítva, akkor a benne lévő feladatok szükségesek ahhoz, hogy a profil teljes legyen.")
+        description = "Ha egy feladatkategória PROFILE_REQUIRED-re van állítva, akkor az abban lévő feladatok elvégzése szükséges a teljes profilhoz.")
 
     var showIncompleteProfile by BooleanSettingRef(fieldName = "Profil kitöltöttsége üzenet aktív",
-        description = "Megjelenjen-e a profil kitöltöttségére vonatkozó üzenet a profilban?")
+        description = "Megjelenjen-e a profil kitöltöttségére vonatkozó üzenet?")
 
     var profileIncomplete by StringSettingRef("A profil nem teljes! A következő dolgok hiányoznak: {}",
         type = SettingType.LONG_TEXT, fieldName = "'Profil hiányos' üzenet",
-        description = "A profil még nincs teljesen kitöltve üzenet, {} = az összes kitöltendő feladat neve felsorolva. (Ha üres, nem látszik.)")
+        description = "Üzenet hiányos profil esetén. A {} helyére a hiányzó feladatok kerülnek. Ha üres, nem jelenik meg.")
 
     var profileComplete by StringSettingRef("A profil sikeresen ki lett töltve!",
         type = SettingType.LONG_TEXT, fieldName = "'Profil kitöltve' üzenet",
-        description = "Ha üres, nem látszik, ha ki van töltve a profil akkor sem.")
+        description = "Üzenet teljes profil esetén. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

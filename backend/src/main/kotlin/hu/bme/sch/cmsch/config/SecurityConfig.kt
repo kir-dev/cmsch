@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.config
 
-import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
+import hu.bme.sch.cmsch.component.login.CmschUserDetailsService
 import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
@@ -22,10 +22,17 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -33,6 +40,8 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
+import tools.jackson.databind.ObjectMapper
 import java.util.*
 
 @EnableWebSecurity
@@ -47,10 +56,31 @@ class SecurityConfig(
     private val authschLoginService: LoginService,
     private val loginComponent: LoginComponent,
     private val startupPropertyConfig: StartupPropertyConfig,
-    private val auditLogService: AuditLogService
+    private val auditLogService: AuditLogService,
+    private val userDetailsService: CmschUserDetailsService
 ) {
-
     private val log = LoggerFactory.getLogger(javaClass)
+
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        val defaultEncoder = BCryptPasswordEncoder()
+        val defaultEncoderName = "bcrypt"
+        // This trickery is for backward compatibility if we decide to use a new password encoder algorithm in the future
+        return DelegatingPasswordEncoder(defaultEncoderName, mapOf(defaultEncoderName to defaultEncoder))
+    }
+
+    @Bean
+    fun authenticationProvider(passwordEncoder: PasswordEncoder): DaoAuthenticationProvider {
+        val authProvider = DaoAuthenticationProvider(userDetailsService)
+        authProvider.setPasswordEncoder(passwordEncoder)
+        return authProvider
+    }
+
+    @Bean
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
+        return config.authenticationManager
+    }
 
     var authschUserServiceClient = WebClient.builder()
         .baseUrl("https://auth.sch.bme.hu/api")
@@ -74,7 +104,6 @@ class SecurityConfig(
                 "/404",
                 "/control/loggedin",
                 "/control/login",
-                "/control/logged-out",
                 "/control/post-login",
                 "/style4.css",
                 "/flatpickr_custom.css",
@@ -181,7 +210,7 @@ class SecurityConfig(
                     .build()
             }
             .retrieve()
-            .bodyToMono(String::class.java)
+            .bodyToMono<String>()
             .block()
 
         val profile = objectMapper.readerFor(ProfileResponse::class.java)
@@ -231,7 +260,7 @@ class SecurityConfig(
             }
             .header("Authorization", "Bearer " + request.accessToken.tokenValue)
             .retrieve()
-            .bodyToMono(String::class.java)
+            .bodyToMono<String>()
             .block()
 
         val profile = objectMapper.readerFor(GoogleUserInfoResponse::class.java)

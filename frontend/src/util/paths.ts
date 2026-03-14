@@ -28,7 +28,8 @@ export const Paths = {
   TEAM_ADMIN: 'team-admin',
   ACCESS_KEY: 'access-key',
   MAP: 'map',
-  DEBT: 'debt'
+  DEBT: 'debt',
+  RESET_PASSWORD: 'reset-password'
 } as const
 export type Paths = (typeof Paths)[keyof typeof Paths]
 
@@ -61,7 +62,8 @@ export const AbsolutePaths = {
   LEADER_BOARD: '/leaderboard',
   ACCESS_KEY: '/access-key',
   MAP: '/map',
-  DEBT: '/debt'
+  DEBT: '/debt',
+  RESET_PASSWORD: '/reset-password'
 } as const
 export type AbsolutePaths = (typeof AbsolutePaths)[keyof typeof AbsolutePaths]
 
@@ -102,6 +104,10 @@ export const ApiPaths = {
   MY_TEAM: '/api/team/my',
   TEAM: '/api/team',
   ALL_TEAMS: '/api/teams',
-  DEBTS: '/api/debts'
+  DEBTS: '/api/debts',
+  LOGIN: '/api/login',
+  REGISTER: '/api/register',
+  FORGOT_PASSWORD: '/api/forgot-password',
+  RESET_PASSWORD: '/api/reset-password'
 } as const
 export type ApiPaths = (typeof ApiPaths)[keyof typeof ApiPaths]

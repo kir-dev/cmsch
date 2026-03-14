@@ -1,14 +1,13 @@
-import { Heading } from '@chakra-ui/react'
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext'
+import { useServiceContext } from '@/api/contexts/service/ServiceContext'
+import { useExtraPage } from '@/api/hooks/extra/useExtraPage'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
+import { RoleType, RoleTypeString } from '@/util/views/profile.view'
 import { Navigate, useParams } from 'react-router'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { useExtraPage } from '../../api/hooks/extra/useExtraPage'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
-import { RoleType, RoleTypeString } from '../../util/views/profile.view'
 
 const ExtraPage = () => {
   const params = useParams()
@@ -24,10 +23,10 @@ const ExtraPage = () => {
   }
   return (
     <CmschPage title={data.title}>
-      <Heading as="h1" variant="main-title">
-        {data.title}
-      </Heading>
-      <Markdown text={data.content} />
+      <h1 className="text-3xl font-bold font-heading">{data.title}</h1>
+      <div className="mt-5">
+        <Markdown text={data.content} />
+      </div>
     </CmschPage>
   )
 }

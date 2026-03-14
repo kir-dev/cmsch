@@ -1,5 +1,5 @@
-import { GROUP_BY_DAY_OPTIONS, stringifyTimeStamp } from '../../../util/core-functions.util'
-import type { EventListView } from '../../../util/views/event.view'
+import { GROUP_BY_DAY_OPTIONS, stringifyTimeStamp } from '@/util/core-functions.util'
+import type { EventListView } from '@/util/views/event.view'
 
 export const Filter = {
   ALL: 'all',

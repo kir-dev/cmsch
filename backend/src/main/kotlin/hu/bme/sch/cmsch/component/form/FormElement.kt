@@ -3,9 +3,10 @@ package hu.bme.sch.cmsch.component.form
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.uuid.Generators
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.UserEntity
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 enum class FormElementType(
     val serverSide: Boolean = false,
@@ -73,7 +74,7 @@ enum class FormElementType(
     },
     INJECT_RANDOM_TOKEN(serverSide = true) {
         override fun fetchValue(user: UserEntity?): String {
-            return Generators.timeBasedEpochRandomGenerator().generate().toString()
+            return Uuid.generateV7().toString()
         }
     },
 

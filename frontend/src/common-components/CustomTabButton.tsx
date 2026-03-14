@@ -1,5 +1,9 @@
-import { Tab, type TabProps } from '@chakra-ui/react'
+import { TabsTrigger } from '@/components/ui/tabs'
 
-export function CustomTabButton({ color, ...props }: TabProps) {
-  return <Tab color={color ?? 'chakra-body-text'} {...props} />
+export function CustomTabButton({ children, value, ...props }: { children: React.ReactNode; value: string }) {
+  return (
+    <TabsTrigger value={value} {...props}>
+      {children}
+    </TabsTrigger>
+  )
 }

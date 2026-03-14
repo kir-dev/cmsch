@@ -1,37 +1,25 @@
-import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
-import { FaChevronRight } from 'react-icons/fa'
-import type { Menu } from '../../../api/contexts/config/types'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
+import type { Menu } from '@/api/contexts/config/types'
+import { ChevronRight } from 'lucide-react'
 import LinkComponent from '../LinkComponent'
 
-type Props = {
-  menu: Menu
-}
-
-export const ChildNavItem = ({ menu }: Props) => {
-  const color = useBrandColor(500, 400)
+export const ChildNavItem = ({ menu }: { menu: Menu }) => {
   return (
     <LinkComponent url={menu.url || '#'} external={menu.external}>
-      <Box role="group" display="block" p={2} rounded="md">
-        <Stack direction="row" align="center">
-          <Box>
-            <Text transition="all .3s ease" _groupHover={{ color: color }} fontWeight={500}>
-              {menu.name}
-            </Text>
-          </Box>
-          <Flex
-            transition="all .3s ease"
-            transform="translateX(-10px)"
-            opacity={0}
-            _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-            justify="flex-end"
-            align="center"
-            flex={1}
+      <div className="group block p-2 rounded-md transition-colors hover:bg-accent">
+        <div className="flex flex-row items-center">
+          <div>
+            <span className="font-medium transition-colors group-hover:text-primary">{menu.name}</span>
+          </div>
+          <div
+            className={
+              'flex flex-1 justify-end items-center transition-all opacity-0 ' +
+              '-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'
+            }
           >
-            <Icon color={color} w={5} h={5} as={FaChevronRight} />
-          </Flex>
-        </Stack>
-      </Box>
+            <ChevronRight className="h-5 w-5 text-primary" />
+          </div>
+        </div>
+      </div>
     </LinkComponent>
   )
 }

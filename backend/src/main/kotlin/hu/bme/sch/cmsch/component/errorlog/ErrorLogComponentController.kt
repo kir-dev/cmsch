@@ -28,5 +28,5 @@ class ErrorLogComponentController(
     "Kliens hibaüzenetek testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

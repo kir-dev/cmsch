@@ -28,5 +28,14 @@ class ProtoComponentController(
     "Prototípusok",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Prototípusok** (Proto) komponens fejlesztési és tesztelési célokat szolgál.
+
+## Beállítások
+
+Ez a komponens általában csak fejlesztői környezetben aktív, és a rendszer belső működésének tesztelésére használható.
+
+*Éles rendszeren történő használata nem ajánlott, hacsak nem specifikus okból van rá szükség.*
+"""
 )

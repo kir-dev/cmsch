@@ -1,7 +1,6 @@
-import { Box, chakra, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from '@chakra-ui/react'
-import { FaChevronDown } from 'react-icons/fa'
-import type { Menu } from '../../../api/contexts/config/types'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
+import type { Menu } from '@/api/contexts/config/types'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { ChevronDown } from 'lucide-react'
 import LinkComponent from '../LinkComponent'
 import { ChildNavItem } from './ChildNavItem'
 
@@ -10,35 +9,25 @@ type Props = {
 }
 
 export const NavItemWithChildren = ({ menu }: Props) => {
-  const bg = useColorModeValue('darkContainerColor.600', 'darkContainerColor.600')
   return (
-    <Box key={menu.name} p={2}>
-      <Popover trigger="hover" placement="bottom-start">
-        <PopoverTrigger>
-          <Box>
+    <div key={menu.name} className="p-2 navitem">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex items-center space-x-1 cursor-pointer transition-colors hover:text-primary">
             <LinkComponent url={menu.url || '#'} external={menu.external}>
-              <HStack
-                _hover={{
-                  textDecoration: 'none',
-                  color: useBrandColor(500, 400)
-                }}
-              >
-                <chakra.span fontSize="md" fontWeight={500}>
-                  {menu.name}
-                </chakra.span>
-                <Icon as={FaChevronDown} w={4} h={4} m={0} />
-              </HStack>
+              <span className="text-md font-medium">{menu.name}</span>
             </LinkComponent>
-          </Box>
-        </PopoverTrigger>
-        <PopoverContent border={0} boxShadow="xl" bg={bg} p={4} rounded="xl" maxW="2xs">
-          <Stack>
+            <ChevronDown className="h-4 w-4" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="p-4 rounded-xl max-w-[16rem]">
+          <div className="flex flex-col space-y-2">
             {menu.children.map((child) => (
               <ChildNavItem key={child.name} menu={child} />
             ))}
-          </Stack>
-        </PopoverContent>
-      </Popover>
-    </Box>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }

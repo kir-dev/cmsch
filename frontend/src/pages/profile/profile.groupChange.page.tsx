@@ -1,16 +1,17 @@
-import { Button, ButtonGroup, FormControl, FormLabel, Heading, Select, Text, VStack } from '@chakra-ui/react'
+import { useServiceContext } from '@/api/contexts/service/ServiceContext'
+import { useGroupChangeMutation } from '@/api/hooks/group-change/useGroupChangeMutation'
+import { useProfileQuery } from '@/api/hooks/profile/useProfileQuery.ts'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import { PageStatus } from '@/common-components/PageStatus.tsx'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AbsolutePaths } from '@/util/paths'
+import { type GroupChangeDTO, GroupChangeStatus } from '@/util/views/groupChange.view'
+import type { ProfileView } from '@/util/views/profile.view.ts'
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router'
-import { useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { useGroupChangeMutation } from '../../api/hooks/group-change/useGroupChangeMutation'
-import { useProfileQuery } from '../../api/hooks/profile/useProfileQuery.ts'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import { PageStatus } from '../../common-components/PageStatus.tsx'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { AbsolutePaths } from '../../util/paths'
-import { type GroupChangeDTO, GroupChangeStatus } from '../../util/views/groupChange.view'
-import type { ProfileView } from '../../util/views/profile.view.ts'
 
 export function ProfileGroupChangePage() {
   const { isLoading, isError, data: profile, refetch } = useProfileQuery()
@@ -30,7 +31,6 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
   const [error, setError] = useState<string>()
   const { sendMessage } = useServiceContext()
   const navigate = useNavigate()
-  const brandColor = useBrandColor()
 
   const onData = (response: GroupChangeDTO) => {
     switch (response.status) {
@@ -65,64 +65,52 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
 
   return (
     <CmschPage title="Tankör beállítása">
-      <Heading>Tankör beállítása</Heading>
-      <Text mt={10} textAlign="center">
-        Állítsd be a tankörödet, hogy részt vehess a feladatokban!
-      </Text>
-      <Text color="gray.500" textAlign="center">
-        Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét!
-      </Text>
+      <h1 className="text-4xl font-bold tracking-tight">Tankör beállítása</h1>
+      <p className="mt-10 text-center">Állítsd be a tankörödet, hogy részt vehess a feladatokban!</p>
+      <p className="text-center text-muted-foreground">Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét!</p>
       {availableGroups.length ? (
-        <form>
-          <VStack spacing={5} mt={10} maxW={80} mx="auto">
-            <FormControl>
-              <FormLabel>Melyik tankörbe tartozol?</FormLabel>
-              <Select
-                id="group"
-                placeholder="Válassz tankört!"
-                onChange={(evt) => {
-                  setValue(evt.target.value)
-                }}
-              >
-                {availableGroups?.map((entry) => (
-                  <option key={entry[0]} value={entry[0]}>
-                    {entry[1]}
-                  </option>
-                ))}
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="mx-auto mt-10 flex max-w-80 flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="group">Melyik tankörbe tartozol?</Label>
+              <Select value={value} onValueChange={setValue}>
+                <SelectTrigger id="group">
+                  <SelectValue placeholder="Válassz tankört!" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableGroups?.map((entry) => (
+                    <SelectItem key={entry[0]} value={entry[0]}>
+                      {entry[1]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
-            </FormControl>
+            </div>
             {profile.fallbackGroup && (
-              <ButtonGroup>
+              <div className="flex justify-center">
                 <Button
                   variant="ghost"
-                  colorScheme={brandColor}
                   onClick={() => {
                     setValue(profile.fallbackGroup?.toString() || '')
                   }}
                 >
                   Vendég vagyok
                 </Button>
-              </ButtonGroup>
+              </div>
             )}
-            <ButtonGroup>
-              <Button onClick={onSubmit} colorScheme={brandColor} isLoading={isPending}>
-                Mentés
+            <div className="flex justify-center gap-3">
+              <Button onClick={onSubmit} disabled={isPending}>
+                {isPending ? 'Mentés...' : 'Mentés'}
               </Button>
-              <LinkButton href={AbsolutePaths.PROFILE} colorScheme="red" variant="outline">
+              <LinkButton href={AbsolutePaths.PROFILE} variant="outline">
                 Mégse
               </LinkButton>
-            </ButtonGroup>
-            {error && (
-              <Text color="red.500" textAlign="center">
-                {error}
-              </Text>
-            )}
-          </VStack>
+            </div>
+            {error && <p className="text-center text-destructive">{error}</p>}
+          </div>
         </form>
       ) : (
-        <Text textAlign="center" mt={4}>
-          Nem találhatóak csoportok :(
-        </Text>
+        <p className="mt-4 text-center">Nem találhatóak csoportok :(</p>
       )}
     </CmschPage>
   )

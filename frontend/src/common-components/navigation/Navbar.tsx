@@ -1,79 +1,70 @@
-import { Box, Collapse, Flex, Heading, Icon, IconButton, Image, useColorModeValue, useDisclosure } from '@chakra-ui/react'
-import { FaBars, FaTimes } from 'react-icons/fa'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useColorModeValue } from '@/util/core-functions.util'
+import { Menu, X } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 import CurrentEventCard from '../CurrentEventCard'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { DesktopNav } from './desktop/DesktopNav'
 import { MobileNav } from './mobile/MobileNav'
 
 export const Navbar = () => {
-  const { isOpen, onToggle } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+  const onToggle = () => setIsOpen(!isOpen)
   const components = useConfigContext()?.components
   const logoUrl = useColorModeValue(components?.style?.lightLogoUrl, components?.style?.darkLogoUrl)
   const backdropFilter = useColorModeValue(components?.style?.lightNavbarFilter, components?.style?.darkNavbarFilter)
   const background = useColorModeValue(components?.style?.lightNavbarColor, components?.style?.darkNavbarColor)
   const textColor = useColorModeValue(components?.style?.lightTextColor, components?.style?.darkTextColor)
   return (
-    <Box
-      mx="auto"
-      maxWidth={['100%', '64rem']}
-      w="full"
-      fontFamily="heading"
-      backdropFilter={backdropFilter}
-      bg={background}
-      borderBottomRadius={[0, null, 'xl']}
-      mb={4}
+    <div
+      className="mx-auto w-full max-w-full md:max-w-[64rem] font-heading mb-4 md:rounded-b-xl"
+      style={{ backdropFilter, backgroundColor: background, color: textColor }}
     >
-      <Flex
-        color={textColor}
-        minH={{ base: '3rem', md: '4.5rem' }}
-        maxW={['100%', '100%', '56rem', '72rem']}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        align="center"
+      <div
+        className={'flex items-center min-h-[3rem] md:min-h-[4.5rem] py-2 px-4 mx-auto w-full max-w-full md:max-w-[56rem] lg:max-w-[72rem]'}
       >
-        <Flex flex={{ base: 1, md: '1' }} ml={{ base: -2, md: 0 }} display={{ base: 'flex', md: 'none' }}>
-          <IconButton
+        <div className="flex flex-1 -ml-2 md:ml-0 md:hidden">
+          <button
             onClick={onToggle}
-            icon={isOpen ? <Icon as={FaTimes} w={5} h={5} /> : <Icon as={FaBars} w={5} h={5} />}
-            color={textColor}
-            variant="ghost"
+            className="p-2 inline-flex items-center justify-center rounded-md hover:bg-accent transition-colors"
             aria-label="Navigáció megnyitása"
-          />
-        </Flex>
-        <Flex justify={{ base: 'center', md: 'start' }}>
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+        <div className="flex justify-center md:justify-start">
           <Link to="/">
             {logoUrl ? (
-              <Image maxH={16} maxW={28} src={logoUrl} alt={components?.app?.siteName} />
+              <img className="max-h-16 max-w-[7rem] object-contain" src={logoUrl} alt={components?.app?.siteName} />
             ) : (
-              <Heading as="h1" variant="main-title" my={2}>
+              <h1 className="text-2xl font-bold my-2" style={{ fontFamily: components?.style?.displayFontName }}>
                 {components?.app?.siteName}
-              </Heading>
+              </h1>
             )}
           </Link>
-        </Flex>
-        <Flex display={{ base: 'none', md: 'flex' }} flex={{ base: 1 }} justify={{ base: 'center', md: 'flex-end' }}>
-          <Flex display={{ base: 'none', md: 'flex' }} mx={4}>
+        </div>
+        <div className="hidden md:flex flex-1 justify-center md:justify-end">
+          <div className="hidden md:flex mx-4">
             <DesktopNav />
-          </Flex>
-        </Flex>
-        <Flex flex={{ base: 1, md: 0 }} mr={{ base: -2, md: 0 }} justify="flex-end">
+          </div>
+        </div>
+        <div className="flex flex-1 md:flex-none -mr-2 md:mr-0 justify-end">
           {!components?.style?.forceDarkMode && <ColorModeSwitcher color={textColor} />}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       {/*The method in onClick hides the menu items when a menu item is clicked. Works for collapsible items too!*/}
-      <Collapse
-        in={isOpen}
-        color={textColor}
-        animateOpacity
-        onClick={(evt) => {
-          if ((evt.target as Element).closest('.navitem')) onToggle()
-        }}
-      >
-        <MobileNav />
-      </Collapse>
+      {isOpen && (
+        <div
+          onClick={(evt) => {
+            if ((evt.target as Element).closest('.navitem')) onToggle()
+          }}
+          className="md:hidden"
+        >
+          <MobileNav />
+        </div>
+      )}
       {!!components?.event && <CurrentEventCard />}
-    </Box>
+    </div>
   )
 }

@@ -1,5 +1,5 @@
-import { Avatar, HStack, Text, useColorModeValue, VStack, WrapItem } from '@chakra-ui/react'
-import type { Organizer } from '../../../api/contexts/config/types'
+import type { Organizer } from '@/api/contexts/config/types'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 type Props = {
   organizer: Organizer
@@ -7,18 +7,17 @@ type Props = {
 
 export const OrganizerWrapItem = ({ organizer: { name, avatar, roles } }: Props) => {
   return (
-    <WrapItem border="2px" borderColor={useColorModeValue('gray.200', 'gray.700')} borderRadius="md">
-      <HStack align="center" w="20rem" p={2}>
-        <Avatar name={name} src={avatar} size="lg" />
-        <VStack flex={1} align="stretch" spacing={0}>
-          <Text fontSize="lg" fontWeight={700}>
-            {name}
-          </Text>
-          <Text fontSize="sm" fontStyle="italic">
-            {roles}
-          </Text>
-        </VStack>
-      </HStack>
-    </WrapItem>
+    <div className="border border-border rounded-md bg-secondary text-secondary-foreground">
+      <div className="flex flex-row items-center w-80 p-2 space-x-4">
+        <Avatar className="h-12 w-12">
+          <AvatarImage src={avatar} alt={name} />
+          <AvatarFallback>{name.substring(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col flex-1 items-stretch space-y-0">
+          <span className="text-lg font-bold">{name}</span>
+          <span className="text-sm italic text-muted-foreground">{roles}</span>
+        </div>
+      </div>
+    </div>
   )
 }

@@ -28,5 +28,5 @@ class EmailComponentController(
     "Emailek testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

@@ -1,14 +1,14 @@
-import { SearchIcon } from '@chakra-ui/icons'
-import { Box, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useCommunityList } from '@/api/hooks/community/useCommunityList'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown.tsx'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Input } from '@/components/ui/input'
+import { AbsolutePaths } from '@/util/paths'
+import type { Community } from '@/util/views/organization'
+import { Search } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useCommunityList } from '../../api/hooks/community/useCommunityList'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown.tsx'
-import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
-import type { Community } from '../../util/views/organization'
 import { CardListItem } from './components/CardListItem'
 
 export default function CommunityListPage() {
@@ -46,30 +46,21 @@ export default function CommunityListPage() {
 
   return (
     <CmschPage title={communities?.title}>
-      <Heading as="h1" variant="main-title">
-        {communities?.title}
-      </Heading>
-      <InputGroup mt={5}>
-        <InputLeftElement h="100%">
-          <SearchIcon />
-        </InputLeftElement>
-        <Input
-          ref={inputRef}
-          placeholder="Keresés..."
-          size="lg"
-          onChange={handleInput}
-          _placeholder={{ color: 'inherit' }}
-          autoFocus={true}
-        />
-      </InputGroup>
+      <h1 className="text-3xl font-bold font-heading">{communities?.title}</h1>
+      <div className="relative mt-5 flex items-center">
+        <Search className="absolute left-3 h-5 w-5 text-muted-foreground" />
+        <Input ref={inputRef} placeholder="Keresés..." className="pl-10 h-12 text-lg" onChange={handleInput} autoFocus={true} />
+      </div>
       {communities?.description && (
-        <Box mt={5}>
+        <div className="mt-5">
           <Markdown text={communities?.description} />
-        </Box>
+        </div>
       )}
-      {filteredCommunities?.map((community) => (
-        <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
-      ))}
+      <div className="mt-5">
+        {filteredCommunities?.map((community) => (
+          <CardListItem key={community.id} data={community} link={`${AbsolutePaths.COMMUNITY}/${community.id}`} />
+        ))}
+      </div>
     </CmschPage>
   )
 }
