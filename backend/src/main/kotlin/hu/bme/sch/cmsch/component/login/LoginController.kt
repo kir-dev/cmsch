@@ -47,7 +47,7 @@ class LoginController(
     }
 
     @GetMapping("/control/login")
-    fun loginDefault(request: HttpServletRequest): String {
+    fun loginDefault(): String {
         return "redirect:${applicationComponent.siteUrl}login"
     }
 
@@ -124,13 +124,13 @@ class LoginController(
     fun confirmEmail(@RequestParam token: String, response: HttpServletResponse): ResponseEntity<Void> {
         val user = passwordLoginService.confirmEmail(token)
             ?: return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create("${loginComponent.externalUrl}/login?error=invalid-token")).build()
+                .location(URI.create("${applicationComponent.siteUrl}login?error=invalid-token")).build()
 
         val jwtToken = jwtTokenProvider.createToken(user)
         response.addCookie(createJwtCookie(jwtToken))
 
         return ResponseEntity.status(HttpStatus.FOUND)
-            .location(URI.create("${loginComponent.externalUrl}/login?confirmed=true")).build()
+            .location(URI.create("${applicationComponent.siteUrl}login?confirmed=true")).build()
     }
 
     @ResponseBody

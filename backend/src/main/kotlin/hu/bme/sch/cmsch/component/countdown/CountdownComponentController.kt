@@ -33,29 +33,4 @@ class CountdownComponentController(
     componentMenuPriority = 20,
     auditLogService = auditLogService,
     storageService = storageService,
-    documentationMarkdown = """
-A **Visszaszámlálás** komponens egy látványos visszaszámláló oldalt jelenít meg a rendezvény kezdetéig. Képes korlátozni a weboldal többi részének elérését, amíg az idő le nem jár.
-
-## Beállítások
-
-A **Komponens beállításai** menüpontban konfigurálhatod a visszaszámlálót:
-
-- **Lap címe** – a böngésző címsorában megjelenő szöveg.
-- **Bekapcsolva** – a visszaszámláló főkapcsolója.
-- **Visszaszámlálás eddig** – az időpont, ameddig a rendszer számol.
-- **Kinek legyen erőltetett** – meghatározható, hogy mely szerepkörök (pl. mindenki a STAFF alatt) csak ezt az oldalt lássák.
-- **Megjelenés** – egyedi üzenet, háttérkép beállítása és az időzítő láthatósága.
-- **Ne engedjen be az oldalra lejárat után** – ha be van kapcsolva, az oldal elérése a visszaszámlálás vége után is korlátozott marad.
-
-## Funkciók
-
-- **Zárolás** – a komponens képes "megfogni" a felhasználókat a kezdőlapon, megakadályozva, hogy a menü többi pontját elérjék a hivatalos megnyitó előtt.
-- **Brand színek** – a `[[ szöveg ]]` formátum használatával a kiemelt részek az oldal brand színével jelennek meg.
-
-## Használati tippek
-
-- Ezt a komponenst tipikusan a rendezvény előtt pár nappal érdemes aktiválni, hogy felcsigázd a résztvevőkeket.
-- Állíts be egy látványos **Háttérképet**, és használd az **Elmosott háttér** opciót a jobb olvashatóság érdekében.
-- A szervezők (STAFF) számára ne állítsd be az erőltetett megjelenítést, hogy ők előre tudják tesztelni a többi menüpontot.
-"""
 )

@@ -18,7 +18,7 @@ export const ForgotPasswordForm = ({ email, setEmail, onSubmit, onBack, isLoadin
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full mt-8" disabled={isLoading}>
           Visszaállítás kérése
         </Button>
       </form>

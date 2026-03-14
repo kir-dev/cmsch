@@ -54,11 +54,5 @@ A **Űrlapok** menüpont alatt:
 - **Férőhely** – hányan jelentkezhetnek összesen.
 - **Csoportos jelentkezés** – ha be van kapcsolva, a csapatkapitány az egész csapat nevében töltheti ki.
 - **Struktúra** – a kérdések és beviteli mezők definíciója.
-
-## Használati tippek
-
-- Az űrlapok felépítését egy speciális JSON-formátumban kell megadni, amely támogatja a szöveges bevitelt, választólistákat, fájlfeltöltést és jelölőnégyzeteket.
-- A **Hirdetett** opcióval az űrlap megjelenik a felhasználó profiljánál is, mint fontos teendő.
-- A beadott űrlapok exportálhatók (CSV-formátumban), így könnyen feldolgozhatók külső eszközökkel is.
 """
 )

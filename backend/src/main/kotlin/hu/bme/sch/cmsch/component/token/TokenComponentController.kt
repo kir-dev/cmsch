@@ -60,10 +60,5 @@ A **Tokenek** menüpont alatt kezelheted a kódokat:
 - **Pont** – mennyit ér a beolvasás.
 - **Ikon** – egyedi ikon a tokenhez.
 - **Látható** – megjelenjen-e a felhasználónak, ha már megszerezte.
-
-## Használati tippek
-
-- A **Pecsét gyűjtés** funkcióval könnyen nyomon követhető, hogy a résztvevők meglátogatták-e a szükséges számú állomást.
-- A **Jelenléti ív** funkcióval PDF-et generálhatsz a résztvevők aktivitásáról.
 """
 )

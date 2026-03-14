@@ -34,27 +34,6 @@ class ApplicationComponentController(
         componentCategory = ApplicationComponent.FUNCTIONALITIES_CATEGORY,
         auditLogService = auditLogService,
         storageService = storageService,
-        documentationMarkdown = """
-    Az **Applikáció** (Application) komponens a rendszer alapvető globális beállításait tartalmazza. Ez a "főkapcsoló" és a központi konfigurációs felület.
-    
-    ## Beállítások
-    
-    A **Komponens beállításai** menüpontban állíthatod be a legfontosabb paramétereket:
-    
-    - **Oldal beállítások** – az oldal neve (pl. "Gólyatábor 2026") és a kezdőoldal (melyik komponens töltődjön be először).
-    - **Admin oldal beállításai** – az admin felület URL-je, színe, neve és a szolgálati közlemények (MOTD).
-    - **Figyelmeztető üzenet** – globális üzenet, amely minden felhasználónál megjelenik az oldal tetején (pl. "Karbantartás miatt az oldal lassabb lehet").
-    
-    ## Funkciók
-    
-    - **Szolgálati közlemény (MOTD)** – az adminisztrátorok számára megjelenő üzenet a belépés után.
-    - **Dokumentumok** – hasznos linkek (pl. Google Drive, Sheets) gyűjteménye a szervezők számára.
-    
-    ## Használati tippek
-    
-    - Az **Admin oldal URL-je** beállítása kritikus a helyes működéshez, mert erre hivatkoznak a kiküldött emailek és a generált QR-kódok.
-    - A **Dokumentumok** mezőben JSON-formátumban adhatsz meg linkeket, amelyek ikonokkal jelennek meg az admin dashboardon, segítve a szervezők munkáját.
-    """
     )
      {
 

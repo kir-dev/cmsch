@@ -58,10 +58,5 @@ A feladatok kezelése több szinten történik:
 - **Pontszám** – a feladatért járó maximális pontszám.
 - **Határidők** – mikortól és meddig adható be a megoldás.
 - **Megjelenés** – leírás Markdown formátumban, kép vagy fájl melléklet.
-
-## Használati tippek
-
-- A **Kötelezően kitöltendő** feladattípus hasznos lehet, ha bizonyos adatokat vagy nyilatkozatokat mindenkitől be szeretnél gyűjteni.
-- Ha az **Újraküldés lehetséges** be van kapcsolva, a felhasználók javíthatják a beadásaikat a határidőig, de az adminisztrátornak újra kell értékelnie.
 """
 )

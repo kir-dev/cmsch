@@ -48,12 +48,6 @@ class BmejegyComponentController(
     
     - **Automatikus szinkronizáció** – a rendszer rendszeres időközönként lekéri a bmejegy.hu-ról a friss vásárlásokat.
     - **Voucher-kezelés** – a szinkronizált jegyek adatai (voucher-kód, típus) tárolódnak a rendszerben, és felhasználhatók beléptetésnél.
-    
-    ## Használati tippek
-    
-    - Fontos, hogy a **Termék neve** pontosan egyezzen (vagy tartalmazza) a bmejegy.hu oldalon megadott névvel.
-    - A szinkronizációhoz szükséges API-kulcsokat és egyéb titkokat a környezeti változókban kell beállítani.
-    - Használd a **Frissítési idő** opciót (ajánlott: 10 perc), hogy a rendszer ne terhelje feleslegesen a külső API-t, de a jegyek viszonylag hamar megjelenjenek a profilokban.
     """
     )
      {

@@ -40,6 +40,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 import tools.jackson.databind.ObjectMapper
 import java.util.*
 
@@ -58,7 +59,6 @@ class SecurityConfig(
     private val auditLogService: AuditLogService,
     private val userDetailsService: CmschUserDetailsService
 ) {
-
     private val log = LoggerFactory.getLogger(javaClass)
 
 
@@ -210,7 +210,7 @@ class SecurityConfig(
                     .build()
             }
             .retrieve()
-            .bodyToMono(String::class.java)
+            .bodyToMono<String>()
             .block()
 
         val profile = objectMapper.readerFor(ProfileResponse::class.java)
@@ -260,7 +260,7 @@ class SecurityConfig(
             }
             .header("Authorization", "Bearer " + request.accessToken.tokenValue)
             .retrieve()
-            .bodyToMono(String::class.java)
+            .bodyToMono<String>()
             .block()
 
         val profile = objectMapper.readerFor(GoogleUserInfoResponse::class.java)

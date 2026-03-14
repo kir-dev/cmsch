@@ -62,7 +62,6 @@ A feladványokat kategóriákba rendezve kezelheted:
 
 ## Használati tippek
 
-- Az **ékezetek figyelmen kívül hagyása** és a **kis- és nagybetűk figyelmen kívül hagyása** segít, hogy a felhasználók ne akadjanak el elütések miatt.
 - A **Shadow Ban** funkcióval anélkül zárhatsz ki gyanúsan gyors megoldókat, hogy tudnának róla (a válaszaikat a felület elfogadja, de nem kapnak érte pontot).
 """
 )

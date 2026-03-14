@@ -44,12 +44,6 @@ class AdmissionComponentController(
     
     - **Hozzáférési szintek** – támogatott szintek: USER, VIP, PERFORMER, ORGANIZER, LEAD_ORGANIZER. A rendszer mindig a felhasználó számára elérhető legmagasabb szintet veszi alapul.
     - **Naplózás** – minden sikeres és sikertelen belépési kísérlet rögzíthető az utólagos ellenőrzéshez.
-    
-    ## Használati tippek
-    
-    - Használd a **Kitiltott felhasználók** (Banned Users) listát a rendbontók gyors kizárásához.
-    - A **Csak az elfogadott űrlapok számítanak** opció akkor hasznos, ha a regisztrációhoz nyilatkozatot vagy egyéb adatot kellett kitölteni az Űrlapok modulban.
-    - Győződj meg róla, hogy a beléptetést végző személyek (rendezők) rendelkeznek a megfelelő jogosultsággal a kódok beolvasásához.
     """
     )
      {

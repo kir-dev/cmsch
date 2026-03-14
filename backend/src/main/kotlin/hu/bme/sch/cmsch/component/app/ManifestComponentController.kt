@@ -31,23 +31,4 @@ class ManifestComponentController(
     menuService = menuService,
     auditLogService = auditLogService,
     storageService = storageService,
-    documentationMarkdown = """
-A **Manifest** komponens a webalkalmazás (PWA - Progressive Web App) telepítési tulajdonságait szabályozza. Ez határozza meg, hogyan jelenik meg az oldal, ha a felhasználó hozzáadja a kezdőképernyőjéhez.
-
-## Beállítások
-
-A **Komponens beállításai** menüpontban konfigurálhatod a manifest fájlt:
-
-- **A manifest.json tartalma** – az alkalmazás neve, rövid neve, leírása, színei és megjelenítési módja (pl. `standalone`, `browser`).
-- **Ikonok** – a különböző eszközökhöz és felbontásokhoz szükséges ikonok feltöltése.
-
-## Funkciók
-
-- **PWA támogatás** – a helyesen beállított manifest lehetővé teszi, hogy az oldal alkalmazásként viselkedjen (ikon a főképernyőn, nincs böngésző keret).
-
-## Használati tippek
-
-- Az **Ikonok** feltöltéséhez használj online generátort, hogy minden szükséges méret (192x192, 512x512 stb.) rendelkezésre álljon.
-- A **Kijelzés módja** (display) beállítással szabályozhatod, hogy látszódjon-e a böngésző címsora (browser) vagy teljes képernyős legyen az élmény (standalone).
-"""
 )

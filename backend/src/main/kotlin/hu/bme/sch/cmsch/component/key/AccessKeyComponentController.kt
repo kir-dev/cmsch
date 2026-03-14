@@ -57,10 +57,5 @@ A **Hozzáférési kulcsok** menüpont alatt:
 - **Csoport** – melyik belső csoportba kerüljön a felhasználó beváltás után.
 - **Gárda** – melyik gárdába kerüljön a felhasználó.
 - **Szerepkör** – milyen jogosultságot kapjon (pl. ATTENDEE).
-
-## Használati tippek
-
-- Ezt a komponenst tipikusan "belépő kódok" vagy "titkos kódok" kezelésére használják, amikkel a felhasználók aktiválhatják a profiljukat a rendszerben.
-- A **Csoportba áthelyezés** funkcióval automatizálható a résztvevők szétosztása a különböző csapatokba/tankörökbe a kódjuk alapján.
 """
 )

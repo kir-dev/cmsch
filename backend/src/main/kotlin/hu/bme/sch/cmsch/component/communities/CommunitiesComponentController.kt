@@ -57,10 +57,5 @@ Két fő entitást kezelhetsz:
 - **Leírás** – részletes bemutatkozó szöveg Markdown-formátumban.
 - **Logó / Kép** – a kör vizuális megjelenése.
 - **Kulcsszavak** – a Tinder funkcióhoz és kereséshez használt címkék.
-
-## Használati tippek
-
-- A **Tinder** funkció remek módja annak, hogy az újoncok (pl. gólyák) megtalálják a számukra érdekes köröket a kulcsszavak alapján.
-- A **Kezdőlapra mehet** opcióval (ha elérhető a körnél) kiemelheted a közösséget a nyitóoldalon.
 """
 )

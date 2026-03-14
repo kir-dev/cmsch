@@ -29,26 +29,4 @@ class ErrorLogComponentController(
     menuService = menuService,
     auditLogService = auditLogService,
     storageService = storageService,
-    documentationMarkdown = """
-A **Kliens-hibaüzenetek** (Error Log) komponens a felhasználók böngészőjében vagy alkalmazásában fellépő technikai hibák automatikus naplózására szolgál.
-
-## Beállítások
-
-A **Komponens beállításai** menüpontban konfigurálhatod a hibanaplózást:
-
-- **Jogosultságok** – mely szerepkörök esetén küldjön a kliens hibaüzeneteket a szervernek.
-- **Kliens hibajelentések fogadása** – a hibanaplózás főkapcsolója.
-
-## Hibák kezelése
-
-A **Kliens-hibaüzenetek** menüpont alatt:
-
-- **Hibalista megtekintése** – láthatod az összes beérkezett hibajelentést, a hiba típusával, idejével és a felhasználó adataival.
-- **Részletek** – megtekinthető a hiba pontos helye és a stack trace (ha elérhető).
-
-## Használati tippek
-
-- Ez a komponens elsősorban a fejlesztők és az üzemeltetők számára hasznos a hibák azonosításához.
-- Ha túl sok hiba érkezik, átmenetileg kikapcsolható a fogadás, amíg a javítás el nem készül.
-"""
 )

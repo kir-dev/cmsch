@@ -53,11 +53,5 @@ A komponens számos entitást foglal magában:
 3. **Szervezők (Organizers)** – a konferencia lebonyolításáért felelős személyek.
 4. **Előadások (Presentations)** – a programpontok részletei (időpont, helyszín, téma).
 5. **Előadók (Presenters)** – a szakmai előadók bemutatása.
-
-## Használati tippek
-
-- A **Promó videó** mezőbe beágyazható (embed) URL-t írj (pl. `https://www.youtube.com/embed/...`).
-- A **Kiemelt előadás választója** segítségével (a prezentáció URL-je vagy azonosítója alapján) választhatod ki, melyik előadás kerüljön a figyelem középpontjába.
-- Használd a **Cooltix** integrációt a jegyértékesítés egyszerűsítéséhez.
 """
 )

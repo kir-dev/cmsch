@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
     setIsLoading(true)
     try {
       const response = await axios.post(`${API_BASE_URL}${ApiPaths.RESET_PASSWORD}`, { token, newPassword: password })
-      if (response.data.status === 'ok') {
+      if (response.data.status === 'OK') {
         toast({ title: 'Sikeres jelszó visszaállítás', description: 'Most már bejelentkezhetsz az új jelszavaddal' })
         setIsDone(true)
       } else {

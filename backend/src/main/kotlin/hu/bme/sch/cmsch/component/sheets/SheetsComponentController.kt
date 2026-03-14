@@ -29,17 +29,4 @@ class SheetsComponentController(
     menuService = menuService,
     auditLogService = auditLogService,
     storageService = storageService,
-    documentationMarkdown = """
-A **Sheets (beta)** komponens lehetővé teszi adatok szinkronizálását Google Sheets-táblázatokkal.
-
-## Beállítások
-
-A **Komponens beállításai** menüpontban konfigurálhatod a kapcsolatot.
-
-*Jelenleg a komponens fejlesztés alatt áll (beta), így a funkciók korlátozottak lehetnek.*
-
-## Funkciók
-
-- **Adatszinkronizáció** – Adatok importálása vagy exportálása Google Sheets-ből.
-"""
 )

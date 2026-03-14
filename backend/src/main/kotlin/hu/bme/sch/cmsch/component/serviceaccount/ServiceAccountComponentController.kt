@@ -29,31 +29,4 @@ class ServiceAccountComponentController(
     menuService = menuService,
     auditLogService = auditLogService,
     storageService = storageService,
-    documentationMarkdown = """
-A **Service Account** komponens külső rendszerek számára biztosít programozott hozzáférést (API-kulcsok segítségével) a CMSCH adataihoz.
-
-## Beállítások
-
-A komponensnek nincsenek bonyolult globális beállításai:
-
-- **Jogosultságok** – mely szerepkörökkel kezelhetőek a service account kulcsok.
-
-## Kulcsok kezelése
-
-A **Service Account** menüpont alatt:
-
-- **Új kulcs létrehozása** – API-kulcs generálása külső alkalmazások számára.
-- **Szerkesztés / Törlés** – kulcsok kezelése és visszavonása.
-
-## Kulcs létrehozása / szerkesztése
-
-- **Név** – a kulcs megnevezése (pl. "Mobil App" vagy "Statisztika modul").
-- **Kulcs** – az egyedi azonosító, amit a külső rendszernek meg kell adnia.
-- **Jogosultságok** – meghatározható, hogy az adott kulccsal milyen adatok érhetőek el.
-
-## Használati tippek
-
-- Soha ne add ki a kulcsokat illetékteleneknek, mert azzal teljes hozzáférést kaphatnak a konfigurált adatokhoz.
-- Minden külső rendszerhez külön kulcsot használj, hogy szükség esetén egyenként is vissza tudd vonni azokat.
-"""
 )

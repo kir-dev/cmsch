@@ -53,10 +53,5 @@ A **Galéria** menüpont alatt töltheted fel a képeket:
 - **Kép** – a fájl feltöltése.
 - **Látható** – ha be van kapcsolva, megjelenik a galériában.
 - **Kezdőlapra mehet** – ha be van kapcsolva, a kép megjelenhet a kezdőlapi carouselben is (ha a kezdőlap komponensnél ez engedélyezve van).
-
-## Használati tippek
-
-- Érdemes jó minőségű, de optimalizált méretű képeket feltölteni a gyors betöltés érdekében.
-- A **Kezdőlapra mehet** opcióval könnyen kiemelheted a rendezvény legjobb pillanatait a nyitóoldalon.
 """
 )

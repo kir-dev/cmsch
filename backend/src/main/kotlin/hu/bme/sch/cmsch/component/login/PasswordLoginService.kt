@@ -83,7 +83,6 @@ class PasswordLoginService(
     private val log = LoggerFactory.getLogger(javaClass)
     private val captchaClient = webClientBuilder.baseUrl("https://www.google.com/recaptcha/api").build()
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun login(request: LoginRequest, ip: String): LoginResponse {
         if (!loginComponent.passwordEnabled) {
             return LoginResponse(LoginStatus.DISABLED, message = "A jelszavas bejelentkezés le van tiltva")
@@ -248,7 +247,7 @@ class PasswordLoginService(
         }
         val values = mapOf(
             "name" to fullName,
-            "link" to "${loginComponent.externalUrl}/api/confirm-email?token=$token"
+            "link" to "${appComponent.adminSiteUrl}api/confirm-email?token=$token"
         )
         service.sendTemplatedEmail(null, template ?: getDefaultEmailConfirmationTemplate(), values, listOf(email))
     }
@@ -262,7 +261,7 @@ class PasswordLoginService(
         }
         val values = mapOf(
             "name" to user.fullName,
-            "link" to "${loginComponent.externalUrl}/reset-password?token=$token"
+            "link" to "${appComponent.siteUrl}reset-password?token=$token"
         )
         service.sendTemplatedEmail(null, template ?: getDefaultPasswordResetTemplate(), values, listOf(user.email))
     }

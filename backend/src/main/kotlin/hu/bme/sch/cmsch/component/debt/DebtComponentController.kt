@@ -54,10 +54,5 @@ Két fő részből áll a rendszer:
 - **Ár** – a termék egységára.
 - **Típus** – kategória (opcionális).
 - **Látható** – elérhető-e a termék az eladáshoz.
-
-## Használati tippek
-
-- Ez a komponens kiválóan alkalmas "fogyasztási napló" vezetésére, ahol a résztvevők utólag, egyben rendezhetik a tartozásukat.
-- A **Fizetve** kapcsolóval követheted, hogy ki rendezte már a számláját.
 """
 )

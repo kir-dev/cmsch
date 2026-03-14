@@ -135,7 +135,6 @@ export const UsernamePasswordLogin = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
-          captchaToken={captchaToken}
           setCaptchaToken={setCaptchaToken}
           recaptchaRef={recaptchaRef}
           onSubmit={handleRegister}

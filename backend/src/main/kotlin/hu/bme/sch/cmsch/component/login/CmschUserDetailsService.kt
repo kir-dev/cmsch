@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 
 class CmschUserDetails(
     val userEntity: UserEntity,
@@ -43,6 +45,7 @@ class CmschUserDetailsService(
     private val loginComponent: LoginComponent
 ) : UserDetailsService {
 
+    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByEmailIgnoreCase(username)
             .orElseThrow { UsernameNotFoundException("User not found with email: $username") }

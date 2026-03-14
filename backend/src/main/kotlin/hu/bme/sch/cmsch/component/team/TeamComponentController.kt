@@ -52,11 +52,5 @@ Az admin felületen kezelheted az összes csapatot, módosíthatod az adataikat 
 - **Csapat készítése** – névválasztással, leírással és logóval indíthatnak új közösséget.
 - **Csatlakozás** – a felhasználók jelentkezhetnek meglévő csapatokba (ha a csapat nyitott).
 - **Vezetői felület** – a saját csapatukon belül követhetik a verseny állását és a teendőket a vezetők.
-
-## Használati tippek
-
-- A **PRIVILEGED jog a csapatkészítőnek** opcióval automatikusan vezetői jogot kap, aki a csapatot létrehozza.
-- A **Csatlakozás engedélyezve** kapcsolóval lezárhatod a csapatváltást a verseny egy adott pontján.
-- Érdemes beállítani a **Csapatnév szabályt (regex)**, hogy elkerüld a nemkívánatos karaktereket a nevekben.
 """
 )

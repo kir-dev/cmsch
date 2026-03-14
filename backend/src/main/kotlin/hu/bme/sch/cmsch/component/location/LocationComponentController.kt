@@ -47,10 +47,5 @@ A **Komponens beállításai** menüpontban konfigurálhatod a térképet:
 
 - **Valós idejű követés** – a rendszer fogadja a tracker-alkalmazásokból érkező GPS-koordinátákat és megjeleníti azokat egy interaktív térképen.
 - **Csoportosítás** – a különböző színek segítenek gyorsan megkülönböztetni a szervezői egységeket.
-
-## Használati tippek
-
-- Ezt a funkciót leginkább külsős, nagy területen zajló rendezvényeknél érdemes használni, ahol fontos a szervezők koordinációja.
-- A **Láthatóság ideje** opcióval elrejtheted azokat a felhasználókat, akiknek a készüléke régóta nem küldött frissítést (pl. lemerült vagy nincs térerő).
 """
 )

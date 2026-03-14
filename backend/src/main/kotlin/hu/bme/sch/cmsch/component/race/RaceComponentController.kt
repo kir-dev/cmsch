@@ -56,10 +56,5 @@ Három szinten kezelheted az adatokat:
 - **Csapat** – a résztvevő csapata.
 - **Idő / Pont** – a mért eredmény.
 - **Kategória** – melyik méréshez tartozik.
-
-## Használati tippek
-
-- A **Növekvő sorrend** opciót használd időmérésnél (ahol a kisebb időeredmény a jobb), és kapcsold ki pontversenynél.
-- A **Szabad kategória** kiválóan alkalmas olyan mérésekre, amelyek nem szigorúan a verseny részei, de színesítik a rendezvényt.
 """
 )

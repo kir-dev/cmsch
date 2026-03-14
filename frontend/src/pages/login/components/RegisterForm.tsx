@@ -11,7 +11,6 @@ interface RegisterFormProps {
   setEmail: (val: string) => void
   password: string
   setPassword: (val: string) => void
-  captchaToken: string | null
   setCaptchaToken: (val: string | null) => void
   recaptchaRef: React.RefObject<ReCAPTCHA | null>
   onSubmit: (e: React.FormEvent) => void
@@ -29,7 +28,6 @@ export const RegisterForm = ({
   setEmail,
   password,
   setPassword,
-  captchaToken,
   setCaptchaToken,
   recaptchaRef,
   onSubmit,

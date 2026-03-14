@@ -1,4 +1,4 @@
-import { LoginStatus } from '@/api/hooks/auth/useAuthActions'
+import type { LoginStatus } from '@/api/hooks/auth/useAuthActions'
 import { l } from '@/util/language'
 
 export const getMessageFromStatus = (status: LoginStatus) => {

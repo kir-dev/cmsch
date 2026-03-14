@@ -119,18 +119,12 @@ class LoginComponent(
     var forgotPasswordEnabled by BooleanSettingRef(true, fieldName = "Elfelejtett jelszó",
         description = "Ha ez be van kapcsolva, akkor lehet jelszó-visszaállítást kérni")
 
-    var emailConfirmationTemplate by StringSettingRef("confirm-email",
-        serverSideOnly = true,
-        fieldName = "Megerősítő email sablon",
-        description = "Az EmailComponentben lévő sablon selectorja")
+    var emailConfirmationTemplate by StringSettingRef("", serverSideOnly = true, fieldName = "Megerősítő email sablon",
+        description = "Az EmailComponentben lévő sablon selectorja, a paraméterek 'name' és 'link'")
 
-    var passwordResetTemplate by StringSettingRef("reset-password",
-        serverSideOnly = true,
+    var passwordResetTemplate by StringSettingRef("", serverSideOnly = true,
         fieldName = "Jelszó visszaállító email sablon",
-        description = "Az EmailComponentben lévő sablon selectorja")
-
-    var externalUrl by StringSettingRef("https://cmsch.hu", serverSideOnly = true, fieldName = "Külső URL",
-        description = "A weboldal külső címe, pl. https://cmsch.hu. A linkek generálásához kell.")
+        description = "Az EmailComponentben lévő sablon selectorja, a paraméterek 'name' és 'link'")
 
     var captchaEnabled by BooleanSettingRef(false, fieldName = "Captcha bekapcsolva",
         description = "Regisztrációnál captcha ellenőrzés")
