@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.Date
 
 @Controller
 @RequestMapping("/admin/control/signup-responses")
@@ -132,14 +133,17 @@ class ResponsesController(
         val submissions = responses.map { objReader.readValue<Map<String, Any>>(it.submission) }
             .map { it.values }
             .toList()
-        val submitters = responses.map { listOf(it.submitterGroupId?:"", it.submitterGroupName, it.submitterUserId?:"", it.submitterUserName) }
+        val submissionData = responses.map { listOf(
+            it.submitterGroupId?:"", it.submitterGroupName, it.submitterUserId?:"", it.submitterUserName,
+            Date(it.creationDate).toString(), it.accepted, it.rejected
+        ) }
 
-        val entries = submitters.zip(submissions) { a, b -> a + b }
+        val entries = submissionData.zip(submissions) { a, b -> a + b }
 
         val header = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
             .keys
             .joinToString(",")
-        val headers = "submitterGroupId,submitterGroupName,submitterUserId,submitterUserName,$header"
+        val headers = "submitterGroupId,submitterGroupName,submitterUserId,submitterUserName,creationDate,accepted,rejected,$header"
 
         val result = CsvMapper().writeValueAsString(entries)
         response.setHeader("Content-Disposition", "attachment; filename=\"form-${id}-responses.csv\"")
@@ -155,7 +159,7 @@ class ResponsesController(
         }
 
         val entries = formService.getResponsesById(id)
-            .map { "{submitterGroupId:${it.submitterGroupId},submitterGroupName:${it.submitterGroupName},submitterUserId:${it.submitterUserId},submitterUserName:${it.submitterUserName},submission:${it.submission}}" }
+            .map { "{submitterGroupId:${it.submitterGroupId},submitterGroupName:${it.submitterGroupName},submitterUserId:${it.submitterUserId},submitterUserName:${it.submitterUserName},creationDate:${it.creationDate},submission:${it.submission}}" }
             .joinToString(",") { it }
 
         return "[${entries}]"
