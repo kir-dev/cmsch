@@ -1,13 +1,14 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "4.0.2"
+    id("org.springframework.boot") version "4.0.4"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.owasp.dependencycheck") version "12.2.0"
-    kotlin("jvm") version "2.3.0"
-    kotlin("plugin.spring") version "2.3.0"
-    id("org.sonarqube") version "7.2.2.6593"
+    kotlin("jvm") version "2.3.20"
+    kotlin("plugin.spring") version "2.3.20"
+    id("org.sonarqube") version "7.2.3.7755"
 }
 
 group = "hu.bme.sch"
@@ -41,17 +42,17 @@ repositories {
     mavenCentral()
 }
 
+tasks.named<KotlinCompilationTask<*>>("compileKotlin").configure {
+    compilerOptions.optIn.add("kotlin.uuid.ExperimentalUuidApi")
+}
+
 dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("tools.jackson.dataformat:jackson-dataformat-csv")
     implementation("tools.jackson.module:jackson-module-kotlin")
-    implementation("com.fasterxml.uuid:java-uuid-generator:5.2.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-    implementation("com.google.firebase:firebase-admin:9.7.1") {
-        exclude(module = "google-cloud-firestore")
-        exclude(module = "google-cloud-storage")
-    }
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.43.0")
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.google.zxing:javase:3.5.4")
     implementation("com.itextpdf:itext-core:9.5.0")
@@ -60,7 +61,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
     implementation("io.jsonwebtoken:jjwt-api")
-    implementation(platform("io.micrometer:micrometer-bom:1.16.2"))
+    implementation(platform("io.micrometer:micrometer-bom:1.16.4"))
     runtimeOnly("io.micrometer:micrometer-core")
     runtimeOnly("io.micrometer:micrometer-observation")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -74,7 +75,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -84,7 +85,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webclient")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("software.amazon.awssdk:s3:2.41.19")
+    implementation("software.amazon.awssdk:s3:2.42.18")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

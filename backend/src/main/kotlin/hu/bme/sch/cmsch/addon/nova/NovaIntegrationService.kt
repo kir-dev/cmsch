@@ -192,7 +192,7 @@ class NovaIntegrationService(
     @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setAvatarStatus(email: String, status: Boolean, rejectionMessage: String?) {
-        val user = userRepository.findByEmail(email).orElse(null) ?: return
+        val user = userRepository.findByEmailIgnoreCase(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->
             tasks.findAllByTag(AVATAR_TAG).forEach { task ->
@@ -215,7 +215,7 @@ class NovaIntegrationService(
     @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun setCvStatus(email: String, status: Boolean, rejectionMessage: String?) {
-        val user = userRepository.findByEmail(email).orElse(null) ?: return
+        val user = userRepository.findByEmailIgnoreCase(email).orElse(null) ?: return
 
         taskRepository.ifPresent { tasks ->
             tasks.findAllByTag(CV_TAG).forEach { task ->

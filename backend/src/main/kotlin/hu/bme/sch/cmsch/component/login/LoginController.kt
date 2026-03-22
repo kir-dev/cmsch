@@ -3,7 +3,8 @@ package hu.bme.sch.cmsch.component.login
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.token.SESSION_TOKEN_COLLECTOR_ATTRIBUTE
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
-import hu.bme.sch.cmsch.service.JwtTokenProvider
+import hu.bme.sch.cmsch.model.UserEntity
+import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.util.getUserOrNull
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -14,29 +15,26 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @Controller
 @ConditionalOnBean(LoginComponent::class)
-class AuthschLoginController(
+class LoginController(
     private val applicationComponent: ApplicationComponent,
     private val jwtTokenProvider: JwtTokenProvider,
     private val startupPropertyConfig: StartupPropertyConfig,
+    private val loginComponent: LoginComponent,
+    private val passwordLoginService: PasswordLoginService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-
-    @ResponseBody
-    @GetMapping("/control/logged-out")
-    fun loggedOut(): String {
-        return "Sikeres kijelentkezés!"
-    }
 
     @GetMapping("/control/post-login")
     fun postLogin(request: HttpServletRequest, httpResponse: HttpServletResponse, auth: Authentication?) {
@@ -48,12 +46,12 @@ class AuthschLoginController(
             if (auth != null && auth.isAuthenticated)
                 "/control/open-site"
             else
-                "/control/logged-out?error=not-logged-in"
+                "${applicationComponent.siteUrl}login?error=not-logged-in"
         )
     }
 
     @GetMapping("/control/login")
-    fun loginDefault(request: HttpServletRequest): String {
+    fun loginDefault(): String {
         return "redirect:${applicationComponent.siteUrl}login"
     }
 
@@ -101,6 +99,76 @@ class AuthschLoginController(
         return ResponseEntity.ok().build()
     }
 
+    @ResponseBody
+    @PostMapping("/api/login")
+    fun login(
+        @RequestBody request: LoginRequest,
+        response: HttpServletResponse,
+        servletRequest: HttpServletRequest
+    ): LoginResponse {
+        val loginResponse = passwordLoginService.login(request, servletRequest.remoteAddr)
+        if (loginResponse.status == LoginStatus.OK && loginResponse.token != null) {
+            response.addCookie(createJwtCookie(loginResponse.token))
+            loginResponse.authentication?.let { setSecurityContext(it, servletRequest) }
+        }
+        return loginResponse
+    }
+
+    @ResponseBody
+    @PostMapping("/api/register")
+    fun register(
+        @RequestBody request: RegisterRequest,
+        response: HttpServletResponse,
+        servletRequest: HttpServletRequest
+    ): LoginResponse {
+        val loginResponse = passwordLoginService.register(request, servletRequest.remoteAddr)
+        if (loginResponse.status == LoginStatus.OK && loginResponse.token != null) {
+            response.addCookie(createJwtCookie(loginResponse.token))
+            loginResponse.authentication?.let { setSecurityContext(it, servletRequest) }
+        }
+        return loginResponse
+    }
+
+    @ResponseBody
+    @GetMapping("/api/confirm-email")
+    fun confirmEmail(
+        @RequestParam token: String,
+        response: HttpServletResponse,
+        servletRequest: HttpServletRequest
+    ): ResponseEntity<Void> {
+        val user = passwordLoginService.confirmEmail(token)
+            ?: return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create("${applicationComponent.siteUrl}login?error=invalid-token")).build()
+
+        val jwtToken = jwtTokenProvider.createToken(user)
+        response.addCookie(createJwtCookie(jwtToken))
+        setSecurityContext(createAuthentication(user), servletRequest)
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+            .location(URI.create("${applicationComponent.siteUrl}login?confirmed=true")).build()
+    }
+
+    @ResponseBody
+    @PostMapping("/api/forgot-password")
+    fun forgotPassword(
+        @RequestBody request: ForgotPasswordRequest,
+        servletRequest: HttpServletRequest
+    ): LoginResponse {
+        return passwordLoginService.forgotPassword(request, servletRequest.remoteAddr)
+    }
+
+    @ResponseBody
+    @GetMapping("/api/auth-status")
+    fun authStatus(@RequestParam email: String): Map<String, Boolean> {
+        return mapOf("confirmed" to passwordLoginService.isEmailConfirmed(email))
+    }
+
+    @ResponseBody
+    @PostMapping("/api/reset-password")
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): LoginResponse {
+        return passwordLoginService.resetPassword(request)
+    }
+
     private fun getDomainFromUrl(url: String): String {
         return URI(url).host
     }
@@ -114,5 +182,22 @@ class AuthschLoginController(
             domain = getDomainFromUrl(applicationComponent.siteUrl)
             setAttribute(Constants.COOKIE_SAME_SITE_ATTR, SameSiteCookies.LAX.value)
         }
+    }
+
+    private fun createAuthentication(user: UserEntity): Authentication {
+        return UsernamePasswordAuthenticationToken(
+            CmschUserDetails(user, loginComponent),
+            null,
+            listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+        )
+    }
+
+    private fun setSecurityContext(auth: Authentication, request: HttpServletRequest) {
+        val securityContext = SecurityContextHolder.getContext()
+        securityContext.authentication = auth
+        request.getSession(true).setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            securityContext
+        )
     }
 }

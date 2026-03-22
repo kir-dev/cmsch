@@ -1,0 +1,42 @@
+package hu.bme.sch.cmsch.service
+
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Service
+import java.util.concurrent.ConcurrentHashMap
+
+@Service
+class RateLimiterService {
+
+    private val loginAttempts = ConcurrentHashMap<String, MutableList<Long>>()
+
+    fun isAllowed(ip: String, limitPerMinute: Long): Boolean {
+        if (limitPerMinute <= 0) return true
+
+        val now = System.currentTimeMillis()
+        val oneMinuteAgo = now - 60000
+
+        val attempts = loginAttempts.computeIfAbsent(ip) { mutableListOf() }
+
+        synchronized(attempts) {
+            attempts.removeIf { it < oneMinuteAgo }
+            if (attempts.size < limitPerMinute) {
+                attempts.add(now)
+                return true
+            }
+            return false
+        }
+    }
+
+    @Scheduled(fixedRate = 300000)
+    fun cleanupStaleEntries() {
+        val now = System.currentTimeMillis()
+        val oneMinuteAgo = now - 60000
+        loginAttempts.entries.removeIf { (_, attempts) ->
+            synchronized(attempts) {
+                attempts.removeIf { it < oneMinuteAgo }
+                attempts.isEmpty()
+            }
+        }
+    }
+
+}
