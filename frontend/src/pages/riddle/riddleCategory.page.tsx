@@ -1,12 +1,12 @@
-import { Button, Heading, Stack, Text, VStack } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useRiddleListQuery } from '@/api/hooks/riddle/useRiddleListQuery.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb.tsx'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Button } from '@/components/ui/button'
+import { AbsolutePaths } from '@/util/paths'
 import { Link, useNavigate, useParams } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery.ts'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb.tsx'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
 import { RiddleListItem } from './components/RiddleListItem.tsx'
 
 const RiddleCategoryPage = () => {
@@ -33,23 +33,21 @@ const RiddleCategoryPage = () => {
   return (
     <CmschPage title={component?.title}>
       <CustomBreadcrumb items={breadcrumbItems} />
-      <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
-        <Heading as="h1" variant="main-title">
-          Riddleök | {category.title}
-        </Heading>
-        <Button colorScheme="brand" as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
-          Megoldott riddleök
+      <div className="flex flex-col justify-between md:flex-row md:items-end">
+        <h1 className="my-5 text-4xl font-bold tracking-tight">Riddleök | {category.title}</h1>
+        <Button asChild>
+          <Link to={AbsolutePaths.RIDDLE_HISTORY}>Megoldott riddleök</Link>
         </Button>
-      </Stack>
-      <VStack spacing={4} mt={5} align="stretch">
+      </div>
+      <div className="mt-5 flex flex-col gap-4">
         {(riddles ?? []).length > 0 ? (
           riddles.map((riddle) => (
             <RiddleListItem riddle={riddle} key={riddle.id} onClick={() => navigate(`${AbsolutePaths.RIDDLE}/solve/${riddle.id}`)} />
           ))
         ) : (
-          <Text>Nincs egyetlen megoldásra váró riddle feladat sem. Szép munka!</Text>
+          <p>Nincs egyetlen megoldásra váró riddle feladat sem. Szép munka!</p>
         )}
-      </VStack>
+      </div>
     </CmschPage>
   )
 }

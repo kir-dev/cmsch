@@ -1,7 +1,7 @@
+import { ApiPaths } from '@/util/paths.ts'
+import { SendAnswerResponseStatus } from '@/util/views/tinder.ts'
 import axios from 'axios'
 import { useState } from 'react'
-import { ApiPaths } from '../../../util/paths.ts'
-import { SendAnswerResponseStatus } from '../../../util/views/tinder.ts'
 
 export const useTinderAnswerSend = () => {
   const [data, setData] = useState<SendAnswerResponseStatus>()

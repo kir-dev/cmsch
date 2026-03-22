@@ -1,4 +1,5 @@
-import { Box, Flex, Select, Stack } from '@chakra-ui/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CodeLanguage } from '@/util/views/task.view'
 import { type Grammar, highlight, languages } from 'prismjs'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
@@ -12,7 +13,6 @@ import 'prismjs/components/prism-typescript'
 import 'prismjs/themes/prism-okaidia.css'
 import { useState } from 'react'
 import Editor from 'react-simple-code-editor'
-import { CodeLanguage } from '../../../util/views/task.view'
 
 interface CodeEditorProps {
   code: string
@@ -35,22 +35,27 @@ const LANGUAGE_GRAMMAR_MAP = new Map<string, Grammar>([
 const CodeEditor = ({ code, setCode, readonly }: CodeEditorProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(CodeLanguage.C)
   return (
-    <Stack mt={5}>
-      <Flex justify="flex-end">
-        <Select onChange={(e) => setSelectedLanguage(e.target.value)} w="10rem" value={selectedLanguage}>
-          <option value={CodeLanguage.C}>C</option>
-          <option value={CodeLanguage.CPP}>C++</option>
-          <option value={CodeLanguage.CSHARP}>C#</option>
-          <option value={CodeLanguage.JAVA}>JAVA</option>
-          <option value={CodeLanguage.JAVASCRIPT}>JavaScript</option>
-          <option value={CodeLanguage.TYPESCRIPT}>TypeScript</option>
-          <option value={CodeLanguage.SQL}>SQL</option>
-          <option value={CodeLanguage.KOTLIN}>Kotlin</option>
-          <option value={CodeLanguage.PYTHON}>Python</option>
+    <div className="flex flex-col mt-5">
+      <div className="flex justify-end">
+        <Select onValueChange={setSelectedLanguage} value={selectedLanguage}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={CodeLanguage.C}>C</SelectItem>
+            <SelectItem value={CodeLanguage.CPP}>C++</SelectItem>
+            <SelectItem value={CodeLanguage.CSHARP}>C#</SelectItem>
+            <SelectItem value={CodeLanguage.JAVA}>JAVA</SelectItem>
+            <SelectItem value={CodeLanguage.JAVASCRIPT}>JavaScript</SelectItem>
+            <SelectItem value={CodeLanguage.TYPESCRIPT}>TypeScript</SelectItem>
+            <SelectItem value={CodeLanguage.SQL}>SQL</SelectItem>
+            <SelectItem value={CodeLanguage.KOTLIN}>Kotlin</SelectItem>
+            <SelectItem value={CodeLanguage.PYTHON}>Python</SelectItem>
+          </SelectContent>
         </Select>
-      </Flex>
+      </div>
 
-      <Box my={5}>
+      <div className="my-5">
         <Editor
           value={code}
           onValueChange={(code) => setCode(code)}
@@ -62,11 +67,11 @@ const CodeEditor = ({ code, setCode, readonly }: CodeEditorProps) => {
             fontSize: 14,
             borderRadius: '0.375rem',
             backgroundColor: '#272822',
-            color: 'white'
+            color: 'var(--foreground)'
           }}
         />
-      </Box>
-    </Stack>
+      </div>
+    </div>
   )
 }
 

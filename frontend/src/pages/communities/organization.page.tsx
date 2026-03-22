@@ -1,11 +1,10 @@
-import { Image } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useOrganization } from '@/api/hooks/community/useOrganization'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
+import { AbsolutePaths } from '@/util/paths'
 import { useParams } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useOrganization } from '../../api/hooks/community/useOrganization'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
-import { AbsolutePaths } from '../../util/paths'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
@@ -28,14 +27,14 @@ export default function OrganizationPage() {
 
   return (
     <CmschPage title={data.name}>
-      <CustomBreadcrumb items={breadcrumbItems} mt={5} />
+      <CustomBreadcrumb items={breadcrumbItems} className="mt-5" />
       <DataSheet organization={data} />
 
       {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />
       ))}
       {data.imageIds?.map((url) => (
-        <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
+        <img key={url} className="mt-10 w-full h-auto rounded-lg" src={url} alt="Körkép" />
       ))}
     </CmschPage>
   )

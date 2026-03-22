@@ -1,7 +1,7 @@
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
 import { useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
 
 const IndexPage = () => {
   const location = useLocation()

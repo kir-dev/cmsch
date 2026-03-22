@@ -1,7 +1,7 @@
-import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useColorModeValue } from '@/util/core-functions.util'
 import { ResponsiveBar } from '@nivo/bar'
 import { useMemo } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
 
 interface LevelDataDisplayProps {
   teams: Record<string, number>
@@ -18,14 +18,14 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
   const color = useColorModeValue(components?.style?.lightTextColor, components?.style?.darkTextColor)
 
   return (
-    <Box w="100%" h={300}>
+    <div className="w-full h-[300px]">
       <ResponsiveBar
         data={data}
         keys={['value']}
         indexBy="team"
         theme={{ axis: { ticks: { text: { fill: color, fontSize: 14 } } } }}
-        labelTextColor={{ from: 'color', modifiers: [['darker', 5]] }}
-        colors={[components?.style?.lightBrandingColor ?? '']}
+        labelTextColor={'var(--primary-foreground)'}
+        colors={['var(--primary)']}
         borderRadius={8}
         padding={0.3}
         margin={{ bottom: 45, left: 45, right: 15, top: 15 }}
@@ -49,14 +49,14 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
                   textAnchor={textAnchor as any}
                   transform={`translate(${textX},${textY})`}
                 >
-                  <chakra.tspan>{value.substring(0, 3)}</chakra.tspan>
-                  <chakra.tspan display={{ base: 'none', md: 'block' }}>{value.substring(3)}</chakra.tspan>
+                  <tspan>{value.substring(0, 3)}</tspan>
+                  <tspan className="hidden md:inline">{value.substring(3)}</tspan>
                 </text>
               </g>
             )
           }
         }}
       />
-    </Box>
+    </div>
   )
 }

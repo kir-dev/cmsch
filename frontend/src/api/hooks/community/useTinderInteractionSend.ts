@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths.ts'
+import type { TinderInteractionDto } from '@/util/views/tinder.ts'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths.ts'
-import type { TinderInteractionDto } from '../../../util/views/tinder.ts'
-import { QueryKeys } from '../queryKeys.ts'
 
 interface TinderInteractionResponse {
   success: boolean

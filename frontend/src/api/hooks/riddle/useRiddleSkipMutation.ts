@@ -1,10 +1,10 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { NEW_RIDDLE_ENDPOINTS } from '@/util/configs/environment.config'
+import { joinPath } from '@/util/core-functions.util'
+import { ApiPaths } from '@/util/paths'
+import type { RiddleSubmissionResult } from '@/util/views/riddle.view'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { NEW_RIDDLE_ENDPOINTS } from '../../../util/configs/environment.config'
-import { joinPath } from '../../../util/core-functions.util'
-import { ApiPaths } from '../../../util/paths'
-import type { RiddleSubmissionResult } from '../../../util/views/riddle.view'
-import { QueryKeys } from '../queryKeys'
 
 export const useRiddleSkipMutation = () => {
   return useMutation<RiddleSubmissionResult, Error, string>({

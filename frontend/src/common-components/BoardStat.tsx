@@ -1,32 +1,30 @@
-import { Stat, StatHelpText, StatLabel, StatNumber, type StatProps } from '@chakra-ui/react'
+import { cn } from '@/lib/utils'
 import { useNavigate } from 'react-router'
-import { useOpaqueBackground } from '../util/core-functions.util'
 
-interface BoardStatProps extends StatProps {
+interface BoardStatProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string
   value: string | number
   subValue?: string | number
   navigateTo?: string
 }
 
-export const BoardStat = ({ label, value, subValue, navigateTo, bg, ...props }: BoardStatProps) => {
-  const background = useOpaqueBackground(1)
+export const BoardStat = ({ label, value, subValue, navigateTo, className, ...props }: BoardStatProps) => {
   const navigate = useNavigate()
   return (
-    <Stat
-      borderRadius="lg"
-      px={5}
-      py={2}
-      bg={bg ?? background}
-      cursor={navigateTo ? 'pointer' : undefined}
+    <div
+      className={cn(
+        'rounded-lg bg-secondary text-secondary-foreground p-5 transition-colors border',
+        navigateTo && 'cursor-pointer hover:bg-secondary/80',
+        className
+      )}
       onClick={() => {
         if (navigateTo) navigate(navigateTo)
       }}
       {...props}
     >
-      <StatLabel>{label}</StatLabel>
-      <StatNumber>{value}</StatNumber>
-      {subValue && <StatHelpText>{subValue}</StatHelpText>}
-    </Stat>
+      <div className="text-sm font-medium text-muted-foreground">{label}</div>
+      <div className="text-2xl font-bold">{value}</div>
+      {subValue && <div className="text-sm text-muted-foreground">{subValue}</div>}
+    </div>
   )
 }

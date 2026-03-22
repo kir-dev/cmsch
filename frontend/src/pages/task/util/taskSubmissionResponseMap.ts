@@ -1,4 +1,4 @@
-import { TaskSubmissionStatus } from '../../../util/views/task.view'
+import { TaskSubmissionStatus } from '@/util/views/task.view'
 
 export const taskSubmissionResponseMap = new Map<TaskSubmissionStatus, string>([
   [TaskSubmissionStatus.OK, 'Elküldve!'],

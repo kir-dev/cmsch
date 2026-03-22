@@ -1,8 +1,7 @@
-import { Box, Heading, VStack } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import type { EventListView } from '@/util/views/event.view'
 import { isSameDay } from 'date-fns'
 import { useMemo } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
-import type { EventListView } from '../../../util/views/event.view'
 import EventListItem from './EventListItem'
 
 interface EventListProps {
@@ -16,14 +15,14 @@ const EventList = ({ eventList, groupByDay }: EventListProps) => {
   if (!groupByDay) return <EventListGroup eventList={eventList} useLink={config?.components?.event?.enableDetailedView} />
 
   return (
-    <VStack>
+    <div className="flex flex-col gap-5">
       {eventGroups.map((group) => (
-        <Box key={group.date.getTime()} w="full">
-          <Heading mb={2}>{group.date.toLocaleDateString('hu-HU', { month: '2-digit', day: '2-digit' })}</Heading>
+        <div key={group.date.getTime()} className="w-full">
+          <h2 className="mb-2 text-xl font-bold">{group.date.toLocaleDateString('hu-HU', { month: '2-digit', day: '2-digit' })}</h2>
           <EventListGroup eventList={group.events} useLink={config?.components?.event?.enableDetailedView} />
-        </Box>
+        </div>
       ))}
-    </VStack>
+    </div>
   )
 }
 
@@ -34,11 +33,11 @@ interface EventListGroupProps {
 
 function EventListGroup({ eventList, useLink }: EventListGroupProps) {
   return (
-    <VStack spacing={3}>
+    <div className="flex flex-col gap-3">
       {eventList.map((e: EventListView) => (
         <EventListItem event={e} key={e.url + e.timestampStart} useLink={useLink} />
       ))}
-    </VStack>
+    </div>
   )
 }
 

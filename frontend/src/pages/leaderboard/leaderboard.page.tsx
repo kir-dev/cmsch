@@ -1,13 +1,12 @@
-import { Box, Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useLeaderBoardQuery } from '@/api/hooks/leaderboard/useLeaderBoardQuery'
+import { BoardStat } from '@/common-components/BoardStat'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown.tsx'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useMatch, useNavigate } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useLeaderBoardQuery } from '../../api/hooks/leaderboard/useLeaderBoardQuery'
-import { BoardStat } from '../../common-components/BoardStat'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown.tsx'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useBrandColor } from '../../util/core-functions.util.ts'
 import LeaderboardByCategoryPage from './leaderboardByCategory.page.tsx'
 import LeaderboardByUserOrGroupPage from './leaderboardByUserOrGroup.page.tsx'
 
@@ -16,7 +15,6 @@ const LeaderboardPage = () => {
   const { data, isError, isLoading } = useLeaderBoardQuery(component?.leaderboardDetailsEnabled ? 'detailed' : 'short')
   const byCategory = useMatch('/leaderboard/category')
   const navigate = useNavigate()
-  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -24,14 +22,14 @@ const LeaderboardPage = () => {
 
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={title} />
 
-  const tabIndex = byCategory ? 1 : 0
+  const tabValue = byCategory ? 'category' : 'main'
 
-  const onTabSelected = (i: number) => {
-    switch (i) {
-      case 0:
+  const onTabSelected = (val: string) => {
+    switch (val) {
+      case 'main':
         navigate('/leaderboard')
         break
-      case 1:
+      case 'category':
         navigate('/leaderboard/category')
         break
     }
@@ -39,33 +37,36 @@ const LeaderboardPage = () => {
 
   return (
     <CmschPage disablePadding={true} title={title}>
-      <Heading as="h1" variant="main-title" textAlign="center" m="2rem">
-        {title}
-      </Heading>
-      {component.topMessage ? (
-        <Box textAlign="center">
+      <h1 className="m-8 text-center text-4xl font-bold tracking-tight">{title}</h1>
+      {component.topMessage && (
+        <div className="text-center">
           <Markdown text={component.topMessage} />
-        </Box>
-      ) : (
-        <></>
+        </div>
       )}
-      <HStack my={5}>
-        {data?.userScore !== undefined && <BoardStat label="Saját pont" value={data.userScore} />}
-        {data?.groupScore !== undefined && <BoardStat label={`${component.myGroupName} pontjai`} value={data.groupScore} />}
-      </HStack>
-      <Tabs isLazy isFitted colorScheme={brandColor} variant="enclosed" index={tabIndex} onChange={onTabSelected}>
-        <TabList>
-          <Tab>{component.groupBoardName}</Tab>
-          {component.leaderboardDetailsByCategoryEnabled && <Tab>{component.leaderBoardCategoryName}</Tab>}
-        </TabList>
-        <TabPanels>
-          <TabPanel px={0}>
-            <LeaderboardByUserOrGroupPage />
-          </TabPanel>
-          <TabPanel px={0}>
-            <LeaderboardByCategoryPage />
-          </TabPanel>
-        </TabPanels>
+      <div className="my-5 flex gap-4">
+        {data?.userScore !== undefined && <BoardStat className="flex-1" label="Saját pont" value={data.userScore} />}
+        {data?.groupScore !== undefined && (
+          <BoardStat className="flex-1" label={`${component.myGroupName} pontjai`} value={data.groupScore} />
+        )}
+      </div>
+
+      <Tabs defaultValue={tabValue} onValueChange={onTabSelected} className="w-full">
+        <TabsList className="flex w-full">
+          <TabsTrigger value="main" className="flex-1">
+            {component.groupBoardName}
+          </TabsTrigger>
+          {component.leaderboardDetailsByCategoryEnabled && (
+            <TabsTrigger value="category" className="flex-1">
+              {component.leaderBoardCategoryName}
+            </TabsTrigger>
+          )}
+        </TabsList>
+        <TabsContent value="main" className="px-0">
+          <LeaderboardByUserOrGroupPage />
+        </TabsContent>
+        <TabsContent value="category" className="px-0">
+          <LeaderboardByCategoryPage />
+        </TabsContent>
       </Tabs>
     </CmschPage>
   )

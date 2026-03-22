@@ -1,7 +1,8 @@
-import { Box, Collapse, Stack, useDisclosure } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { isCurrentEvent, isUpcomingEvent } from '../../../util/core-functions.util'
-import type { EventListView } from '../../../util/views/event.view'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { useTime } from '@/hooks/useDate.ts'
+import { isCurrentEvent, isUpcomingEvent } from '@/util/core-functions.util'
+import type { EventListView } from '@/util/views/event.view'
+import { useEffect, useState } from 'react'
 import { CardListItem } from './CardListItem'
 import EventList from './EventList'
 
@@ -12,30 +13,33 @@ type EventFilterOptionProps = {
 }
 
 export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOptionProps) => {
-  const { isOpen, onToggle, onOpen, onClose } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+  const now = useTime(10000)
   useEffect(() => {
-    if (forceOpen) {
-      onOpen()
-    } else {
-      onClose()
-    }
-  }, [forceOpen, onClose, onOpen])
-  const hasCurrentEvent = events.some(isCurrentEvent)
-  const hasUpcomingEvent = events.some(isUpcomingEvent)
+    setIsOpen(forceOpen)
+  }, [forceOpen])
+
+  const hasCurrentEvent = events.some((event) => isCurrentEvent(now / 1000, event))
+  const hasUpcomingEvent = events.some((event) => isUpcomingEvent(now / 1000, event))
+
   return (
-    <Stack spacing={0} my={0}>
-      <CardListItem
-        showPulsingDot={hasCurrentEvent || hasUpcomingEvent}
-        pulsingDotColor={hasUpcomingEvent ? 'yellow.400' : undefined}
-        title={name}
-        open={isOpen}
-        toggle={onToggle}
-      />
-      <Collapse in={isOpen}>
-        <Box borderWidth="0px 2px 2px 2px" borderRadius="0 0 5px 5px" borderColor="whiteAlpha.200" padding={2}>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <div className="my-0 flex flex-col gap-0">
+          <CardListItem
+            showPulsingDot={hasCurrentEvent || hasUpcomingEvent}
+            pulsingDotColor={hasUpcomingEvent ? 'text-warning' : 'text-success'}
+            title={name}
+            open={isOpen}
+            toggle={() => setIsOpen(!isOpen)}
+          />
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="rounded-b-[5px] border-x border-b border-border p-2">
           <EventList eventList={events} />
-        </Box>
-      </Collapse>
-    </Stack>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }

@@ -1,98 +1,62 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Button, ButtonGroup, Flex, IconButton, Image } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
+import { Carousel, type CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { cn } from '@/lib/utils.ts'
+import { useCallback, useState } from 'react'
 
 type ImageCarouselProps = {
   images: string[]
 }
 
 export const ImageCarousel = ({ images }: ImageCarouselProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+  const [count, setCount] = useState(0)
 
-  const previousImage = () => {
-    const previousIndex = currentImageIndex - 1
-    setCurrentImageIndex(previousIndex < 0 ? images.length - 1 : previousIndex)
-  }
-  const nextImage = () => {
-    const nextIndex = currentImageIndex + 1
-    setCurrentImageIndex(nextIndex > images.length - 1 ? 0 : nextIndex)
-  }
+  const onSetApi = useCallback((carouselApi: CarouselApi) => {
+    setApi(carouselApi)
+    if (!carouselApi) return
+
+    setCount(carouselApi.scrollSnapList().length)
+    setCurrent(carouselApi.selectedScrollSnap())
+
+    carouselApi.on('select', () => {
+      setCurrent(carouselApi.selectedScrollSnap())
+    })
+  }, [])
+
   if (images.length === 0) return null
 
   return (
-    <Flex flexDirection="column" marginTop={10} overflowX="clip">
-      <Flex
-        width={`${images.length * 100}%`}
-        flexDirection="row"
-        transform={`translateX(-${(currentImageIndex / images.length) * 100}%)`}
-        transition="transform .5s"
-      >
-        {images.map((image) => (
-          <Box flex={1} key={image} alignItems="center" display="flex">
-            <Image src={image} w="100%" maxH="50rem" objectFit="contain" objectPosition="center" />
-          </Box>
-        ))}
-      </Flex>
-      <Flex paddingTop={5} alignItems="center" justify="space-between">
-        <DirectionButton direction={Directions.LEFT} onClick={previousImage} />
-        <ButtonGroup display="flex" alignItems="center">
-          {images.map((_image, index) => (
-            <CurrentImageIndicatorDot key={index} index={index} currentIndex={currentImageIndex} onClick={setCurrentImageIndex} />
+    <div className="flex flex-col mt-10">
+      <Carousel setApi={onSetApi} opts={{ loop: true }} className="w-full">
+        <CarouselContent>
+          {images.map((image) => (
+            <CarouselItem key={image}>
+              <div className="flex items-center justify-center">
+                <img src={image} className="w-full max-h-200 object-contain object-center" alt="" />
+              </div>
+            </CarouselItem>
           ))}
-        </ButtonGroup>
-        <DirectionButton direction={Directions.RIGHT} onClick={nextImage} />
-      </Flex>
-    </Flex>
+        </CarouselContent>
+        <CarouselPrevious className="left-2" />
+        <CarouselNext className="right-2" />
+      </Carousel>
+      {count > 1 && (
+        <div className="flex items-center justify-center space-x-2 pt-4">
+          {Array.from({ length: count }).map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              aria-label={`Ugrás a(z) ${index + 1}. képre`}
+              aria-current={index === current}
+              className={cn(
+                'h-[10px] w-[10px] p-0 border-2 border-solid rounded-full cursor-pointer transition-all hover:border-[5px] border-primary',
+                index === current ? 'bg-primary' : 'bg-transparent'
+              )}
+              onClick={() => api?.scrollTo(index)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
-
-type CurrentImageIndicatorDotProps = {
-  index: number
-  currentIndex: number
-  onClick: (index: number) => void
-}
-
-const CurrentImageIndicatorDot = ({ index, currentIndex, onClick }: CurrentImageIndicatorDotProps) => {
-  const brandColor = useBrandColor(500, 500)
-  return (
-    <Button
-      height="10px"
-      width="10px"
-      padding={0}
-      borderWidth={2}
-      borderStyle="solid"
-      borderColor={brandColor}
-      borderRadius="full"
-      cursor="pointer"
-      transition="border-width .1s"
-      _hover={{ borderWidth: 10 }}
-      backgroundColor={index === currentIndex ? brandColor : 'transparent'}
-      onClick={() => {
-        onClick(index)
-      }}
-    />
-  )
-}
-
-type DirectionButtonProps = {
-  direction: Directions
-  onClick: () => void
-}
-
-const Directions = {
-  LEFT: 'left',
-  RIGHT: 'right'
-}
-type Directions = (typeof Directions)[keyof typeof Directions]
-
-const DirectionButton = ({ direction, onClick }: DirectionButtonProps) => (
-  <IconButton
-    icon={direction === Directions.LEFT ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-    colorScheme={useBrandColor()}
-    onClick={onClick}
-    padding={0}
-    variant="ghost"
-    aria-label={direction === Directions.LEFT ? 'Előző kép' : 'következő kép'}
-  />
-)

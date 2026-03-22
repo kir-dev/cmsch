@@ -1,16 +1,17 @@
-import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { useTinderCommunity } from '@/api/hooks/community/useTinderCommunity.ts'
+import { useTinderInteractionReset } from '@/api/hooks/community/useTinderInteractionReset.ts'
+import { useTinderInteractionSend } from '@/api/hooks/community/useTinderInteractionSend.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
+import { ConfirmDialogButton } from '@/common-components/ConfirmDialogButton.tsx'
+import { CmschPage } from '@/common-components/layout/CmschPage.tsx'
+import { PageStatus } from '@/common-components/PageStatus.tsx'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast.ts'
+import { AbsolutePaths } from '@/util/paths'
+import { type TinderCommunity } from '@/util/views/tinder.ts'
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext.tsx'
-import { useTinderCommunity } from '../../api/hooks/community/useTinderCommunity.ts'
-import { useTinderInteractionReset } from '../../api/hooks/community/useTinderInteractionReset.ts'
-import { useTinderInteractionSend } from '../../api/hooks/community/useTinderInteractionSend.ts'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable.tsx'
-import { ConfirmDialogButton } from '../../common-components/ConfirmDialogButton.tsx'
-import { CmschPage } from '../../common-components/layout/CmschPage.tsx'
-import { PageStatus } from '../../common-components/PageStatus.tsx'
-import { AbsolutePaths } from '../../util/paths'
-import { type TinderCommunity } from '../../util/views/tinder.ts'
 import { TinderCard } from './components/TinderCard'
 
 const SWIPE_THRESHOLD = 150
@@ -19,7 +20,7 @@ const TinderPage = () => {
   const config = useConfigContext()?.components
   const component = config?.communities
 
-  const toast = useToast()
+  const { toast } = useToast()
 
   const { data: communities, isLoading, isError, refetch } = useTinderCommunity()
   const interact = useTinderInteractionSend()
@@ -329,65 +330,32 @@ const TinderPage = () => {
   const handleReset = async () => {
     try {
       await resetInteractions()
-      toast({ title: 'Interakciók sikeresen törölve', status: 'success' })
+      toast({ title: 'Interakciók sikeresen törölve' })
       refetch()
     } catch (err) {
       console.error(err)
-      toast({ title: 'Interakciók törlése sikertelen', status: 'error' })
+      toast({ title: 'Interakciók törlése sikertelen' })
     }
   }
 
   return (
     <CmschPage loginRequired={true} title="Tinder">
-      <Box w="100%" mx="auto" px={{ base: 2, md: 4 }}>
-        <Box
-          position="relative"
-          mb={6}
-          display="flex"
-          flexDirection={{ base: 'column', sm: 'row' }}
-          alignItems={{ base: 'center', md: 'flex-start' }}
-          pb={10}
-          gap={4}
-        >
-          <Heading as="h1" variant="main-title" textAlign={{ base: 'center', sm: 'left' }} flex={{ base: 'none', md: 1 }}>
-            Kör tinder
-          </Heading>
-          <Flex
-            flexDirection={{ base: 'column', md: 'row' }}
-            gap={3}
-            width={{ base: 'full', sm: 'auto' }}
-            position={{ base: 'relative', sm: 'absolute' }}
-            top={{ base: 'auto', sm: '50%' }}
-            right={{ base: 'auto', sm: 2 }}
-            transform={{ base: 'none', sm: 'translateY(-50%)' }}
-          >
-            <Button
-              as={Link}
-              to={`${AbsolutePaths.TINDER}/liked`}
-              size={{ base: 'md', md: 'lg' }}
-              aria-label="Tinder-matches-button"
-              width={{ base: 'full', sm: 'auto' }}
-            >
-              Kedvelt körök
+      <div className="w-full mx-auto px-2 md:px-4">
+        <div className="relative mb-6 flex flex-col sm:flex-row items-center md:items-start pb-10 gap-4">
+          <h1 className="text-3xl font-bold font-heading text-center sm:text-left flex-none md:flex-1">Kör tinder</h1>
+          <div className="flex flex-col md:flex-row gap-3 w-full sm:w-auto sm:absolute sm:top-1/2 sm:right-2 sm:-translate-y-1/2">
+            <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+              <Link to={`${AbsolutePaths.TINDER}/liked`}>Kedvelt körök</Link>
             </Button>
-            <Button
-              as={Link}
-              to={`${AbsolutePaths.TINDER}/question`}
-              size={{ base: 'md', md: 'lg' }}
-              width={{ base: 'full', sm: 'auto' }}
-              aria-label="Tinder-questions-button"
-            >
-              Válaszaid
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link to={`${AbsolutePaths.TINDER}/question`}>Válaszaid</Link>
             </Button>
-          </Flex>
-        </Box>
+          </div>
+        </div>
         {displayed.length === 0 ? (
-          <Box px={4} py={8} textAlign="center">
-            <Text>
-              Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva. Az alábbi gombbal
-              pedig újrakezdheted a körök böngészését.
-            </Text>
-            <Box mt={8}>
+          <div className="px-4 py-8 text-center">
+            <p>Minden kört megtekintettél már. A kedvelt köröket megtekintheted összegyűjtve a fenti gombra kattintva.</p>
+            <div className="pt-8">
               <ConfirmDialogButton
                 headerText="Interakciók törlése"
                 bodyText="Biztosan törölni szeretné az összes Tinder interakcióját? Ezt nem lehet visszacsinálni."
@@ -396,11 +364,10 @@ const TinderPage = () => {
                 buttonVariant="outline"
                 confirmButtonText="Törlés"
                 refuseButtonText="Mégse"
-                buttonWidth={{ base: 'full', sm: 'auto' }}
                 confirmAction={handleReset}
               />
-            </Box>
-          </Box>
+            </div>
+          </div>
         ) : (
           <div style={stackContainerStyle} aria-live="polite">
             {displayed.map((c, idx) => {
@@ -462,7 +429,7 @@ const TinderPage = () => {
             })}
           </div>
         )}
-      </Box>
+      </div>
     </CmschPage>
   )
 }

@@ -1,22 +1,21 @@
-import { Button, Heading, Stack, Text, useToast, VStack } from '@chakra-ui/react'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useRiddleListQuery } from '@/api/hooks/riddle/useRiddleListQuery'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
+import type { RiddleCategory } from '@/util/views/riddle.view.ts'
 import { Link, useNavigate } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useRiddleListQuery } from '../../api/hooks/riddle/useRiddleListQuery'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
-import type { RiddleCategory } from '../../util/views/riddle.view.ts'
 import { RiddleCategoryListItem } from './components/RiddleCategoryListItem'
 
 const RiddleCategoryList = () => {
   const navigate = useNavigate()
-  const toast = useToast()
+  const { toast } = useToast()
   const component = useConfigContext()?.components?.riddle
   const { isLoading, isError, data } = useRiddleListQuery()
-  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -30,25 +29,20 @@ const RiddleCategoryList = () => {
     } else {
       toast({
         title: l('riddle-completed-category-title'),
-        description: l('riddle-completed-category-description'),
-        status: 'success',
-        duration: 9000,
-        isClosable: true
+        description: l('riddle-completed-category-description')
       })
     }
   }
 
   return (
     <CmschPage title={component?.title}>
-      <Stack direction={['column', 'row']} justify="space-between" align={['flex-start', 'flex-end']}>
-        <Heading as="h1" variant="main-title">
-          Riddleök
-        </Heading>
-        <Button colorScheme={brandColor} as={Link} to={AbsolutePaths.RIDDLE_HISTORY}>
-          Megoldott riddleök
+      <div className="flex flex-col justify-between md:flex-row md:items-end">
+        <h1 className="mb-5 text-4xl font-bold tracking-tight">Riddleök</h1>
+        <Button asChild>
+          <Link to={AbsolutePaths.RIDDLE_HISTORY}>Megoldott riddleök</Link>
         </Button>
-      </Stack>
-      <VStack spacing={4} mt={5} align="stretch">
+      </div>
+      <div className="mt-5 flex flex-col gap-4">
         {(data ?? []).length > 0 ? (
           data.map((riddleCategory) => (
             <RiddleCategoryListItem
@@ -58,9 +52,9 @@ const RiddleCategoryList = () => {
             />
           ))
         ) : (
-          <Text>Nincs egyetlen riddle feladat sem.</Text>
+          <p>Nincs egyetlen riddle feladat sem.</p>
         )}
-      </VStack>
+      </div>
     </CmschPage>
   )
 }
