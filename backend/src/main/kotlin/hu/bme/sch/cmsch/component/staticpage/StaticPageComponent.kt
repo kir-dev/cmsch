@@ -26,11 +26,11 @@ class StaticPageComponent(
 ) {
 
     val staticPageGroup by SettingGroup(fieldName = "Statikus Oldalak",
-        description = "Jelenleg nincs mit beállítani itt")
+        description = "Statikus oldalak beállításai")
 
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
 }

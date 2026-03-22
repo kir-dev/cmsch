@@ -28,5 +28,30 @@ class ConferenceComponentController(
     "Konferencia testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Konferencia** komponens egy komplex eseménykezelő modul, amely kifejezetten tudományos vagy szakmai konferenciák igényeire lett szabva. Kezeli az előadókat, előadásokat, támogatókat és a regisztrációt.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a konferencia felületét:
+
+- **Korábbi konferenciák** – szekció címe az archívumhoz.
+- **Regisztráció** – Cooltix-integráció és a jelentkezési gomb szövege.
+- **Mobil App** – az esemény saját alkalmazásának promóciója és letöltési linkjei.
+- **Nyereményjáték** – a konferenciához kapcsolódó játék leírása, képe és szabályai.
+- **Promó videó** – beágyazott YouTube-videó és leírása.
+- **Támogatók** – a szponzorációs szekció címe.
+- **Kiemelt előadás** – egy kiválasztott előadás hangsúlyos megjelenítése a főoldalon.
+
+## Konferencia kezelése
+
+A komponens számos entitást foglal magában:
+
+1. **Konferenciák** – az egyes események (évek/alkalmak) adatai.
+2. **Cégek (Companies)** – a támogató partnerek listája.
+3. **Szervezők (Organizers)** – a konferencia lebonyolításáért felelős személyek.
+4. **Előadások (Presentations)** – a programpontok részletei (időpont, helyszín, téma).
+5. **Előadók (Presenters)** – a szakmai előadók bemutatása.
+"""
 )

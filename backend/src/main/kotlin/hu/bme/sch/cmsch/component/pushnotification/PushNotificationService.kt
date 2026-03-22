@@ -1,20 +1,27 @@
 package hu.bme.sch.cmsch.component.pushnotification
 
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.MulticastMessage
+import com.google.auth.oauth2.GoogleCredentials
 import hu.bme.sch.cmsch.dto.CmschNotification
 import hu.bme.sch.cmsch.model.RoleType
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.retry.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.awaitBodilessEntity
 
 @Service
 @ConditionalOnBean(PushNotificationComponent::class)
 class PushNotificationService(
-    private val messaging: FirebaseMessaging,
+    private val credentials: GoogleCredentials,
+    private val projectId: String,
+    private val fcmWebClient: WebClient,
     private val messagingTokenRepository: MessagingTokenRepository,
     private val retryTemplate: RetryTemplate
 ) {
@@ -48,39 +55,43 @@ class PushNotificationService(
         return sendNotifications(tokens, notification)
     }
 
-    private fun sendNotifications(tokens: List<String>, notification: CmschNotification): Int {
-        if (tokens.isEmpty()) return 0
+    private fun getAccessToken(): String {
+        credentials.refreshIfExpired()
+        return credentials.accessToken.tokenValue
+    }
 
-        var tokensRemaining = tokens
-        val sendResult = runCatching {
-            retryTemplate.execute {
-                log.debug("Attempting notification broadcast to {} devices...", tokensRemaining.size)
+    private fun sendNotifications(tokens: List<String>, notification: CmschNotification): Int = runBlocking {
+        if (tokens.isEmpty()) return@runBlocking 0
 
-                // The token limit per multicast message is 500
-                val failedTokens = tokensRemaining.chunked(500)
-                    .flatMap { chunk ->
-                        val message = MulticastMessage.builder().addAllTokens(chunk)
-                        notification.addToMessage(message)
+        val accessToken = runCatching { getAccessToken() }.getOrElse {
+            log.error("Failed to get FCM access token", it)
+            return@runBlocking 0
+        }
 
-                        val result = runCatching { messaging.sendEachForMulticast(message.build()) }
-                        val responses = result.getOrNull()?.responses ?: return@flatMap chunk
-                        return@flatMap responses
-                            .zip(chunk)
-                            .filter { (response, _) -> !response.isSuccessful }
-                            .map { (_, token) -> token }
+        val results = coroutineScope {
+            tokens.chunked(100).flatMap { chunk ->
+                chunk.map { token ->
+                    async {
+                        runCatching {
+                            fcmWebClient.post()
+                                .uri("{projectId}/messages:send", projectId)
+                                .header("Authorization", "Bearer $accessToken")
+                                .bodyValue(notification.toFcmRequest(token))
+                                .retrieve()
+                                .awaitBodilessEntity()
+                            true
+                        }.getOrElse { e ->
+                            log.warn("Failed to send notification to token {}: {}", token, e.message)
+                            false
+                        }
                     }
-
-                if (failedTokens.isEmpty()) return@execute
-                tokensRemaining = failedTokens
-                throw Exception() // try again
+                }.awaitAll()
             }
         }
 
-        if (sendResult.isFailure) {
-            log.info("Failed to send notification {} to {} devices", notification, tokensRemaining.size)
-            // Maybe purge old and invalidated tokens?
-        }
-        return tokens.size - tokensRemaining.size
+        val successCount = results.count { it }
+        log.info("Successfully sent notification to {} out of {} devices", successCount, tokens.size)
+        successCount
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)

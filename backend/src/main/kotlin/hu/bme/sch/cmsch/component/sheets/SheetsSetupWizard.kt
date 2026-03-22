@@ -23,6 +23,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import kotlin.uuid.Uuid
 
 const val SHEETS_WIZARD = "sheets-setup-wizard"
 
@@ -98,7 +99,7 @@ class SheetsSetupWizard(
     }
 
     fun getComponentsForForms(user: CmschUser, requestParams: Map<String, String>, formId: Int): List<DashboardComponent> {
-        val token = requestParams.getOrDefault("token", UUID.randomUUID().toString())
+        val token = requestParams.getOrDefault("token", Uuid.generateV7().toString())
         val name = requestParams.getOrDefault("name", "névtelen integráció")
         return listOf(
             permissionCard,

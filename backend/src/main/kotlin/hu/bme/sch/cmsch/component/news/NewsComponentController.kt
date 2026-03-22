@@ -41,8 +41,7 @@ A **Komponens beállításai** menüpontban konfigurálhatod a hírek megjelené
 
 - **Lap címe** – ez jelenik meg a böngésző címsorában.
 - **Menü neve** – a menüben látható név.
-- **Jogosultságok** – meghatározhatod, hogy minimum milyen szerepkörrel érhető el a hírek oldal  
-  (pl. mindenki, bejelentkezett felhasználók, rendezők, adminok).
+- **Jogosultságok** – mely szerepkörökkel érhető el a hírek oldala.
 - **Részletes nézet** – ha be van kapcsolva, akkor a hírek külön oldalon is megnyithatók, nem csak listában.
 
 ## Hírek kezelése
@@ -57,24 +56,21 @@ A hírek listájában láthatod az összes eddig létrehozott hírt. Innen tudsz
 
 Új hír felvételekor vagy szerkesztéskor a következő mezőket tudod beállítani:
 
-- **Url** – rövid azonosító, ami a hír webcímében szerepel. Csak kisbetűk és kötőjelek használhatók. A frontenden ${appComponent.siteUrl}news/{url} linken érhető el.
+- **URL** – rövid azonosító, ami a hír webcímében szerepel. Csak kisbetűk és kötőjelek használhatók.
 - **Cím** – a hír fő címe.
 - **Rövid tartalom** – rövid leírás, ami a hírek listájában jelenik meg.
-- **Tartalom** – a hír teljes szövege, markdown formázással.
+- **Tartalom** – a hír teljes szövege, Markdown-formázással.
 - **Kép** – illusztráció a hírhez (feltöltés szükséges).
 - **Látható** – ha be van kapcsolva, a hír megjelenik a felhasználók számára.
 - **Kiemelt** – ha be van jelölve, a hír külön kiemeltként jelenhet meg a felületen.
 - **Publikálás időpontja** – időzítésre használható. Az itt beállított időpont előtt nem látszik a hír.
-- **Minimum rang a megtekintéshez** – korlátozhatod, hogy csak bizonyos jogosultsági szinttel rendelkező felhasználók lássák.
-- **OG:Title, OG:Image, OG:Description** – a közösségi megosztásokhoz tartozó metaadatok  
-  (Facebook, Messenger, stb. megosztáskor jelennek meg). ${appComponent.adminSiteUrl}share/news/{url} linkkel tudod megosztani a híreket, hogy megjelenjenek megfelelően.
+- **Minimum szerepkör a megtekintéshez** – korlátozhatod, hogy csak bizonyos szerepkörrel rendelkező felhasználók lássák.
+- **OG:Title, OG:Image, OG:Description** – a közösségi megosztásokhoz tartozó metaadatok.
 
 ## Használati tippek
 
-- Ha **előre be szeretnéd időzíteni** a hírt, állítsd be a publikálás időpontját, és jelöld be a **Látható** kapcsolót.  
-  A hír csak az időpont után fog megjelenni.
+- Ha **előre be szeretnéd időzíteni** a hírt, állítsd be a publikálás időpontját, és jelöld be a **Látható** kapcsolót. A hír csak az időpont után fog megjelenni.
 - A **Kiemelt hírek** előtérbe kerülnek a felhasználói oldalon, ezért fontos közleményeknél használd.
-- A **Jogosultságok** mezővel egyszerűen korlátozhatod, hogy egy hír csak a szervezőknek,  
-  vagy csak a bejelentkezett résztvevőknek látszódjon.
+- A **Jogosultságok** mezővel egyszerűen korlátozhatod, hogy egy hír csak a szervezőknek, vagy csak a bejelentkezett résztvevőknek látszódjon.
 """
 )

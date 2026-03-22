@@ -30,5 +30,5 @@ class ManifestComponentController(
     componentMenuPriority = 28,
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

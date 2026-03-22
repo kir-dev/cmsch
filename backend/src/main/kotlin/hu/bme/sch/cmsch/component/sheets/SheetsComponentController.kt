@@ -28,5 +28,5 @@ class SheetsComponentController(
     componentMenuName = "Sheets testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

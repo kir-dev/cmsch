@@ -31,9 +31,9 @@ class NewsComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var showDetails by BooleanSettingRef(fieldName = "Részletes nézet",
-        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is")
+        description = "Bekapcsolt állapotban a hírek részletes tartalma is megtekinthető külön oldalon")
 
 }

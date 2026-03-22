@@ -30,5 +30,5 @@ class StylingComponentController(
     componentMenuPriority = 5,
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )
