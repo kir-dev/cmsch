@@ -113,7 +113,7 @@ class ResponsesController(
             "Exportálás CSV fájlba"
         )
     ),
-    searchSettings = calculateSearchSettings<ResponseEntity>(false),
+    innerSearchSettings = calculateSearchSettings<ResponseEntity>(false),
 ) {
 
     private val exportPermission = StaffPermissions.PERMISSION_EDIT_FORM_RESULTS

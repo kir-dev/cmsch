@@ -63,7 +63,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     private val outerControlActions: MutableList<ControlAction> = mutableListOf(),
     innerControlActions: MutableList<ControlAction> = mutableListOf(),
     buttonActions: MutableList<ButtonAction> = mutableListOf(),
-    searchSettings: SearchSettings? = null,
+    private val innerSearchSettings: SearchSettings? = null,
 ): OneDeepEntityPage<INNER>(
     view,
     innerClassType,
@@ -103,7 +103,6 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
 
     innerControlActions,
     buttonActions,
-    searchSettings = searchSettings,
 ) {
 
     private val outerDescriptor = OverviewBuilder(outerClassType)
@@ -184,6 +183,7 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
         model.addAttribute("controlActions", controlActions.filter { it.permission.validate(user) })
         model.addAttribute("allControlActions", controlActions)
         model.addAttribute("buttonActions", buttonActions.filter { it.permission.validate(user) })
+        model.addAttribute("searchSettings", innerSearchSettings)
 
         attachPermissionInfo(model)
 
