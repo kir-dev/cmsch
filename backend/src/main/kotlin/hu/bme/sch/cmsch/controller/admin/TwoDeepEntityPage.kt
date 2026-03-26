@@ -62,7 +62,8 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
 
     private val outerControlActions: MutableList<ControlAction> = mutableListOf(),
     innerControlActions: MutableList<ControlAction> = mutableListOf(),
-    buttonActions: MutableList<ButtonAction> = mutableListOf()
+    buttonActions: MutableList<ButtonAction> = mutableListOf(),
+    searchSettings: SearchSettings? = null,
 ): OneDeepEntityPage<INNER>(
     view,
     innerClassType,
@@ -101,7 +102,8 @@ abstract class TwoDeepEntityPage<OUTER : IdentifiableEntity, INNER: Identifiable
     ignoreFromMenu,
 
     innerControlActions,
-    buttonActions
+    buttonActions,
+    searchSettings = searchSettings,
 ) {
 
     private val outerDescriptor = OverviewBuilder(outerClassType)
