@@ -1,6 +1,5 @@
-import { HStack, IconButton, Text } from '@chakra-ui/react'
-import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa'
-import { useBrandColor } from '../../../../util/core-functions.util.ts'
+import { Button } from '@/components/ui/button'
+import { MinusCircle, PlusCircle } from 'lucide-react'
 
 interface ZoomBarProps {
   scale: number
@@ -9,12 +8,15 @@ interface ZoomBarProps {
 }
 
 export function ZoomBar({ scale, incrementScale, decrementScale }: ZoomBarProps) {
-  const brandColor = useBrandColor()
   return (
-    <HStack justify="center" mt={2}>
-      <IconButton colorScheme={brandColor} aria-label="Kicsinyítés" icon={<FaMinusCircle />} onClick={decrementScale} />
-      <Text>{Math.round(scale * 100)}%</Text>
-      <IconButton colorScheme={brandColor} aria-label="Nagyítás" icon={<FaPlusCircle />} onClick={incrementScale} />
-    </HStack>
+    <div className="flex flex-row justify-center mt-2 items-center space-x-4">
+      <Button variant="ghost" className="text-primary" size="icon" aria-label="Kicsinyítés" onClick={decrementScale}>
+        <MinusCircle className="h-5 w-5" />
+      </Button>
+      <span>{Math.round(scale * 100)}%</span>
+      <Button variant="ghost" className="text-primary" size="icon" aria-label="Nagyítás" onClick={incrementScale}>
+        <PlusCircle className="h-5 w-5" />
+      </Button>
+    </div>
   )
 }

@@ -1,13 +1,12 @@
-import { Heading } from '@chakra-ui/react'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useTeamList } from '../../api/hooks/team/queries/useTeamList'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useTeamList } from '@/api/hooks/team/queries/useTeamList'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
 
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
-import { SearchBar } from '../../common-components/SearchBar'
-import { useSearch } from '../../util/useSearch'
-import type { TeamListItemView } from '../../util/views/team.view'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
+import { SearchBar } from '@/common-components/SearchBar'
+import { useSearch } from '@/util/useSearch'
+import type { TeamListItemView } from '@/util/views/team.view'
 import { TeamListItem } from './components/TeamListItem'
 
 const EmptyData: TeamListItemView[] = []
@@ -32,13 +31,13 @@ export default function TeamListPage() {
 
   return (
     <CmschPage title={component?.title}>
-      <Heading as="h1" variant="main-title">
-        {component.title}
-      </Heading>
-      {component.searchEnabled && <SearchBar mt={5} {...searchArgs} />}
-      {searchArgs.filteredData?.map((team) => (
-        <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
-      ))}
+      <h1 className="mb-5 text-4xl font-bold tracking-tight">{component.title}</h1>
+      {component.searchEnabled && <SearchBar className="mt-5" {...searchArgs} />}
+      <div className="mt-5 flex flex-col gap-4">
+        {searchArgs.filteredData?.map((team) => (
+          <TeamListItem key={team.id} team={team} detailEnabled={component?.showTeamDetails} />
+        ))}
+      </div>
     </CmschPage>
   )
 }

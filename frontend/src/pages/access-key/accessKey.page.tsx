@@ -1,39 +1,29 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Button,
-  FormControl,
-  FormLabel,
-  Heading,
-  HStack,
-  Input,
-  Text,
-  useToast,
-  VStack
-} from '@chakra-ui/react'
-import { type SubmitEvent, useState } from 'react'
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext'
+import { useAccessKeyMutation } from '@/api/hooks/access-key/useAccessKeyMutation'
+import { useAccessKey } from '@/api/hooks/access-key/useAccessKeyQuery'
+import { useTokenRefresh } from '@/api/hooks/useTokenRefresh.ts'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown'
+import { PageStatus } from '@/common-components/PageStatus'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useToast } from '@/hooks/use-toast'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
+import type { AccessKeyResponse } from '@/util/views/accessKey'
+import { AlertCircle } from 'lucide-react'
+import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useAccessKeyMutation } from '../../api/hooks/access-key/useAccessKeyMutation'
-import { useAccessKey } from '../../api/hooks/access-key/useAccessKeyQuery'
-import { useTokenRefresh } from '../../api/hooks/useTokenRefresh.ts'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown'
-import { PageStatus } from '../../common-components/PageStatus'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
-import { AbsolutePaths } from '../../util/paths'
-import type { AccessKeyResponse } from '../../util/views/accessKey'
 
 function AccessKeyPage() {
   const { refetch } = useAuthContext()
   const tokenRefresh = useTokenRefresh()
-  const [value, setValue] = useState<string>()
+  const [value, setValue] = useState<string>('')
   const [error, setError] = useState<string>()
-  const toast = useToast()
+  const { toast } = useToast()
   const navigate = useNavigate()
-  const brandColor = useBrandColor()
 
   const onData = async (response: AccessKeyResponse) => {
     if (response.success) {
@@ -41,10 +31,10 @@ function AccessKeyPage() {
         await tokenRefresh.mutateAsync()
         refetch()
       }
-      toast({ title: l('access-token-success'), status: 'success' })
+      toast({ title: l('access-token-success') })
       navigate(AbsolutePaths.PROFILE)
     } else {
-      toast({ title: response.reason, status: 'error' })
+      toast({ title: response.reason, variant: 'destructive' })
       setError(response.reason)
     }
   }
@@ -54,7 +44,7 @@ function AccessKeyPage() {
   const mutation = useAccessKeyMutation(onData, onError)
   const query = useAccessKey()
 
-  const onSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (value) {
       mutation.mutate({ key: value })
@@ -69,40 +59,31 @@ function AccessKeyPage() {
 
   return (
     <CmschPage title={query.data.title}>
-      <Heading as="h1" variant="main-title">
-        {query.data.title}
-      </Heading>
+      <h1 className="text-3xl font-bold font-heading">{query.data.title}</h1>
 
       {query.data.enabled ? (
-        <Markdown text={query.data.topMessage} />
+        <div className="mt-5">
+          <Markdown text={query.data.topMessage} />
+        </div>
       ) : (
-        <Alert status="error">
-          <AlertIcon />
+        <Alert variant="destructive" className="mt-5">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription>{l('access-token-not-available')}</AlertDescription>
         </Alert>
       )}
       <form onSubmit={onSubmit}>
-        <VStack spacing={5} mt={10} alignItems="flex-start">
-          <FormControl>
-            <FormLabel>{query.data.fieldName}</FormLabel>
-            <Input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              isDisabled={!query.data.enabled}
-              _placeholder={{ color: 'inherit' }}
-            />
-          </FormControl>
-          <HStack>
-            <Button type="submit" colorScheme={brandColor} isLoading={query.isLoading} isDisabled={!query.data.enabled}>
+        <div className="flex flex-col space-y-5 mt-10 items-start">
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="access-key">{query.data.fieldName}</Label>
+            <Input id="access-key" value={value} onChange={(e) => setValue(e.target.value)} disabled={!query.data.enabled} />
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button type="submit" disabled={query.isLoading || !query.data.enabled}>
               Beküldés
             </Button>
-            {error && (
-              <Text color="red.500" textAlign="center">
-                {error}
-              </Text>
-            )}
-          </HStack>
-        </VStack>
+            {error && <p className="text-destructive text-center">{error}</p>}
+          </div>
+        </div>
       </form>
     </CmschPage>
   )

@@ -28,5 +28,25 @@ class LeaderBoardComponentController(
     componentMenuName = "Toplista testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Toplista** komponens összesíti a felhasználók és csapatok pontszámait különböző forrásokból (feladatok, riddle-ök, tokenek, beadások), és rangsort állít fel belőlük.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a toplista működését:
+
+- **Lap címe** – a böngésző címsorában megjelenő szöveg.
+- **Menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el a toplista.
+- **Működés** – bekapcsolható a részletes (kategóriánkénti) toplista, illetve befagyasztható az állás a verseny végén.
+- **Pontszámítás** – beállítható, hogy melyik forrás (feladatok, riddle-ök, tokenek, beadások) hány százalékos súllyal számítson bele a végeredménybe.
+- **Kijelzés** – szabályozható a megjelenített sorok száma, a keresési lehetőség, és hogy a felhasználói vagy a csoportos toplista (vagy mindkettő) látható legyen-e.
+
+## Funkciók
+
+- **Befagyasztás** – a `Toplista befagyasztott` opcióval megállíthatod a pontok frissülését a felhasználók felé, így az utolsó pillanatig titokban tartható a végeredmény.
+- **Szűrés** – a `Legalább ennyi ponttal` opcióval elrejtheted az inaktív résztvevőket a listáról.
+- **Ritkaság szerinti tokenek** – külön kijelezhető, hogy a különböző ritkaságú tokenekből mennyit gyűjtöttek össze a résztvevők.
+"""
 )

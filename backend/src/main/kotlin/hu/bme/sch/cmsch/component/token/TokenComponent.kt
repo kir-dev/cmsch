@@ -31,7 +31,7 @@ class TokenComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(setOf(),
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var qrFrontendBaseUrl by StringSettingRef("https://todo.sch.bme.hu/token/scan?token=", serverSideOnly = false,
         fieldName = "QR frontend url", description = "Ez lesz a tokenek elé generálva", type = SettingType.URL)
@@ -55,43 +55,43 @@ class TokenComponent(
         description = "Az üzenet ha még nincs elérve a cél, {} = a szám amennyi kell még")
 
     var minTokenDoneMessage by StringSettingRef("Megvan a tanköri jelenlét", type = SettingType.LONG_TEXT,
-        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem látszik")
+        fieldName = "'Már van elég' üzenet", description = "Ha üres, nem jelenik meg")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val styleGroup by SettingGroup(fieldName = "Stílus", description = "Hogy jelenjenek meg a tokenek")
 
     var showCollector by BooleanSettingRef(false, serverSideOnly = true, fieldName = "Megszerző neve látszik",
-        description = "Ha a csoportos gyűjtés be van kapcsolva akkor kiírja-e, Látszódjon-e hogy ki szerezte meg a tokent?")
+        description = "Ha a csoportos gyűjtés be van kapcsolva, kiírja-e, hogy ki szerezte meg a tokent?")
 
     var defaultIcon by StringSettingRef("stamp", fieldName = "Alapértelmezett ikon",
-        description = "Azoknak a tokeneknek ahova nincs egyedi megadva")
+        description = "Azoknak a tokeneknek, ahol nincs egyedi megadva")
 
-    var defaultTestIcon by StringSettingRef("rocket", fieldName = "Alapértelmezett test ikon",
-        description = "Azoknak a teszt tokeneknek ahova nincs egyedi megadva (0-100 egész szám)")
+    var defaultTestIcon by StringSettingRef("rocket", fieldName = "Alapértelmezett teszt ikon",
+        description = "Azoknak a teszt tokeneknek, ahol nincs egyedi megadva (0-100 egész szám)")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val reportGroup by SettingGroup(fieldName = "Jelenléti ív", description = "Jelenléti ív beállítások")
 
-    final var reportTitle by StringSettingRef("GÓLYAKÖRTE 2025",
+    final var reportTitle by StringSettingRef("ESEMÉNY 2025",
         fieldName = "Jelenléti ív címe", description = "Ez lesz a jelenléti ív címe")
 
     final var reportSummaryTableColumns by StringSettingRef(
         "stamp,attendance,riddle,achievement",
         fieldName = "Riport összefoglaló táblázat oszlopai",
-        description = "Ezek az oszlopok fognak megjelenni az összefoglaló táblázatban, vesszővel elválasztva kell őket megadni, lehetséges értékek: stamp,attendance,riddle,achievement,time-between-scans")
+        description = "A táblázatban megjelenő oszlopok, vesszővel elválasztva. Lehetséges értékek: stamp, attendance, riddle, achievement, time-between-scans")
 
     final var reportDescription by StringSettingRef(
-        "A hallgatók a rendezvény alatt ellátogathattak a Schönherz öntevékeny köreinek " +
-                "standjaihoz, ahol miután megismerkedtek az adott körrel, beolvashattak egy-egy QR kódot. Ezáltal digitális " +
-                "pecséteket szerezhettek.  A rendezvényen a hallgatók megoldhattak logikai és kreatív feladatokat is.",
-        fieldName = "Jelenléti ív leírás", description = "Jelenléti ív leírás a cím alatti bekezdésben",
+        "A hallgatók a rendezvény alatt ellátogathattak a standokhoz, ahol miután megismerkedtek az adott körrel, " +
+                "beolvashattak egy-egy QR kódot. Ezáltal digitális pecséteket szerezhettek. " +
+                "A rendezvényen a hallgatók megoldhattak logikai és kreatív feladatokat is.",
+        fieldName = "Jelenléti ív leírás", description = "Jelenléti ív leírása a cím alatti bekezdésben",
         type = SettingType.LONG_TEXT)
 
     final var reportLogo by StringSettingRef("manifest/report-logo.png",
         fieldName = "Jelenléti ív logója", type = SettingType.IMAGE,
-        description = "Ez lesz a jelenléti íven megjelenített logó (csak PNG és JPG jó)")
+        description = "A jelenléti íven megjelenített logó (csak PNG és JPG támogatott)")
 
     final var reportFooterText by StringSettingRef("Az exportot a Kir-Dev generálta a résztvevők hozzájárulásával!",
         fieldName = "Jelenléti footer szöveg", description = "Ez lesz a jelenléti ív footerében")

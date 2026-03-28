@@ -1,7 +1,6 @@
-import { Flex, HStack, Image, Tag, Text } from '@chakra-ui/react'
-import type { Dev } from '../../../api/hooks/developers/useDevelopers'
-import { API_BASE_URL } from '../../../util/configs/environment.config'
-import { KirDevColor } from '../../../util/configs/theme.config'
+import type { Dev } from '@/api/hooks/developers/useDevelopers'
+import { Badge } from '@/components/ui/badge'
+import { API_BASE_URL } from '@/util/configs/environment.config'
 
 export type Props = {
   dev: Dev
@@ -9,16 +8,21 @@ export type Props = {
 
 export const DeveloperWrapItem = ({ dev: { name, img, tags } }: Props) => {
   return (
-    <Flex direction="column" align="center" w="20rem" h="20rem">
-      <Text fontSize="2xl">{name}</Text>
-      <Image src={img} h="15rem" fallbackSrc={`${API_BASE_URL}/img/big_pear_logo.png`} />
-      <HStack spacing={2} my={2}>
+    <div className="flex flex-col items-center w-80 h-80">
+      <span className="text-2xl">{name}</span>
+      <img
+        src={img}
+        className="h-60 object-contain"
+        alt={name}
+        onError={(e) => (e.currentTarget.src = `${API_BASE_URL}/img/big_pear_logo.png`)}
+      />
+      <div className="flex flex-row space-x-2 my-2">
         {tags.map((tag) => (
-          <Tag size={'md'} variant="solid" fontWeight="bold" color="white" bgColor={KirDevColor} key={tag}>
+          <Badge variant="default" className="font-bold" key={tag}>
             {tag}
-          </Tag>
+          </Badge>
         ))}
-      </HStack>
-    </Flex>
+      </div>
+    </div>
   )
 }

@@ -28,5 +28,33 @@ class RaceComponentController(
     "Verseny testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
+    documentationMarkdown = """
+A **Verseny** komponens időalapú vagy pontalapú mérések eredményeinek rögzítésére és rangsorolására szolgál.
+
+## Beállítások
+
+A **Komponens beállításai** menüpontban konfigurálhatod a méréseket:
+
+- **Lap címe** – a böngésző címsorában megjelenő szöveg.
+- **Menü neve** – a menüben látható név.
+- **Jogosultságok** – mely szerepkörökkel érhető el az oldal.
+- **Kijelzés** – szabályozható a toplista láthatósága, a rendezési elv (növekvő/csökkenő) és a keresési lehetőség.
+- **Szabad kategória** – egyedi, kötetlenebb mérési kategória (pl. "Funky mérés") beállítása.
+
+## Verseny kezelése
+
+Három szinten kezelheted az adatokat:
+
+1. **Versenykategóriák** – hozz létre csoportokat a különböző méréseknek (pl. "Alap mérés", "Profi mérés").
+2. **Mérési eredmények** – itt rögzítheted a konkrét eredményeket (idő, név, csapat).
+3. **Szabad kategóriás eredmények** – a kötetlenebb mérések eredményeinek helyszíne.
+
+## Eredmény rögzítése / szerkesztése
+
+- **Név** – a résztvevő neve.
+- **Csapat** – a résztvevő csapata.
+- **Idő / Pont** – a mért eredmény.
+- **Kategória** – melyik méréshez tartozik.
+"""
 )

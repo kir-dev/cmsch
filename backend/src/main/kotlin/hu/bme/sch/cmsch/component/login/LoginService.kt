@@ -16,7 +16,6 @@ import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
-import hu.bme.sch.cmsch.setting.SettingRef
 import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -45,25 +44,34 @@ class LoginService(
     fun fetchUserEntity(profile: ProfileResponse): UserEntity {
         val lock = userLocks.lockForKey(profile.internalId)
         try {
-            val user: UserEntity
-            if (users.exists(profile.internalId)) {
-                user = users.getById(profile.internalId)
+            var user: UserEntity
+            val existingByInternalId = users.findByInternalId(profile.internalId)
+            if (existingByInternalId.isPresent) {
+                user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as authsch user")
             } else {
-                user = UserEntity(
-                    0,
-                    profile.internalId,
-                    profile.neptun ?: "N/A",
-                    "",
-                    (profile.surname ?: "") + " " + (profile.givenName ?: ""),
-                    "",
-                    profile.email ?: "",
-                    RoleType.BASIC,
-                    groupName = "", group = null,
-                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
-                    provider = AUTHSCH
-                )
-                log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as authsch user")
+                val existingByEmail =
+                    if (!profile.email.isNullOrBlank()) users.findByEmailIgnoreCase(profile.email!!) else Optional.empty()
+                if (existingByEmail.isPresent) {
+                    user = existingByEmail.get()
+                    log.info("Logging in with existing user ${user.fullName} (found by email) as authsch user, internalId updated from ${user.internalId} to ${profile.internalId}")
+                    user.internalId = profile.internalId
+                } else {
+                    user = UserEntity(
+                        0,
+                        profile.internalId,
+                        profile.neptun ?: "N/A",
+                        "",
+                        (profile.surname ?: "") + " " + (profile.givenName ?: ""),
+                        "",
+                        profile.email ?: "",
+                        RoleType.BASIC,
+                        groupName = "", group = null,
+                        guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                        provider = AUTHSCH
+                    )
+                    log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as authsch user")
+                }
             }
             transactionManager.transaction(readOnly = true) { updateFieldsForAuthsch(user, profile) }
             transactionManager.transaction(readOnly = false) { users.save(user) }
@@ -77,26 +85,34 @@ class LoginService(
     fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): UserEntity {
         val lock = userLocks.lockForKey(profile.internalId)
         try {
-            val user: UserEntity
-            if (users.exists(profile.internalId)) {
-                user = users.getById(profile.internalId)
+            var user: UserEntity
+            val existingByInternalId = users.findByInternalId(profile.internalId)
+            if (existingByInternalId.isPresent) {
+                user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as google user")
             } else {
-                user = UserEntity(
-                    0,
-                    profile.internalId.take(254),
-                    "N/A",
-                    "",
-                    "${profile.familyName} ${profile.givenName}".take(254),
-                    "",
-                    profile.email.take(254),
-                    RoleType.BASIC,
-                    groupName = "", group = null,
-                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
-                    provider = GOOGLE,
-                    profilePicture = profile.picture.take(254)
-                )
-                log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as google user profile picture: ${profile.picture}")
+                val existingByEmail = users.findByEmailIgnoreCase(profile.email)
+                if (existingByEmail.isPresent) {
+                    user = existingByEmail.get()
+                    log.info("Logging in with existing user ${user.fullName} (found by email) as google user, internalId updated from ${user.internalId} to ${profile.internalId}")
+                    user.internalId = profile.internalId
+                } else {
+                    user = UserEntity(
+                        0,
+                        profile.internalId.take(254),
+                        "N/A",
+                        "",
+                        "${profile.familyName} ${profile.givenName}".take(254),
+                        "",
+                        profile.email.take(254),
+                        RoleType.BASIC,
+                        groupName = "", group = null,
+                        guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                        provider = GOOGLE,
+                        profilePicture = profile.picture.take(254)
+                    )
+                    log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as google user profile picture: ${profile.picture}")
+                }
             }
             transactionManager.transaction(readOnly = true) { updateFieldsForGoogle(user) }
             transactionManager.transaction(readOnly = false) { users.save(user) }
@@ -154,7 +170,7 @@ class LoginService(
 
         if (user.internalId.isNotBlank() && !user.detailsImported) {
             userDetailsByInternalIdMapping.findByInternalId(user.internalId).ifPresent {
-                if(it.allDetailsImported()) {
+                if (it.allDetailsImported()) {
                     user.neptun = it.neptun!!
                     user.role = it.role!!
                     user.groupName = it.groupName!!
@@ -378,30 +394,45 @@ class LoginService(
     }
 
     fun fetchKeycloakUserEntity(profile: KeycloakUserInfoResponse): UserEntity {
-        val user: UserEntity
-        if (users.exists(profile.sid)) {
-            user = users.getById(profile.sid)
-            log.info("Logging in with existing user ${user.fullName} as keycloak user")
-        } else {
-            user = UserEntity(
-                    0,
-                    profile.sid,
-                    "N/A",
-                    "",
-                    "${profile.familyName} ${profile.givenName}",
-                    profile.preferredUsername,
-                    profile.email,
-                    RoleType.BASIC,
-                    groupName = "", group = null,
-                    guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
-                    provider = KEYCLOAK,
-                    profilePicture = ""
-            )
-            log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as keycloak user")
+        val lock = userLocks.lockForKey(profile.sid)
+        try {
+            var user: UserEntity
+            val existingByInternalId = users.findByInternalId(profile.sid)
+            if (existingByInternalId.isPresent) {
+                user = existingByInternalId.get()
+                log.info("Logging in with existing user ${user.fullName} as keycloak user")
+            } else {
+                val existingByEmail =
+                    if (!profile.email.isBlank()) users.findByEmailIgnoreCase(profile.email) else Optional.empty()
+                if (existingByEmail.isPresent) {
+                    user = existingByEmail.get()
+                    log.info("Logging in with existing user ${user.fullName} (found by email) as keycloak user, internalId updated from ${user.internalId} to ${profile.sid}")
+                    user.internalId = profile.sid
+                } else {
+                    user = UserEntity(
+                        0,
+                        profile.sid,
+                        "N/A",
+                        "",
+                        "${profile.familyName} ${profile.givenName}",
+                        profile.preferredUsername,
+                        profile.email,
+                        RoleType.BASIC,
+                        groupName = "", group = null,
+                        guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
+                        provider = KEYCLOAK,
+                        profilePicture = ""
+                    )
+                    log.info("Logging in with new user ${user.fullName} internalId: ${user.internalId} as keycloak user")
+                }
+            }
+            updateFieldsForKeycloak(profile, user)
+            users.save(user)
+            adminMenuService.invalidateUser(user.internalId)
+            return user
+        } finally {
+            lock.unlock()
         }
-        updateFieldsForKeycloak(profile, user)
-        users.save(user)
-        return user
     }
 
     private fun updateFieldsForKeycloak(profile: KeycloakUserInfoResponse, user: UserEntity) {

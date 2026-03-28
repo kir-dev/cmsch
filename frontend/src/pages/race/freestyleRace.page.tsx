@@ -1,5 +1,5 @@
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useFreestyleRaceQuery } from '../../api/hooks/race/useFreestyleRaceQuery'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useFreestyleRaceQuery } from '@/api/hooks/race/useFreestyleRaceQuery'
 import RaceBoard from './components/RaceBoard'
 
 const FreestyleRace = () => {

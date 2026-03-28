@@ -1,9 +1,9 @@
+import { useServiceContext } from '@/api/contexts/service/ServiceContext'
+import { LoadingPage } from '@/pages/loading/loading.page'
+import { l } from '@/util/language'
+import { AbsolutePaths } from '@/util/paths'
 import { useEffect } from 'react'
 import { Navigate } from 'react-router'
-import { useServiceContext } from '../api/contexts/service/ServiceContext'
-import { LoadingPage } from '../pages/loading/loading.page'
-import { l } from '../util/language'
-import { AbsolutePaths } from '../util/paths'
 
 interface PageStatusProps {
   isLoading: boolean
@@ -21,6 +21,7 @@ export function PageStatus({ isLoading, isError, title }: PageStatusProps) {
       return
     }
 
+    // If there is no loading and there is no error, the page shouldn't been shown
     sendMessage(l('page-load-failed-contact-developers', { title }))
   }, [isLoading, isError, sendMessage, title])
 

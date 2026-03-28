@@ -1,6 +1,6 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
-import GetSomeHelp from '../assets/stop-it-get-some-help-just-stop.gif'
-import { useBrandColor } from '../util/core-functions.util.ts'
+import GetSomeHelp from '@/assets/stop-it-get-some-help-just-stop.gif'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 type Props = {
   isOpen: boolean
@@ -8,26 +8,22 @@ type Props = {
 }
 
 export const StopItModal = ({ isOpen, onClose }: Props) => {
-  const brandColor = useBrandColor()
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Egy kicsit lassabban!</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <img alt="Stop spamming, get some help!" src={GetSomeHelp} />
-        </ModalBody>
-
-        <ModalFooter>
-          <Button colorScheme="gray" mr={3} onClick={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Egy kicsit lassabban!</DialogTitle>
+        </DialogHeader>
+        <div className="py-4">
+          <img alt="Stop spamming, get some help!" src={GetSomeHelp} className="w-full rounded-md" />
+        </div>
+        <DialogFooter className="flex gap-2">
+          <Button variant="secondary" onClick={onClose}>
             Oké
           </Button>
-          <Button colorScheme={brandColor} onClick={onClose}>
-            Értettem
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <Button onClick={onClose}>Értettem</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

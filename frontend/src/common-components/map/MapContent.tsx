@@ -1,9 +1,9 @@
-import { useToast } from '@chakra-ui/react'
+import { useToast } from '@/hooks/use-toast'
+import { l } from '@/util/language'
+import { type MapDataItemView, MapMarkerShape } from '@/util/views/map.view'
 import { Map, Marker, ZoomControl } from 'pigeon-maps'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useGeolocated } from 'react-geolocated'
-import { l } from '../../util/language'
-import { type MapDataItemView, MapMarkerShape } from '../../util/views/map.view'
 import { MapMarker } from './MapMarker'
 
 interface MapContentProps {
@@ -12,8 +12,7 @@ interface MapContentProps {
 }
 
 export function MapContent({ showUserLocation, mapData }: MapContentProps) {
-  const toast = useToast()
-  const [center, setCenter] = useState<[number, number]>([47.47303, 19.0531])
+  const { toast } = useToast()
 
   const { coords, getPosition, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
     positionOptions: {
@@ -23,19 +22,15 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
     suppressLocationOnMount: true,
     watchPosition: showUserLocation
   })
+  const center: [number, number] = coords ? [coords.latitude, coords.longitude] : [47.47303, 19.0531]
 
   useEffect(() => {
     if (showUserLocation) getPosition()
   }, [showUserLocation, getPosition])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (coords) setCenter([coords.latitude, coords.longitude])
-  }, [coords])
-
-  useEffect(() => {
     if (showUserLocation && isGeolocationEnabled && !isGeolocationAvailable) {
-      toast({ title: l('location-sensor-denied'), status: 'error' })
+      toast({ title: l('location-sensor-denied'), variant: 'destructive' })
     }
   }, [showUserLocation, isGeolocationAvailable, isGeolocationEnabled, toast])
 
@@ -49,7 +44,7 @@ export function MapContent({ showUserLocation, mapData }: MapContentProps) {
       ))}
       {coords && (
         <Marker hover width={200} height={3} anchor={[coords.latitude, coords.longitude]}>
-          <MapMarker color="blue.500" text="Te" markerShape={MapMarkerShape.PERSON} />
+          <MapMarker color="lightblue" text="Te" markerShape={MapMarkerShape.PERSON} />
         </Marker>
       )}
     </Map>

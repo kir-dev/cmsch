@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { useConfigContext } from './api/contexts/config/ConfigContext.tsx'
 import { CmschLayout } from './common-components/layout/CmschLayout'
+import { Toaster } from './components/ui/toaster'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
 import CommunityListPage from './pages/communities/communityList.page.tsx'
@@ -11,7 +12,7 @@ import OrganizationListPage from './pages/communities/organizationList.page.tsx'
 import TinderPage from './pages/communities/tinder.page.tsx'
 import TinderQuestionsPage from './pages/communities/tinderQuestions.page.tsx'
 import TinderRouter from './pages/communities/tinderRouter.tsx'
-import CountdownPage from './pages/countdown/countdown.page'
+import { CountdownPage } from './pages/countdown/countdown.page'
 import DebtPage from './pages/debt/debt.page.tsx'
 import { ErrorPage } from './pages/error/error.page'
 import EventPage from './pages/events/event.page'
@@ -24,6 +25,7 @@ import ImpressumPage from './pages/impressum/impressum.page.tsx'
 import IndexPage from './pages/index/index.page'
 import LeaderboardPage from './pages/leaderboard/leaderboard.page.tsx'
 import LoginPage from './pages/login/login.page'
+import ResetPasswordPage from './pages/login/resetPassword.page.tsx'
 import MapPage from './pages/map/map.page.tsx'
 import NewsPage from './pages/news/news.page.tsx'
 import NewsListPage from './pages/news/newsList.page.tsx'
@@ -43,8 +45,7 @@ import TaskCategoryPage from './pages/task/taskCategory.page.tsx'
 import TaskCategoryList from './pages/task/taskCategoryList.page.tsx'
 import CreateTeamPage from './pages/teams/createTeam.page.tsx'
 import EditMyTeamPage from './pages/teams/editMyTeam.page.tsx'
-import MyTeamPage from './pages/teams/myTeam.page.tsx'
-import TeamDetailsPage from './pages/teams/teamDetails.page.tsx'
+import TeamDetailsPage, { TeamDetails } from './pages/teams/teamDetails.page.tsx'
 import TeamListPage from './pages/teams/teamList.page.tsx'
 import TokenListPage from './pages/token/tokenList.page.tsx'
 import TokenScanPage from './pages/token/tokenScan.page.tsx'
@@ -130,7 +131,7 @@ export function App() {
                 <Route path={Paths.CREATE_TEAM} element={<CreateTeamPage />} />
                 <Route path={Paths.EDIT_TEAM} element={<EditMyTeamPage />} />
                 <Route path={Paths.MY_TEAM}>
-                  <Route index element={<MyTeamPage />} />
+                  <Route index element={<TeamDetails />} />
                   <Route path={Paths.RACE} element={<RaceByTeamPage />} />
                 </Route>
                 <Route path={Paths.TEAMS}>
@@ -147,6 +148,7 @@ export function App() {
                 </Route>
                 <Route index element={<IndexPage />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route path={Paths.RESET_PASSWORD} element={<ResetPasswordPage />} />
                 <Route path="logout" element={<HomePage />} />
                 {/** Error handling pages */}
                 <Route path="error" element={<ErrorPage />} />
@@ -154,6 +156,7 @@ export function App() {
               </Route>
             </Routes>
           </Suspense>
+          <Toaster />
         </CmschLayout>
       </CountdownPage>
     </TitleProvider>

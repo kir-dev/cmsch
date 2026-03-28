@@ -1,7 +1,6 @@
-import { CheckCircleIcon, CloseIcon, InfoIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons'
-import { Box, Center, Heading, Image, Text } from '@chakra-ui/react'
-import Markdown from '../../../common-components/Markdown'
-import { ScanMessages, type ScanResponseView, ScanStatus } from '../../../util/views/token.view'
+import Markdown from '@/common-components/Markdown'
+import { ScanMessages, type ScanResponseView, ScanStatus } from '@/util/views/token.view'
+import { AlertOctagon, AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-react'
 
 interface QrScanResultProps {
   isError?: boolean
@@ -11,62 +10,62 @@ interface QrScanResultProps {
 export const QRScanResultComponent = ({ response, isError }: QrScanResultProps) => {
   const renderIcon = () => {
     if (!response?.status || isError) {
-      return <CloseIcon color="red.500" boxSize="120px" />
+      return <XCircle className="text-danger h-[120px] w-[120px]" />
     } else
       switch (response.status) {
         case ScanStatus.SCANNED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.ALREADY_SCANNED:
-          return <InfoIcon color="blue.500" boxSize="120px" />
+          return <Info className="text-info h-[120px] w-[120px]" />
         case ScanStatus.WRONG:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <AlertTriangle className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.CANNOT_COLLECT:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <AlertTriangle className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.INACTIVE:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <AlertTriangle className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_FIGHT_LEVEL_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_FIGHT_LEVEL_NOT_OPEN:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_FIGHT_TOWER_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_TOWER_CAPTURED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.QR_TOWER_LOGGED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.QR_TOWER_ENSLAVED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.QR_TOWER_ALREADY_ENSLAVED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_TOTEM_LOGGED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.QR_TOTEM_ENSLAVED:
-          return <CheckCircleIcon color="green.500" boxSize="120px" />
+          return <CheckCircle2 className="text-success h-[120px] w-[120px]" />
         case ScanStatus.QR_TOTEM_ALREADY_ENSLAVED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_FIGHT_TOTEM_LOCKED:
-          return <InfoIcon color="orange.500" boxSize="120px" />
+          return <Info className="text-warning h-[120px] w-[120px]" />
         case ScanStatus.QR_TOWER_DAILY_LIMIT_EXCEEDED:
-          return <WarningTwoIcon color="yellow.500" boxSize="120px" />
+          return <AlertTriangle className="text-warning h-[120px] w-[120px]" />
         default:
-          return <WarningIcon color="red.500" boxSize="120px" />
+          return <AlertOctagon className="text-danger h-[120px] w-[120px]" />
       }
   }
 
   return (
-    <Box textAlign="center" maxW="sm" mx="auto">
-      <Center flexDirection="column" p="40px" mt="4">
-        {response?.iconUrl ? <Image src={response.iconUrl} /> : renderIcon()}
-        {response?.title && <Heading size="lg">{response.title}</Heading>}
-        {!response?.title && isError && <Heading>Hiba</Heading>}
-        {response && <Text fontSize="lg">{ScanMessages[response.status] || 'Ismeretlen eredmény'}</Text>}
-        {!response && isError && <Text fontSize="lg">Hiba a validálás során!</Text>}
+    <div className="text-center max-w-sm mx-auto">
+      <div className="flex flex-col items-center p-10 mt-4">
+        {response?.iconUrl ? <img src={response.iconUrl} alt={response.title} /> : renderIcon()}
+        {response?.title && <h2 className="text-2xl font-bold mt-4">{response.title}</h2>}
+        {!response?.title && isError && <h2 className="text-2xl font-bold mt-4">Hiba</h2>}
+        {response && <p className="text-lg mt-2">{ScanMessages[response.status] || 'Ismeretlen eredmény'}</p>}
+        {!response && isError && <p className="text-lg mt-2">Hiba a validálás során!</p>}
         {response?.description && (
-          <Box py="4">
+          <div className="py-4 w-full">
             <Markdown text={response.description} />
-          </Box>
+          </div>
         )}
-      </Center>
-    </Box>
+      </div>
+    </div>
   )
 }

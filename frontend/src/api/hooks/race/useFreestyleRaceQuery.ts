@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths'
+import type { RaceView } from '@/util/views/race.view'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths'
-import type { RaceView } from '../../../util/views/race.view'
-import { QueryKeys } from '../queryKeys'
 
 export const useFreestyleRaceQuery = () => {
   return useQuery<RaceView, Error>({

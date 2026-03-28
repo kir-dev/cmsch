@@ -1,7 +1,7 @@
 import { useParams } from 'react-router'
 
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useRaceQuery } from '../../api/hooks/race/useRaceQuery'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useRaceQuery } from '@/api/hooks/race/useRaceQuery'
 import RaceBoard from './components/RaceBoard'
 
 const RacePage = () => {

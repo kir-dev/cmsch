@@ -1,6 +1,5 @@
-import { Box, CircularProgress, Flex, HStack, Text } from '@chakra-ui/react'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
-import type { RiddleCategory } from '../../../util/views/riddle.view'
+import { CircularProgress } from '@/common-components/CircularProgress'
+import type { RiddleCategory } from '@/util/views/riddle.view'
 
 interface RiddleCategoryListItemProps {
   category: RiddleCategory
@@ -8,22 +7,23 @@ interface RiddleCategoryListItemProps {
 }
 
 export function RiddleCategoryListItem({ category, onClick }: RiddleCategoryListItemProps) {
-  const bg = useOpaqueBackground(1)
-  const hoverBg = useOpaqueBackground(2)
+  const percentage = (category.completed / category.total) * 100
 
   return (
-    <Box key={category.categoryId} bg={bg} px={6} py={2} borderRadius="md" cursor="pointer" _hover={{ bgColor: hoverBg }} onClick={onClick}>
-      <Flex align="center" justifyContent="space-between">
-        <Text fontWeight="bold" fontSize="xl">
-          {category.title}
-        </Text>
-        <HStack>
-          <Text fontWeight="bold">
+    <div
+      key={category.categoryId}
+      className="cursor-pointer rounded-md bg-secondary text-secondary-foreground px-6 py-2 transition-colors hover:bg-secondary/80 border"
+      onClick={onClick}
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-xl font-bold">{category.title}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-bold">
             {category.completed}/{category.total}
-          </Text>
-          <CircularProgress size={10} value={category.completed} max={category.total} color="green.400" />
-        </HStack>
-      </Flex>
-    </Box>
+          </span>
+          <CircularProgress value={percentage} size={40} strokeWidth={4} label="" />
+        </div>
+      </div>
+    </div>
   )
 }

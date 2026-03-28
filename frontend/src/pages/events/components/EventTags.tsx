@@ -1,23 +1,21 @@
-import { HStack, type SpaceProps, Tag } from '@chakra-ui/react'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
+import { Badge } from '@/components/ui/badge'
 
 interface EventTagsProps {
   tags: Array<string>
-  my?: SpaceProps['my']
+  className?: string
 }
 
-const EventTags = ({ tags, my }: EventTagsProps) => {
-  const brandColor = useBrandColor()
+const EventTags = ({ tags, className }: EventTagsProps) => {
   return (
-    <HStack spacing={2} my={my} justifyContent="end">
+    <div className={`flex justify-end gap-2 ${className}`}>
       {tags.filter(Boolean).map((tag) => {
         return (
-          <Tag size={'md'} variant="solid" colorScheme={brandColor} key={tag}>
+          <Badge variant="default" key={tag}>
             {tag}
-          </Tag>
+          </Badge>
         )
       })}
-    </HStack>
+    </div>
   )
 }
 

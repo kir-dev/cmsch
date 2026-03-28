@@ -1,29 +1,34 @@
-import { Box, CircularProgress, HStack, Stat, StatHelpText, StatLabel, StatNumber, type StatProps } from '@chakra-ui/react'
+import { CircularProgress } from '@/common-components/CircularProgress'
+import { useOpaqueBackground } from '@/util/core-functions.util'
+import type { TeamStatView } from '@/util/views/team.view'
 import { Link } from 'react-router'
-import { useOpaqueBackground } from '../../../util/core-functions.util'
-import type { TeamStatView } from '../../../util/views/team.view'
 
-interface TeamStatProps extends StatProps {
+interface TeamStatProps {
   stat: TeamStatView
+  className?: string
 }
 
-export function TeamStat({ stat, ...props }: TeamStatProps) {
+export function TeamStat({ stat, className }: TeamStatProps) {
   const { name, value1, value2, navigate, percentage } = stat
   const background = useOpaqueBackground(1)
   const backgroundHover = useOpaqueBackground(2)
+
   const content = (
-    <Stat borderRadius="lg" px={5} py={2} bg={background} _hover={{ bg: navigate ? backgroundHover : undefined }} {...props}>
-      <HStack justify="space-between">
-        <Box>
-          <StatLabel>{name}</StatLabel>
-          <StatNumber>{value1}</StatNumber>
-          <StatHelpText>{value2}</StatHelpText>
-        </Box>
-        {typeof percentage !== 'undefined' && (
-          <CircularProgress color="green.500" size={50} max={100} value={percentage}></CircularProgress>
-        )}
-      </HStack>
-    </Stat>
+    <div
+      className={`rounded-lg px-5 py-2 transition-colors ${className}`}
+      style={{ backgroundColor: background }}
+      onMouseEnter={(e) => navigate && (e.currentTarget.style.backgroundColor = backgroundHover)}
+      onMouseLeave={(e) => navigate && (e.currentTarget.style.backgroundColor = background)}
+    >
+      <div className="flex flex-row justify-between items-center">
+        <div>
+          <div className="text-sm font-medium text-muted-foreground">{name}</div>
+          <div className="text-2xl font-bold">{value1}</div>
+          <div className="text-xs text-muted-foreground">{value2}</div>
+        </div>
+        {typeof percentage !== 'undefined' && <CircularProgress value={percentage} size={48} strokeWidth={3} label="" />}
+      </div>
+    </div>
   )
 
   if (navigate) return <Link to={navigate}>{content}</Link>

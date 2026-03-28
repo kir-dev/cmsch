@@ -1,9 +1,9 @@
-import { ColorModeScript } from '@chakra-ui/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
+import './index.css'
 
 import { createRoot } from 'react-dom/client'
 import { App } from './App'
@@ -21,7 +21,6 @@ const root = createRoot(document.getElementById('root')!)
 
 root.render(
   <React.StrictMode>
-    <ColorModeScript />
     <ThemeConfig>
       <AppBackground>
         <QueryClientProvider client={queryClient}>

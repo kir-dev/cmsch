@@ -1,5 +1,5 @@
+import { useStyle } from '@/api/contexts/config/ConfigContext.tsx'
 import Color, { type ColorInstance } from 'color'
-import { useStyle } from '../api/contexts/config/ConfigContext.tsx'
 
 export function hexToRgb(hex: string): [number, number, number] {
   // Remove the hash if it exists
@@ -15,7 +15,7 @@ export function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function useColor(hex: string | undefined): ColorInstance {
-  const style = useStyle()?.lightBrandingColor ?? '#FFAA00'
+  const style = useStyle()?.lightBrandingColor ?? '#F15A29'
   try {
     return hex ? Color(hex) : Color(style)
   } catch {

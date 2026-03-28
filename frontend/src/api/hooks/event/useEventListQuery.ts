@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { ApiPaths } from '@/util/paths'
+import type { EventListView } from '@/util/views/event.view'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { ApiPaths } from '../../../util/paths'
-import type { EventListView } from '../../../util/views/event.view'
-import { QueryKeys } from '../queryKeys'
 
 export const useEventListQuery = () => {
   return useQuery<EventListView[], Error>({

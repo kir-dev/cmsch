@@ -1,24 +1,19 @@
-import { useDisclosure } from '@chakra-ui/hooks'
-import { chakra, useColorModeValue } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 type Props = {
   text: string
 }
 
 export const SpoilerText = ({ text }: Props) => {
-  const { isOpen, onToggle, onClose } = useDisclosure()
-  const style = useConfigContext()?.components?.style
+  const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    onClose()
-  }, [onClose, text])
-
-  const hiddenColor = useColorModeValue(style?.lightTextColor, style?.darkTextColor)
   return (
-    <chakra.label onClick={onToggle} bgColor={isOpen ? undefined : hiddenColor} color={isOpen ? undefined : hiddenColor}>
+    <span
+      onClick={() => setIsOpen(!isOpen)}
+      className={cn('cursor-pointer transition-colors', isOpen ? '' : 'bg-foreground text-foreground select-none')}
+    >
       {text}
-    </chakra.label>
+    </span>
   )
 }

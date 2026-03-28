@@ -36,13 +36,14 @@ class EventComponent(
 
     val appearanceGroup by SettingGroup(fieldName = "Megjelenés")
 
-    var seekToCurrentCurrent by BooleanSettingRef(fieldName = "Tekerjen oda a jelenlegi programhoz")
+    var seekToCurrent by BooleanSettingRef(fieldName = "Tekerjen oda a jelenlegi programhoz",
+        description = "Betöltéskor az aktuális időponthoz legközelebb eső eseményre ugrik")
 
     var separateDays by BooleanSettingRef(fieldName = "Külön csoportosítva naponként")
 
     var topMessage by StringSettingRef("Rövid szöveg a programokról általánosságban",
         type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Oldal tetején megjelenő szöveg",
-        description = "Ha üres akkor nincs ilyen")
+        description = "Ha üres, nem jelenik meg")
 
     var searchEnabled by BooleanSettingRef(fieldName = "Keresés elérhető",
         description = "Legyen-e kereső az oldal tetején")
@@ -53,10 +54,10 @@ class EventComponent(
 
     var enableDetailedView by BooleanSettingRef(fieldName = "Elérhető a részletes nézet (külön lapon)")
 
-    var filterByCategory by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet kategória alapján (is) lehet szűrni")
+    var filterByCategory by BooleanSettingRef(fieldName = "Ha be van kapcsolva, kategória alapján is lehet szűrni")
 
-    var filterByLocation by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet helyszín alapján (is) lehet szűrni")
+    var filterByLocation by BooleanSettingRef(fieldName = "Ha be van kapcsolva, helyszín alapján is lehet szűrni")
 
-    var filterByDay by BooleanSettingRef(fieldName = "Ha be van kapcsolva, akkor lehet nap alapján (is) lehet szűrni")
+    var filterByDay by BooleanSettingRef(fieldName = "Ha be van kapcsolva, nap alapján is lehet szűrni")
 
 }

@@ -1,20 +1,19 @@
-import { Box, Button, Text, VStack } from '@chakra-ui/react'
-import { FaGoogle, FaKey, FaSignInAlt } from 'react-icons/fa'
+import { Chrome, Key, LogIn } from 'lucide-react'
 import { Navigate } from 'react-router'
 
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { ComponentUnavailable } from '../../common-components/ComponentUnavailable'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import Markdown from '../../common-components/Markdown'
-import { API_BASE_URL } from '../../util/configs/environment.config'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { l } from '../../util/language'
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import Markdown from '@/common-components/Markdown'
+import { Button } from '@/components/ui/button'
+import { API_BASE_URL } from '@/util/configs/environment.config'
+import { l } from '@/util/language'
+import { UsernamePasswordLogin } from './UsernamePasswordLogin'
 
 const LoginPage = () => {
   const { isLoggedIn } = useAuthContext()
   const component = useConfigContext()?.components?.login
-  const brandColor = useBrandColor()
 
   if (!component) return <ComponentUnavailable />
 
@@ -22,55 +21,48 @@ const LoginPage = () => {
 
   return (
     <CmschPage title={l('login-helmet')}>
-      <VStack spacing={10} mb={10}>
-        {component.topMessage ? (
-          <Box textAlign="center">
+      <div className="flex flex-col items-center space-y-10 mb-10">
+        {component.topMessage && !component.passwordEnabled ? (
+          <div className="text-center">
             <Markdown text={component.topMessage} />
-          </Box>
+          </div>
         ) : (
-          <Box mt={4} />
+          <div className="mt-4" />
         )}
-        {component.authschPromoted && (
-          <>
-            <Button
-              colorScheme={brandColor}
-              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}
-              leftIcon={<FaSignInAlt />}
-            >
-              {component.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}
-            </Button>
-            {(component.googleSsoEnabled || component.keycloakEnabled) && <Text>vagy</Text>}
-          </>
-        )}
-        {component.googleSsoEnabled && (
-          <>
-            <Button
-              colorScheme={brandColor}
-              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}
-              leftIcon={<FaGoogle />}
-            >
-              Google SSO
-            </Button>
-            {component.keycloakEnabled && <Text>vagy</Text>}
-          </>
-        )}
-        {component.keycloakEnabled && (
-          <>
-            <Button
-              colorScheme={brandColor}
-              onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`)}
-              leftIcon={<FaKey />}
-            >
-              {component.keycloakAuthName}
-            </Button>
-          </>
-        )}
+
+        {component.passwordEnabled && <UsernamePasswordLogin />}
+
+        <div className="flex flex-col items-center space-y-4 w-full max-w-md">
+          {component.authschPromoted && (
+            <>
+              <Button className="w-full" onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}>
+                <LogIn className="mr-2 h-4 w-4" /> {component.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}
+              </Button>
+              {(component.googleSsoEnabled || component.keycloakEnabled) && <span>vagy</span>}
+            </>
+          )}
+          {component.googleSsoEnabled && (
+            <>
+              <Button className="w-full" onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/google`)}>
+                <Chrome className="mr-2 h-4 w-4" /> Google SSO
+              </Button>
+              {component.keycloakEnabled && <span>vagy</span>}
+            </>
+          )}
+          {component.keycloakEnabled && (
+            <>
+              <Button className="w-full" onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/keycloak`)}>
+                <Key className="mr-2 h-4 w-4" /> {component.keycloakAuthName}
+              </Button>
+            </>
+          )}
+        </div>
         {component.bottomMessage && (
-          <Box maxW={440} textAlign="center">
+          <div className="max-w-md text-center">
             <Markdown text={component.bottomMessage} />
-          </Box>
+          </div>
         )}
-      </VStack>
+      </div>
     </CmschPage>
   )
 }

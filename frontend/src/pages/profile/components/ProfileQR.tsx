@@ -1,59 +1,44 @@
-import {
-  Box,
-  Button,
-  Center,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react'
+import type { Profile } from '@/api/contexts/config/types'
+import { WalletButton } from '@/common-components/WalletButton'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import type { ProfileView } from '@/util/views/profile.view'
+import { useState } from 'react'
 import { FaQrcode } from 'react-icons/fa'
 import QRCode from 'react-qr-code'
-import type { Profile } from '../../../api/contexts/config/types'
-import { WalletButton } from '../../../common-components/WalletButton'
-import { useBrandColor } from '../../../util/core-functions.util.ts'
-import type { ProfileView } from '../../../util/views/profile.view'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
     <>
-      <Center flexDirection="column">
-        <Text fontSize="3xl" fontWeight={500}>
-          {component.qrTitle}
-        </Text>
-        <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
+      <div className="flex flex-col items-center">
+        <span className="text-3xl font-medium">{component.qrTitle}</span>
+        <Button className="mt-5" onClick={() => setIsOpen(true)}>
+          <FaQrcode className="mr-2" />
           QR kód felmutatása
         </Button>
-        <Text fontSize="sm" color={useBrandColor(300, 300)} my={5}>
-          vagy
-        </Text>
+        <span className="my-5 text-sm text-primary">vagy</span>
         {profile.fullName && profile.cmschId && <WalletButton type="apple" name={profile.fullName} userId={profile.cmschId} />}
         {profile.fullName && profile.cmschId && <WalletButton type="google" name={profile.fullName} userId={profile.cmschId} />}
-      </Center>
+      </div>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{profile.fullName}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{profile.fullName}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center py-4">
             {profile.cmschId ? (
-              <Center flexDirection="column">
-                <Box w="fit-content" maxW="100%" p={2} mb={5} borderRadius={3} backgroundColor="white">
-                  <QRCode value={profile.cmschId} />
-                </Box>
-              </Center>
+              <div className="mb-5 w-fit max-w-full rounded-[3px] p-2" style={{ backgroundColor: '#ffffff' }}>
+                <QRCode value={profile.cmschId} />
+              </div>
             ) : (
-              <Text>Hiba: Cmsch azonosító nem található</Text>
+              <p>Hiba: Cmsch azonosító nem található</p>
             )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

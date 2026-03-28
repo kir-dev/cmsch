@@ -35,7 +35,7 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): UserEnti
 }
 
 fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
-    return if (this == null) null else userService.findById(this.name).getOrNull()
+    return if (this == null) null else userService.findByInternalId(this.name).getOrNull()
 }
 
 fun Map<String, String>.urlEncode(): String =

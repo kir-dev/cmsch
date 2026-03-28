@@ -1,24 +1,22 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { TeamResponses } from '@/util/views/team.view'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { useState } from 'react'
-import { TeamResponses } from '../../../../util/views/team.view'
 
 export const useTeamJoin = (onResponse: (response: TeamResponses) => void) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const joinTeam = (id: number) => {
-    setLoading(true)
-    axios //todo
-      .post<TeamResponses>(`/api/team/join`, { id })
-      .then((res) => {
-        onResponse(res.data)
-      })
-      .catch((err) => {
-        setError(err)
-        onResponse(TeamResponses.ERROR)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
-  return { joinTeamLoading: loading, joinTeamError: error, joinTeam }
+  const queryClient = useQueryClient()
+  return useMutation<TeamResponses, Error, number>({
+    mutationFn: async (id) => {
+      const res = await axios.post<TeamResponses>(`/api/team/join`, { id })
+      return res.data
+    },
+    onSuccess: async (data) => {
+      onResponse(data)
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.TEAM_DETAILS] })
+    },
+    onError: (err) => {
+      onResponse(TeamResponses.ERROR)
+      console.error(err)
+    }
+  })
 }

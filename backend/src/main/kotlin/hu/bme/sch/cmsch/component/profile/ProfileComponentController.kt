@@ -32,5 +32,5 @@ class ProfileComponentController(
     componentMenuPriority = 6,
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

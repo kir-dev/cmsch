@@ -1,5 +1,4 @@
-import { Flex, Heading, VStack } from '@chakra-ui/react'
-import type { QrLevelDto } from '../../../util/views/qrFight.view'
+import type { QrLevelDto } from '@/util/views/qrFight.view'
 import { TotemField } from './TotemField'
 
 interface TotemDataDisplay {
@@ -8,13 +7,13 @@ interface TotemDataDisplay {
 
 export function TotemDataDisplay({ level }: TotemDataDisplay) {
   return (
-    <VStack align="flex-start" w="100%">
-      <Heading fontSize="lg">Totemek</Heading>
-      <Flex wrap="wrap" w="100%" gap={5}>
+    <div className="flex flex-col items-start w-full space-y-2">
+      <h3 className="text-lg font-bold">Totemek</h3>
+      <div className="flex flex-wrap w-full gap-5">
         {level.totems.map((t) => (
           <TotemField totem={t} key={t.name} />
         ))}
-      </Flex>
-    </VStack>
+      </div>
+    </div>
   )
 }

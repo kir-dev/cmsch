@@ -33,83 +33,82 @@ class RiddleComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(setOf(),
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
-    var visibleRiddlesPerCategory by NumberSettingRef(1, type = SettingType.NUMBER, fieldName = "Egyidőben mutatott riddleök száma",
-        description = "Kategóriánként ennyi kerül megjelenítésre egyidőben, ennyi közül lehet választani"
-    )
+    var visibleRiddlesPerCategory by NumberSettingRef(1, type = SettingType.NUMBER, fieldName = "Egyidőben mutatott riddle-ök száma",
+        description = "Kategóriánként ennyi riddle jelenik meg egyszerre, amelyek közül a felhasználó választhat")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val shadowBanModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Shadow Ban",
-        description = "Küldjük el pihenni a \"túl aktív\" játékosokat, de csak titokban. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!")
+        description = "A megadott felhasználók vagy csoportok megoldásait a rendszer nem fogadja el, de erről nem kapnak értesítést. Felhasználónként vagy csoportonként kezdjen új sort, vagy használjon vesszőt elválasztóként.")
 
     var userShadowBanList by StringSettingRef(fieldName = "Tiltott játékosok listája",
         type = SettingType.LONG_TEXT, serverSideOnly = true,
-        description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani")
+        description = "A tiltott játékosok CMSCH ID-jai. Ezen játékosoktól a rendszer nem fogad el megoldásokat.")
 
     var groupShadowBanList by StringSettingRef(fieldName = "Tiltott csoportok listája", type = SettingType.LONG_TEXT,
-        serverSideOnly = true, description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat")
+        serverSideOnly = true, description = "A tiltott csoportok nevei. Ezen csoportok tagjaitól a rendszer nem fogad el megoldásokat.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val banModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Ban",
-        description = "Küldjük el pihenni a \"túl aktív\" játékosokat. Delikvensenként kezdj új sort, vagy válaszd el őket vesszővel!")
+        description = "A megadott felhasználók vagy csoportok megoldásait a rendszer nem fogadja el. Felhasználónként vagy csoportonként kezdjen új sort, vagy használjon vesszőt elválasztóként.")
 
     var userBanList by StringSettingRef(serverSideOnly = true, fieldName = "Tiltott játékosok listája",
         type = SettingType.LONG_TEXT,
-        description = "Ezektől a játékosoktól nem fogadunk el megoldásokat. internalId megadásával lehet egy játékost kitiltani")
+        description = "A tiltott játékosok CMSCH ID-jai. Ezen játékosoktól a rendszer nem fogad el megoldásokat.")
 
     var groupBanList by StringSettingRef(fieldName = "Tiltott csoportok listája", type = SettingType.LONG_TEXT,
-        serverSideOnly = true, description = "Ezektől a csoportoktól és tagjaitól nem fogadunk el megoldásokat")
+        serverSideOnly = true, description = "A tiltott csoportok nevei. Ezen csoportok tagjaitól a rendszer nem fogad el megoldásokat.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val scoringGroup by SettingGroup(fieldName = "Pontozás")
 
     var hintScorePercent by NumberSettingRef(100,
-        serverSideOnly = true, fieldName = "Hint pont érték", strictConversion = false,
-        description = "Ennyi százaléka lesz a hinttel megoldott riddle pont értéke a hint nélkül megoldottnak")
+        serverSideOnly = true, fieldName = "Hint pont érték (%)", strictConversion = false,
+        description = "A hinttel megoldott riddle-ért járó pontszám a teljes pontszám százalékában")
 
     var saveFailedAttempts by BooleanSettingRef(false, fieldName = "Hibás válaszok számának mentése",
-        description = "Jelentős plusz erőforrással jár ennek a használata ha sokan riddleöznek")
+        description = "Bekapcsolt állapotban a rendszer menti a hibás próbálkozásokat (jelentős erőforrás-többlettel járhat)")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val answerGroup by SettingGroup(fieldName = "Válaszok ellenőrzése",
-        description = "A transzformációt a beküldött és a riddleben található megoldásra is futtatjuk, tehát nem kell pl. ékezetek nélkülire átírni a megoldásokat.")
+        description = "A transzformációkat a beküldött válaszra és a tárolt megoldásra is lefuttatjuk.")
 
-    var ignoreCase by BooleanSettingRef(true, fieldName = "Kis/nagy betű ignorálása",
-        description = "A válaszoknál nem számít a kis- és nagybetű")
+    var ignoreCase by BooleanSettingRef(true, fieldName = "Kis- és nagybetű figyelmen kívül hagyása",
+        description = "A válaszok ellenőrzésekor nem számít a kis- és nagybetűk közötti különbség")
 
-    var ignoreWhitespace by BooleanSettingRef(false, fieldName = "Elválasztás ignorálása",
-        description = "A válaszoknál nem számít a szavak elválasztása (szóköz, kötőjel, &, +, vessző)")
+    var ignoreWhitespace by BooleanSettingRef(false, fieldName = "Szóközök és elválasztók figyelmen kívül hagyása",
+        description = "A válaszok ellenőrzésekor nem számítanak a szóközök, kötőjelek és egyéb elválasztó karakterek")
 
-    var ignoreAccent by BooleanSettingRef(false, fieldName = "Ékezetek ignorálása",
-        description = "A válaszoknál nem számítanak az ékezetek (áéíóöőúüű)")
+    var ignoreAccent by BooleanSettingRef(false, fieldName = "Ékezetek figyelmen kívül hagyása",
+        description = "A válaszok ellenőrzésekor nem számítanak az ékezetek (pl. á helyett a is elfogadható)")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val skipGroup by SettingGroup(fieldName = "Átugrás funkció",
-        description = "Bizonyos megoldó létszám fölött átugorható a riddle")
+        description = "Bizonyos számú megoldó után a riddle átugorhatóvá válik")
 
-    var skipEnabled by BooleanSettingRef(true, fieldName = "Átugrás bekapcsolva",
-        description = "A riddle átugrás gomb elérhető")
+    var skipEnabled by BooleanSettingRef(true, fieldName = "Átugrás engedélyezve",
+        description = "A riddle átugrása gomb elérhető a felhasználók számára")
 
     var skipAfterGroupsSolved by NumberSettingRef(20, fieldName = "Átugrás ennyi megoldó után",
-        strictConversion = false, description = "Ennyi csapat vagy felhasználó megoldása után elérhető a gomb")
+        strictConversion = false, description = "Ennyi csapat vagy felhasználó megoldása után válik elérhetővé az átugrás")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val microserviceGroup by SettingGroup(fieldName = "Riddle microservice",
-        description = "A riddle megoldások kiszervezhetőek egy külön microservicebe")
+        description = "A riddle megoldások ellenőrzése kiszervezhető egy külső szolgáltatásba")
 
     var microserviceNodeBaseUrl by StringSettingRef("http://<pod>.<namespace>.svc.cluster.local",
-        serverSideOnly = true, type = SettingType.URL, fieldName = "Riddle node base URL-je",
-        description = "Ezen a címen érhető el clusteren belül a riddle node. Ez a formátum: http://<pod>.<namespace>.svc.cluster.local")
+        serverSideOnly = true, type = SettingType.URL, fieldName = "Riddle node belső URL-je",
+        description = "A riddle node elérhetősége a belső hálózaton (pl. Kubernetes clusteren belül)")
 
-    var microserviceSyncEnabled by BooleanSettingRef(false, fieldName = "Beállítások szinkronizációja",
-        description = "Ha egy riddle módosul akkor küld például értesítést a nodenak, hogy invalidálja a cachet (nincs implementálva)")
+    var microserviceSyncEnabled by BooleanSettingRef(false, fieldName = "Beállítások szinkronizálása",
+        description = "Bekapcsolt állapotban a rendszer értesíti a node-ot a riddle-ök módosításáról a cache invalidálásához (nincs implementálva)")
 
     override fun onPersist() {
         super.onPersist()

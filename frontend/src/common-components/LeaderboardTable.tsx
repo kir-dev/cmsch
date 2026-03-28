@@ -1,7 +1,7 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useSearch } from '@/util/useSearch'
+import type { LeaderBoardItemView } from '@/util/views/leaderBoardView'
 import { useCallback, useMemo } from 'react'
-import { useSearch } from '../util/useSearch'
-import type { LeaderBoardItemView } from '../util/views/leaderBoardView'
 import { CollapsableTableRow } from './CollapsableTableRow'
 import { SearchBar } from './SearchBar'
 
@@ -41,25 +41,36 @@ export const LeaderBoardTable = ({
   return (
     <>
       {searchEnabled && (
-        <Box mx={5}>
-          <SearchBar mb={5} {...searchArgs} />
-        </Box>
+        <div className="mx-5">
+          <SearchBar className="mb-5" {...searchArgs} />
+        </div>
       )}
-      <Box>
-        {searchArgs.filteredData.map((item, idx) => (
-          <CollapsableTableRow
-            collapsable={detailed && (item.items || false) && item.items.length > 0}
-            key={item.position}
-            data={item}
-            idx={idx}
-            showGroup={showGroup}
-            suffix={suffix}
-            categorized={categorized}
-            showDescription={showDescription}
-          />
-        ))}
-      </Box>
-      {data.length === 0 && <Text>Nincs megjeleníthető információ.</Text>}
+      <Table>
+        <TableHeader>
+          <TableRow className="sr-only">
+            {!categorized && <TableHead>#</TableHead>}
+            <TableHead>Név</TableHead>
+            {showGroup && <TableHead>Csoport</TableHead>}
+            <TableHead>Pont</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {searchArgs.filteredData.map((item, idx) => (
+            <CollapsableTableRow
+              collapsable={detailed && (item.items || false) && item.items.length > 0}
+              key={item.position}
+              data={item}
+              idx={idx}
+              showGroup={showGroup}
+              suffix={suffix}
+              categorized={categorized}
+              showDescription={showDescription}
+            />
+          ))}
+        </TableBody>
+      </Table>
+      {data.length === 0 && <p className="p-5">Nincs megjeleníthető információ.</p>}
     </>
   )
 }

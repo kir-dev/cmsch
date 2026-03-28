@@ -1,23 +1,21 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { useState } from 'react'
 
 export const useTeamMemberKick = (onSuccess: (response: boolean) => void, onError = () => {}) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const kickMember = (id: number) => {
-    setLoading(true)
-    axios //todo
-      .put<boolean>(`/api/team/admin/kick-user`, { id })
-      .then((res) => {
-        onSuccess(res.data)
-      })
-      .catch((err) => {
-        setError(err)
-        onError()
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
-  return { kickLoading: loading, kickError: error, kickMember }
+  const queryClient = useQueryClient()
+  return useMutation<boolean, Error, number>({
+    mutationFn: async (id) => {
+      const res = await axios.put<boolean>(`/api/team/admin/kick-user`, { id })
+      return res.data
+    },
+    onSuccess: async (data) => {
+      onSuccess(data)
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.TEAM_DETAILS] })
+    },
+    onError: (err) => {
+      console.error(err)
+      onError()
+    }
+  })
 }

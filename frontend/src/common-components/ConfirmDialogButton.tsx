@@ -1,30 +1,30 @@
 import {
   AlertDialog,
-  AlertDialogBody,
-  AlertDialogCloseButton,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  type ResponsiveValue,
-  useDisclosure
-} from '@chakra-ui/react'
-import { useRef, useState } from 'react'
-import { useBrandColor } from '../util/core-functions.util.ts'
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
+import { Button, buttonVariants } from '@/components/ui/button'
+import type { VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 
 interface ConfirmDialogButtonProps {
   headerText?: string
   bodyText?: string
   buttonText?: string
   buttonColorScheme?: string
-  buttonVariant?: string
+  buttonVariant?: VariantProps<typeof buttonVariants>['variant']
   confirmButtonText?: string
   refuseButtonText?: string
-  buttonWidth?: ResponsiveValue<string | number>
+  buttonWidth?: string
 
-  // allow async confirm actions
-  confirmAction(): Promise<void> | void
+  confirmAction(): void | Promise<void>
 }
 
 export const ConfirmDialogButton = ({
@@ -33,55 +33,40 @@ export const ConfirmDialogButton = ({
   buttonText = '',
   buttonColorScheme,
   buttonVariant,
-  buttonWidth,
   confirmButtonText = 'Igen',
   refuseButtonText = 'Mégse',
   confirmAction
 }: ConfirmDialogButtonProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = useRef(null)
-  const brandColor = useBrandColor()
-  const [isConfirming, setIsConfirming] = useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const resolvedVariant = buttonColorScheme === 'red' ? 'destructive' : buttonVariant
 
   const handleConfirm = async () => {
+    setIsPending(true)
     try {
-      setIsConfirming(true)
-      // support sync and async confirmAction
-      await Promise.resolve(confirmAction())
-      onClose()
+      await confirmAction()
     } finally {
-      setIsConfirming(false)
+      setIsPending(false)
     }
   }
 
   return (
-    <>
-      <Button onClick={onOpen} width={buttonWidth} colorScheme={buttonColorScheme} variant={buttonVariant}>
-        {buttonText}
-      </Button>
-      <AlertDialog
-        preserveScrollBarGap={true}
-        motionPreset="slideInBottom"
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        isCentered
-      >
-        <AlertDialogOverlay />
-        <AlertDialogContent>
-          {headerText && <AlertDialogHeader>{headerText}</AlertDialogHeader>}
-          <AlertDialogCloseButton />
-          {bodyText && <AlertDialogBody>{bodyText}</AlertDialogBody>}
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose} isDisabled={isConfirming}>
-              {refuseButtonText}
-            </Button>
-            <Button colorScheme={brandColor} ml={3} onClick={handleConfirm} isLoading={isConfirming}>
-              {confirmButtonText}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant={resolvedVariant}>{buttonText}</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          {headerText && <AlertDialogTitle>{headerText}</AlertDialogTitle>}
+          {bodyText && <AlertDialogDescription>{bodyText}</AlertDialogDescription>}
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isPending}>{refuseButtonText}</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm} disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {confirmButtonText}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

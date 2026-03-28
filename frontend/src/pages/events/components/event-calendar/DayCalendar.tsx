@@ -1,9 +1,10 @@
-import { Box, Heading, HStack, IconButton, useColorModeValue } from '@chakra-ui/react'
+import { Button } from '@/components/ui/button'
+import { useDate } from '@/hooks/useDate.ts'
+import { formatHu } from '@/util/core-functions.util'
+import type { EventListView } from '@/util/views/event.view'
 import { addDays, endOfDay, startOfDay } from 'date-fns'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { formatHu, useBrandColor } from '../../../../util/core-functions.util'
-import type { EventListView } from '../../../../util/views/event.view'
 import { CurrentDateBar } from './CurrentDateBar'
 import { EventBox } from './EventBox'
 import { HourColumn } from './HourColumn'
@@ -15,11 +16,9 @@ interface DayCalendarProps {
 }
 
 export function DayCalendar({ events }: DayCalendarProps) {
-  const brandColor = useBrandColor()
   const [scale, setScale] = useState(1)
-  const [startDate, setStartDate] = useState(startOfDay(new Date()))
-
-  const bg = useColorModeValue('#00000005', '#FFFFFF05')
+  const now = useDate()
+  const [startDate, setStartDate] = useState(startOfDay(now))
 
   const eventsForThisDay = useMemo(() => mapEventsForDay(events, startDate), [events, startDate])
 
@@ -32,32 +31,34 @@ export function DayCalendar({ events }: DayCalendarProps) {
   }
 
   const incrementScale = () => {
-    setScale((prev) => prev + 0.2)
+    setScale((prev) => Math.min(prev + 0.2, 2))
   }
 
   const decrementScale = () => {
-    setScale((prev) => prev - 0.2)
+    setScale((prev) => Math.max(prev - 0.2, 0.6))
   }
 
   return (
-    <Box my={5} w="full" display={['block', null, 'none']}>
-      <HStack justify="space-between">
-        <IconButton colorScheme={brandColor} aria-label="Előző nap" icon={<FaChevronLeft />} onClick={decrementDay} />
-        <Heading as="h2" size="md">
-          {formatHu(startDate, 'EEEE, MMMM dd.')}
-        </Heading>
-        <IconButton colorScheme={brandColor} aria-label="Következő nap" icon={<FaChevronRight />} onClick={incrementDay} />
-      </HStack>
+    <div className="my-5 w-full block md:hidden">
+      <div className="flex justify-between items-center">
+        <Button variant="ghost" className="text-primary" size="icon" aria-label="Előző nap" onClick={decrementDay}>
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <h2 className="text-xl font-bold">{formatHu(startDate, 'EEEE, MMMM dd.')}</h2>
+        <Button variant="ghost" className="text-primary" size="icon" aria-label="Következő nap" onClick={incrementDay}>
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
       <ZoomBar incrementScale={incrementScale} decrementScale={decrementScale} scale={scale} />
-      <HStack maxH={820} mt={5} overflowY="auto" overflowX="hidden" pt={5} align="flex-start">
+      <div className="flex flex-row max-h-[820px] mt-5 overflow-y-auto overflow-x-hidden pt-5 items-start space-x-2">
         <HourColumn h={scale * 800} />
-        <Box borderRadius="md" position="relative" w="full" h={scale * 800} bg={bg} p={2}>
+        <div className="rounded-md relative w-full p-2 bg-black/2 dark:bg-white/2" style={{ height: scale * 800 }}>
           <CurrentDateBar minTimestamp={startDate.getTime()} maxTimestamp={endOfDay(startDate).getTime()} />
           {eventsForThisDay.map((event) => (
             <EventBox event={event} key={event.url} />
           ))}
-        </Box>
-      </HStack>
-    </Box>
+        </div>
+      </div>
+    </div>
   )
 }

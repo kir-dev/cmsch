@@ -27,13 +27,47 @@ class QrFightComponentController(
     adminMenuService,
     QrFightComponent::class.java,
     component,
-    ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
-    "QR Fight",
-    "QR Fight beállítások",
-    auditLogService = auditLogService,
-    menuService = menuService,
-    storageService = storageService
-) {
+        ControlPermissions.PERMISSION_CONTROL_QR_FIGHT,
+        "QR Fight",
+        "QR Fight beállítások",
+        auditLogService = auditLogService,
+        menuService = menuService,
+        storageService = storageService,
+        documentationMarkdown = """
+    A **QR Fight** komponens egy interaktív, területfoglalós játékot valósít meg. A csapatok QR-kódok ("tornyok") beolvasásával szerezhetnek területeket és pontokat.
+    
+    ## Beállítások
+    
+    A **Komponens beállításai** menüpontban konfigurálhatod a játékot:
+    
+    - **Lap címe** – a böngésző címsorában megjelenő szöveg.
+    - **Menü neve** – a menüben látható név.
+    - **Jogosultságok** – mely szerepkörökkel érhető el a játék oldala.
+    - **QR Fight engedélyezve** – a játék aktív állapotának kapcsolója.
+    - **Napi limit** – szabályozható, hogy egy játékos hányszor olvashat be egy tornyot egy nap (visszaélések elkerülésére).
+    - **InduláSch integráció** – speciális összeköttetés az InduláSch rendszerrel, ahol a toronyfoglalások állása külső kijelzőkön is megjeleníthető.
+    
+    ## QR Fight kezelése
+    
+    Két fő entitással dolgozhatsz:
+    
+    1. **Szintek (Levels)** – a játék különböző fázisai vagy területei.
+    2. **Tornyok (Towers)** – a konkrét beolvasandó pontok. Megadható a nevük, a selectoruk és az értékük.
+    
+    ## Torony létrehozása / szerkesztése
+    
+    - **Név** – a torony megnevezése.
+    - **Selector** – egyedi azonosító a toronyhoz.
+    - **Pontszám** – mennyit ér a torony elfoglalása vagy megtartása.
+    - **Látható** – megjelenjen-e a térképen/listában.
+    
+    ## Használati tippek
+    
+    - A **Napi torony beolvasás limit** (-1-re állítva kikapcsolható) segít abban, hogy a csapatok ne tudják folyamatos "spammeléssel" uralni a tornyokat.
+    - Az **InduláSch integráció** segítségével valós időben mutathatod a rendezvény helyszínén, hogy éppen melyik csapat vezeti a harcot.
+    """
+    )
+     {
 
     // FIXME: Add button
     @GetMapping("/execute-towers")

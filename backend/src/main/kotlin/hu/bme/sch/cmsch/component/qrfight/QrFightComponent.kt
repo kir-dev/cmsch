@@ -32,13 +32,13 @@ class QrFightComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var enabled by BooleanSettingRef(fieldName = "QR Fight engedélyezve",
-        description = "Ha be van kapcsolva, akkor mennek a QR fightos endpointok")
+        description = "Bekapcsolt állapotban a QR Fight funkciók elérhetőek")
 
     var topMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var apiTokens by StringSettingRef("tower:token", serverSideOnly = true, fieldName = "API tokenek",
         description = "Formátum: towerSelector:token, ...")

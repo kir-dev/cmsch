@@ -1,8 +1,8 @@
+import { QueryKeys } from '@/api/hooks/queryKeys.ts'
+import { joinPath } from '@/util/core-functions.util'
+import type { LeaderBoardView } from '@/util/views/leaderBoardView'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { joinPath } from '../../../util/core-functions.util'
-import type { LeaderBoardView } from '../../../util/views/leaderBoardView'
-import { QueryKeys } from '../queryKeys'
 
 type TempLeaderBoardItemView = {
   id?: number

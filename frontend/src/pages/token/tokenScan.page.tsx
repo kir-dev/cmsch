@@ -1,21 +1,18 @@
-import { Button, ButtonGroup, Fade, Heading, Spinner } from '@chakra-ui/react'
-import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
+import { ArrowLeft, Loader2, QrCode } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
+import { useAuthContext } from '@/api/contexts/auth/useAuthContext'
+import { useScanTokenMutation } from '@/api/hooks/token/useScanTokenMutation'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { QrReader } from '@/common-components/QrReader'
+import { Button } from '@/components/ui/button'
+import { AbsolutePaths } from '@/util/paths'
 import { useEffect } from 'react'
-import { useAuthContext } from '../../api/contexts/auth/useAuthContext'
-import { useScanTokenMutation } from '../../api/hooks/token/useScanTokenMutation'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { QrReader } from '../../common-components/QrReader'
-import { useBrandColor } from '../../util/core-functions.util.ts'
-import { AbsolutePaths } from '../../util/paths'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScan = () => {
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthContext()
-  const spinnerColor = useBrandColor(500, 600)
-  const brandColor = useBrandColor()
   const { mutate, isPending, isError, reset, data, isIdle } = useScanTokenMutation()
 
   const handleScan = (qrData: string | null) => {
@@ -34,31 +31,32 @@ const TokenScan = () => {
 
   return (
     <CmschPage loginRequired={true} title="QR beolvasás">
-      <Heading mb={5}>QR beolvasás</Heading>
-      {isPending && <Spinner color={spinnerColor} size="xl" thickness="0.3rem" />}
+      <h2 className="text-3xl font-bold mb-5 font-heading">QR beolvasás</h2>
+      {isPending && <Loader2 className="h-12 w-12 animate-spin mb-5 text-primary" />}
       {isIdle && <QrReader onScan={handleScan} />}
 
       {!isIdle && (
-        <Fade in>
+        <div className="animate-in fade-in duration-500">
           <QRScanResultComponent response={data} isError={isError} />
-        </Fade>
+        </div>
       )}
 
-      <ButtonGroup mt={10}>
+      <div className="flex flex-row space-x-2 mt-10">
         <Button
-          leftIcon={<FaArrowLeft />}
+          variant="outline"
+          className="flex items-center gap-2"
           onClick={() => {
             navigate(AbsolutePaths.TOKEN)
           }}
         >
-          Vissza
+          <ArrowLeft className="h-4 w-4" /> Vissza
         </Button>
         {!isIdle && (
-          <Button colorScheme={brandColor} leftIcon={<FaQrcode />} onClick={reset}>
-            Új QR scannelése
+          <Button className="flex items-center gap-2" onClick={reset}>
+            <QrCode className="h-4 w-4" /> Új QR scannelése
           </Button>
         )}
-      </ButtonGroup>
+      </div>
     </CmschPage>
   )
 }
