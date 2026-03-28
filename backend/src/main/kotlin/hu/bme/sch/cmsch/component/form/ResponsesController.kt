@@ -5,6 +5,7 @@ import tools.jackson.databind.ObjectMapper
 import tools.jackson.dataformat.csv.CsvMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
@@ -111,7 +112,8 @@ class ResponsesController(
             true,
             "Exportálás CSV fájlba"
         )
-    )
+    ),
+    innerSearchSettings = calculateSearchSettings<ResponseEntity>(false),
 ) {
 
     private val exportPermission = StaffPermissions.PERMISSION_EDIT_FORM_RESULTS
