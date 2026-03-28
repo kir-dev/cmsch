@@ -43,7 +43,7 @@ interface ClockSegmentProps {
 const ClockSegment = ({ value, label }: ClockSegmentProps) => {
   const valueText = (value || '00').padStart(2, '0')
   return (
-    <div className="flex flex-col items-center w-full md:w-1/5 mx-10 my-5">
+    <div className="flex flex-col items-center w-full md:w-1/5 mx-10 my-5 gap-2">
       <h2 className="text-6xl font-bold leading-10">{valueText}</h2>
       <p>{label}</p>
     </div>
