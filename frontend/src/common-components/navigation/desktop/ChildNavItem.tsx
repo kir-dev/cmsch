@@ -7,10 +7,10 @@ export const ChildNavItem = ({ menu }: { menu: Menu }) => {
   return (
     <NavigationMenuLink asChild>
       <LinkComponent url={menu.url || '#'} external={menu.external}>
-        <div className="group block p-2 rounded-md transition-colors hover:bg-accent">
+        <div className="group block p-2 rounded-md transition-colors hover:bg-primary">
           <div className="flex flex-row items-center">
             <div>
-              <span className="font-medium transition-colors group-hover:text-primary">{menu.name}</span>
+              <span className="font-medium transition-colors group-hover:text-primary-foreground">{menu.name}</span>
             </div>
             <div
               className={
@@ -18,7 +18,7 @@ export const ChildNavItem = ({ menu }: { menu: Menu }) => {
                 '-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'
               }
             >
-              <ChevronRight className="h-5 w-5 text-primary" />
+              <ChevronRight className="h-5 w-5 text-primary-foreground" />
             </div>
           </div>
         </div>

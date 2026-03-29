@@ -18,7 +18,7 @@ export const NewsListItem = ({ news, fontSize, useLink }: Props) => {
       className={cn(
         'rounded-md border p-4 transition-colors',
         news.highlighted ? 'border-primary' : 'border-border',
-        useLink ? 'hover:bg-accent/50' : ''
+        useLink ? 'hover:bg-primary/50' : ''
       )}
     >
       <div className="flex flex-col-reverse gap-4 md:flex-row">
