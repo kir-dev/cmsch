@@ -9,11 +9,11 @@ export const AppBackground: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <div
-        className="fixed inset-0 hidden h-screen w-screen bg-no-repeat bg-cover bg-center bg-background text-foreground md:block"
+        className="fixed inset-0 hidden h-screen w-screen bg-no-repeat bg-cover bg-center bg-app-background text-foreground md:block"
         style={{ backgroundImage }}
       ></div>
       <div
-        className="fixed inset-0 block h-screen w-screen bg-no-repeat bg-cover bg-center bg-background text-foreground md:hidden"
+        className="fixed inset-0 block h-screen w-screen bg-no-repeat bg-cover bg-center bg-app-background text-foreground md:hidden"
         style={{ backgroundImage: mobileBackgroundImage }}
       ></div>
       <div className="text-foreground relative">{children}</div>

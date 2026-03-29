@@ -1,5 +1,5 @@
 import { useConfigContext } from '@/api/contexts/config/ConfigContext'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { useColorModeValue } from '@/util/core-functions.util'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
@@ -26,7 +26,7 @@ export const Navbar = () => {
           <button
             onClick={() => setIsOpen(true)}
             className={
-              'p-2 inline-flex items-center justify-center rounded-md hover:bg-accent ' +
+              'p-2 inline-flex items-center justify-center rounded-md hover:bg-primary ' +
               'transition-colors focus-visible:ring-2 focus-visible:ring-ring'
             }
             aria-label="Navigáció megnyitása"
@@ -56,6 +56,7 @@ export const Navbar = () => {
       </div>
       <Sheet open={isOpen} modal={true} onOpenChange={setIsOpen}>
         <SheetContent side="top" className="w-full p-0" style={{ backdropFilter, backgroundColor: background, color: textColor }}>
+          <SheetTitle className="invisible absolute">Menü</SheetTitle>
           <div className="pt-12">
             <MobileNav onNavigate={() => setIsOpen(false)} />
           </div>

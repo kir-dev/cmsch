@@ -4,7 +4,7 @@ import { Loading } from '@/common-components/Loading'
 export function LoadingPage() {
   return (
     <Loading>
-      <CmschPage title="Betöltés" className="w-fit">
+      <CmschPage title="Betöltés">
         <div className="flex items-center justify-center">
           <Loading />
         </div>
