@@ -8,8 +8,8 @@
   margin-inline: auto;
   padding-inline: 2rem;
   @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
+  max-width: none;
+}
   @media (width >= 1400px) {
     max-width: 1400px;
   }
@@ -19,6 +19,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-app-background: var(--app-background);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -33,9 +34,6 @@
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
 
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
@@ -92,13 +90,14 @@
 
 @layer base {
   :root {
-    --background: var(--light-bg, #ffffff);
+    --app-background: var(--light-bg, #ffffff);
+    --background: var(--light-container-bg, #ffffff);
     --foreground: var(--light-text, #1a202c);
 
     --card: var(--light-container-bg, #ffffff);
     --card-foreground: var(--light-text, #1a202c);
 
-    --popover: var(--light-bg, #ffffff);
+    --popover: var(--light-container-bg, #ffffff);
     --popover-foreground: var(--light-text, #1a202c);
 
     --primary: var(--light-primary, #f15a29);
@@ -108,10 +107,7 @@
     --secondary-foreground: var(--light-neutral-foreground, #1a202c);
 
     --muted: var(--light-neutral, #edf2f7);
-    --muted-foreground: #718096;
-
-    --accent: var(--light-neutral, #edf2f7);
-    --accent-foreground: var(--light-neutral-foreground, #1a202c);
+    --muted-foreground: var(--light-neutral-foreground, #1a202c);
 
     --success: var(--light-success, #48bb78);
     --success-foreground: var(--light-success-foreground, #ffffff);
@@ -136,13 +132,14 @@
   }
 
   .dark {
-    --background: var(--dark-bg, #171923);
+    --app-background: var(--dark-bg, #171923);
+    --background: var(--dark-container-bg, #171923);
     --foreground: var(--dark-text, #ffffffeb);
 
     --card: var(--dark-container-bg, #171923);
     --card-foreground: var(--dark-text, #ffffffeb);
 
-    --popover: var(--dark-bg, #171923);
+    --popover: var(--dark-container-bg, #171923);
     --popover-foreground: var(--dark-text, #ffffffeb);
 
     --primary: var(--dark-primary, #f15a29);
@@ -152,10 +149,7 @@
     --secondary-foreground: var(--dark-neutral-foreground, #ffffffeb);
 
     --muted: var(--dark-neutral, #2d3748);
-    --muted-foreground: #a0aec0;
-
-    --accent: var(--dark-neutral, #2d3748);
-    --accent-foreground: var(--dark-neutral-foreground, #ffffffeb);
+    --muted-foreground: var(--dark-neutral-foreground, #ffffffeb);
 
     --success: var(--dark-success, #68d391);
     --success-foreground: var(--dark-success-foreground, #1a202c);

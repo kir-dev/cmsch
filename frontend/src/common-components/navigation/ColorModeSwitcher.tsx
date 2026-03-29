@@ -14,7 +14,7 @@ export const ColorModeSwitcher = ({ color }: { color?: string }) => {
     <button
       aria-label="Sötét-világos mód váltás"
       onClick={toggleColorMode}
-      className="p-2 rounded-md hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring"
+      className="p-2 rounded-md hover:bg-primary-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring"
       style={{ color }}
     >
       {isLightMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}{' '}

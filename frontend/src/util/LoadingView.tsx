@@ -22,7 +22,9 @@ export const LoadingView: FC<LoadingViewProps> = ({ errorAction, hasError, error
           <h2 className="text-center text-2xl font-bold">{errorTitle}</h2>
           <p className="mt-4 max-w-96 text-center">{errorMessage}</p>
           <div className="mt-4 flex justify-center">
-            <Button onClick={errorAction}>Újra</Button>
+            <Button onClick={errorAction} className="min-w-32">
+              Újra
+            </Button>
           </div>
         </div>
       </div>
