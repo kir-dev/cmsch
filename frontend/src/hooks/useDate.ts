@@ -18,6 +18,6 @@ export const useDate = (refreshIntervalMs?: number) => {
 }
 
 export const useTime = (refreshIntervalMs?: number) => {
-  const timeSupplier = useCallback(() => Date.now(), [])
+  const timeSupplier = useCallback(() => Date.now() / 1000, [])
   return useRefreshedInterval(timeSupplier, refreshIntervalMs)
 }
