@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
-import { useTime } from '@/hooks/useDate.ts'
+import { useTimeInSeconds } from '@/hooks/useDate.ts'
 import { stringifyTimeStamp } from '@/util/core-functions.util.ts'
 import { l } from '@/util/language'
 import { AbsolutePaths } from '@/util/paths'
@@ -46,7 +46,7 @@ const TaskPage = () => {
   const [fileAnswer, setFileAnswer] = useState<File | undefined>(undefined)
   const filePickerRef = useRef<FilePicker>(null)
   const [codeAnswer, setCodeAnswer] = useState<string>(`#include <stdio.h>\nint main() {\n  printf("Hello, World!");\n  return 0;\n}`)
-  const now = useTime(10000)
+  const now = useTimeInSeconds(10000)
   const component = useConfigContext()?.components?.task
 
   const { toast } = useToast()
