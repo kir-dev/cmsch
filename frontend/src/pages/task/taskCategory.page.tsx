@@ -6,7 +6,7 @@ import { CmschPage } from '@/common-components/layout/CmschPage'
 import Markdown from '@/common-components/Markdown.tsx'
 import { PageStatus } from '@/common-components/PageStatus'
 import { Badge } from '@/components/ui/badge'
-import { useTime } from '@/hooks/useDate.ts'
+import { useTimeInSeconds } from '@/hooks/useDate.ts'
 import { AbsolutePaths } from '@/util/paths'
 import { Link, Navigate, useParams } from 'react-router'
 import { TaskStatusBadge } from './components/TaskStatusBadge'
@@ -16,7 +16,7 @@ const TaskCategoryPage = () => {
   const { isLoading, isError, data } = useTasksInCategoryQuery(id || 'UNKNOWN')
 
   const component = useConfigContext()?.components?.task
-  const now = useTime(10000)
+  const now = useTimeInSeconds(10000)
 
   if (!id) return <Navigate to={AbsolutePaths.TASKS} />
 
