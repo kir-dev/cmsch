@@ -29,6 +29,7 @@ export const Paths = {
   ACCESS_KEY: 'access-key',
   MAP: 'map',
   DEBT: 'debt',
+  GALLERY: 'gallery',
   RESET_PASSWORD: 'reset-password'
 } as const
 export type Paths = (typeof Paths)[keyof typeof Paths]
@@ -63,6 +64,7 @@ export const AbsolutePaths = {
   ACCESS_KEY: '/access-key',
   MAP: '/map',
   DEBT: '/debt',
+  GALLERY: '/gallery',
   RESET_PASSWORD: '/reset-password'
 } as const
 export type AbsolutePaths = (typeof AbsolutePaths)[keyof typeof AbsolutePaths]
@@ -98,6 +100,7 @@ export const ApiPaths = {
   TINDER_INTERACTION: '/api/tinder/community/interact',
   ACCESS_KEY: '/api/access-key',
   HOME_NEWS: '/api/home/news',
+  GALLERY: '/api/gallery',
   HOME_GALLERY: '/api/gallery/home',
   ADD_PUSH_NOTIFICATION_TOKEN: '/api/pushnotification/add-token',
   DELETE_PUSH_NOTIFICATION_TOKEN: '/api/pushnotification/delete-token',

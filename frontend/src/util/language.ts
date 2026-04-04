@@ -85,7 +85,8 @@ const officialLanguageData: Partial<Record<keyof typeof friendlyLanguageData, st
   'login-status-rate-limited': 'Túl sok próbálkozás, kérlek várj egy kicsit!',
   'login-status-invalid-token': 'Érvénytelen vagy lejárt token!',
   'login-status-token-expired': 'A token lejárt!',
-  'login-status-weak-password': 'A jelszónak legalább 8 karakter hosszúnak kell lennie!'
+  'login-status-weak-password': 'A jelszónak legalább 8 karakter hosszúnak kell lennie!',
+  'gallery-empty-message': 'Nincs kép a galériában'
 }
 
 const friendlyLanguageData = {
@@ -165,7 +166,8 @@ const friendlyLanguageData = {
   'login-status-rate-limited': 'Túl sok próbálkozás, kérlek várj egy kicsit!',
   'login-status-invalid-token': 'Érvénytelen vagy lejárt token!',
   'login-status-token-expired': 'A token lejárt!',
-  'login-status-weak-password': 'A jelszónak legalább 8 karakter hosszúnak kell lennie!'
+  'login-status-weak-password': 'A jelszónak legalább 8 karakter hosszúnak kell lennie!',
+  'gallery-empty-message': 'Nincs kép a galériában'
 }
 
 const parameters: Partial<Record<keyof typeof friendlyLanguageData, Record<string, string | undefined>>> = {

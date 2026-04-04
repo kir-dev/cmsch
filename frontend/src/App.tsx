@@ -20,6 +20,7 @@ import EventCalendarPage from './pages/events/eventCalendar.page.tsx'
 import EventListPage from './pages/events/eventList.page'
 import ExtraPage from './pages/extra/extra.page.tsx'
 import FormPage from './pages/form/form.page.tsx'
+import GalleryPage from './pages/gallery/gallery.page.tsx'
 import HomePage from './pages/home/home.page'
 import ImpressumPage from './pages/impressum/impressum.page.tsx'
 import IndexPage from './pages/index/index.page'
@@ -94,6 +95,9 @@ export function App() {
                 </Route>
                 <Route path={Paths.FORM + '/:slug'}>
                   <Route index element={<FormPage />} />
+                </Route>
+                <Route path={Paths.GALLERY}>
+                  <Route index element={<GalleryPage />} />
                 </Route>
                 <Route path={Paths.IMPRESSUM}>
                   <Route index element={<ImpressumPage />} />

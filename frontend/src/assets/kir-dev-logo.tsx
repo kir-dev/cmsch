@@ -14,6 +14,10 @@ export const KirDevLogo = ({ ...props }: SVGProps<SVGSVGElement>) => (
         fill: black;
         stroke-width: 10;
       }
+      .dark #kir-dev-svg path, .dark #kir-dev-svg rect, .dark #kir-dev-svg polygon {
+        stroke: white;
+        fill: white;
+      }
 
       .chakra-ui-dark #kir-dev-svg path, .chakra-ui-dark #kir-dev-svg rect, .chakra-ui-dark #kir-dev-svg polygon {
         stroke: #EBECEC;

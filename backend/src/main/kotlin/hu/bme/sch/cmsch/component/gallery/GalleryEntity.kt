@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.env.Environment
 
@@ -53,6 +54,22 @@ data class GalleryEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var url: String = "",
+
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @ColumnDefault("''")
+    @property:GenerateInput(order = 5, label = "Thumbnail Url", note = "A galériában tárolt kép előnézetének linkje", type = InputType.IMAGE_URL)
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var thumbnailUrl: String = "",
+
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @ColumnDefault("''")
+    @property:GenerateInput(type = InputType.BLOCK_TEXT, order = 6, label = "Leírás")
+    @property:GenerateOverview(columnName = "Leírás", order = 4, useForSearch = true)
+    @property:ImportFormat
+    var description: String = "",
 ) : ManagedEntity, Duplicatable {
 
     override fun getEntityConfig(env: Environment) = EntityConfig(
