@@ -15,7 +15,11 @@ import hu.bme.sch.cmsch.component.form.ResponseRepository
 import hu.bme.sch.cmsch.component.news.NewsEntity
 import hu.bme.sch.cmsch.component.news.NewsRepository
 import hu.bme.sch.cmsch.component.qrfight.QrFightComponent
-import hu.bme.sch.cmsch.component.riddle.*
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleComponent
+import hu.bme.sch.cmsch.component.riddle.RiddleEntity
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleCategoryRepository
 import hu.bme.sch.cmsch.component.staticpage.StaticPageEntity
 import hu.bme.sch.cmsch.component.staticpage.StaticPageRepository
 import hu.bme.sch.cmsch.component.task.*
@@ -82,7 +86,6 @@ class TestConfig(
     private val formRepository: Optional<FormRepository>,
     private val formResponseRepository: Optional<ResponseRepository>,
     private val extraMenuRepository: ExtraMenuRepository,
-    private val riddleCacheManager: Optional<RiddleCacheManager>,
     private val startupPropertyConfig: StartupPropertyConfig,
 ) {
 
@@ -138,7 +141,6 @@ class TestConfig(
         if (inited)
             return
         inited = true
-        riddleCacheManager.ifPresent { it.resetCache(persistMapping = false, overrideMappings = false) }
     }
 
     private fun addForms(form: FormRepository, response: ResponseRepository) {

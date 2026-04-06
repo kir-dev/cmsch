@@ -58,9 +58,6 @@ data class RiddleMappingEntity(
 
 ): ManagedEntity, Duplicatable {
 
-    @Transient
-    var riddleCategoryId: Int = 0
-
     override fun getEntityConfig(env: Environment) = EntityConfig(
         name = "RiddleMapping",
         view = if (env.getProperty("hu.bme.sch.cmsch.startup.riddle-ownership-mode") === "USER")

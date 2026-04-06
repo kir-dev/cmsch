@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api")
 @ConditionalOnBean(RiddleComponent::class)
 class RiddleApiController(
-    private val riddleService: ConcurrentRiddleService,
+    private val riddleService: RiddleBusinessLogicService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val riddleComponent: RiddleComponent
 ) {
