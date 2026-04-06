@@ -6,12 +6,12 @@ import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.TimeService
-import hu.bme.sch.cmsch.util.transaction
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -21,63 +21,57 @@ class LocationService(
     private val userRepository: UserRepository,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val waypointRepository: WaypointRepository,
+    private val locationRepository: LocationRepository,
     private val locationComponent: LocationComponent,
     private val transactionManager: PlatformTransactionManager
 ) : EntityPageDataSource<LocationEntity, Int> {
 
-    private val tokenToLocationMapping = ConcurrentHashMap<String, LocationEntity>()
+    private val log = LoggerFactory.getLogger(javaClass)
 
     fun pushLocation(locationDto: LocationDto): LocationResponse {
-        if (!tokenToLocationMapping.containsKey(locationDto.token)) {
-            val user = transactionManager.transaction(readOnly = true) {
-                userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
-            }
-            if (user.isPresent) {
-                val userEntity = user.get()
-                if (userEntity.role.value >= RoleType.STAFF.value) {
-                    tokenToLocationMapping[locationDto.token] =
-                        LocationEntity(
-                            id = 0,
-                            userId = userEntity.id,
-                            userName = userEntity.fullName,
-                            alias = userEntity.alias,
-                            groupName = userEntity.groupName,
-                            markerColor = resolveColor(userEntity.groupName),
-                            broadcast = locationDto.broadcastEnabled
-                                    && userEntity.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString)
-                        )
-                } else {
-                    return LocationResponse("jogosulatlan", "n/a")
-                }
-            } else {
-                return LocationResponse("nem jogosult", "n/a")
-            }
+        val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + locationDto.token)
+        if (user.isEmpty) {
+            return LocationResponse("nem jogosult", "n/a")
         }
 
-        val entity = tokenToLocationMapping[locationDto.token]?.let {
-            it.longitude = locationDto.longitude
-            it.latitude = locationDto.latitude
-            it.altitude = locationDto.altitude
-            it.accuracy = locationDto.accuracy
-            it.speed = locationDto.speed
-            it.altitudeAccuracy = locationDto.altitudeAccuracy
-            it.heading = locationDto.heading
-            it.timestamp = clock.getTimeInSeconds()
-            it.broadcast = locationDto.broadcastEnabled && shareLocationAllowed(locationDto.token)
-            return@let it
+        val userEntity = user.get()
+        if (userEntity.role.value < RoleType.STAFF.value) {
+            return LocationResponse("jogosulatlan", "n/a")
         }
 
-        return if (entity != null) {
-            LocationResponse(if (entity.broadcast) "OK" else "BROADCAST", entity.groupName)
+        val existingLocation = locationRepository.findByToken(locationDto.token)
+        val entity = if (existingLocation.isPresent) {
+            existingLocation.get()
         } else {
-            LocationResponse("nem található", "n/a")
+            LocationEntity(
+                id = 0,
+                token = locationDto.token,
+                userId = userEntity.id,
+                userName = userEntity.fullName,
+                alias = userEntity.alias,
+                groupName = userEntity.groupName,
+                markerColor = resolveColor(userEntity.groupName),
+                broadcast = locationDto.broadcastEnabled
+                        && userEntity.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString)
+            )
         }
+
+        entity.longitude = locationDto.longitude
+        entity.latitude = locationDto.latitude
+        entity.altitude = locationDto.altitude
+        entity.accuracy = locationDto.accuracy
+        entity.speed = locationDto.speed
+        entity.altitudeAccuracy = locationDto.altitudeAccuracy
+        entity.heading = locationDto.heading
+        entity.timestamp = clock.getTimeInSeconds()
+        entity.broadcast = locationDto.broadcastEnabled && shareLocationAllowed(locationDto.token)
+
+        locationRepository.save(entity)
+        return LocationResponse(if (entity.broadcast) "OK" else "BROADCAST", entity.groupName)
     }
 
     private fun shareLocationAllowed(token: String): Boolean {
-        val user = transactionManager.transaction(readOnly = true) {
-            userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
-        }
+        val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
         return user.getOrNull()?.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString) ?: false
     }
 
@@ -99,30 +93,32 @@ class LocationService(
     }
 
     fun findAllLocation(): MutableList<LocationEntity> {
-        return tokenToLocationMapping.values.toList()
-                .sortedBy { it.groupName }.toMutableList()
+        return locationRepository.findAll()
+            .toList()
+            .sortedBy { it.groupName }
+            .toMutableList()
     }
 
     fun clean() {
-        return tokenToLocationMapping.clear()
+        locationRepository.deleteAll()
     }
 
     fun refresh() {
-        return tokenToLocationMapping.keys()
-                .asSequence()
-                .forEach { token ->
-                    tokenToLocationMapping[token]?.let {
-                        val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
-                        it.userId = user.get().id
-                        it.userName = user.get().fullName
-                        it.alias = user.get().alias
-                        it.groupName = user.get().groupName
-                    }
-                }
+        locationRepository.findAll().forEach { location ->
+            val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + location.token)
+            user.ifPresent { userEntity ->
+                location.userId = userEntity.id
+                location.userName = userEntity.fullName
+                location.alias = userEntity.alias
+                location.groupName = userEntity.groupName
+                locationRepository.save(location)
+            }
+        }
     }
 
     fun findLocationsOfGroup(groupId: Int): List<LocationEntity> {
-        return tokenToLocationMapping.values.filter { it.id == groupId }
+        return locationRepository.findAll()
+            .filter { it.userId == groupId }
     }
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
@@ -130,23 +126,25 @@ class LocationService(
         val visibilityDuration = locationComponent.visibleDuration
         val currentTime = clock.getTimeInSeconds()
 
-        locations.addAll(tokenToLocationMapping.values
+        locations.addAll(locationRepository.findAll()
             .filter { it.groupName == group || it.broadcast }
             .filter { it.timestamp + visibilityDuration > currentTime }
-            .map { MapMarker(
-                displayName = mapDisplayName(it),
-                longitude = it.longitude,
-                latitude = it.latitude,
-                altitude = it.altitude,
-                accuracy = it.accuracy,
-                altitudeAccuracy = it.altitudeAccuracy,
-                heading = it.heading,
-                speed = it.speed,
-                timestamp = it.timestamp,
-                markerShape = it.markerShape,
-                markerColor = it.markerColor,
-                description = it.description,
-            ) }
+            .map {
+                MapMarker(
+                    displayName = mapDisplayName(it),
+                    longitude = it.longitude,
+                    latitude = it.latitude,
+                    altitude = it.altitude,
+                    accuracy = it.accuracy,
+                    altitudeAccuracy = it.altitudeAccuracy,
+                    heading = it.heading,
+                    speed = it.speed,
+                    timestamp = it.timestamp,
+                    markerShape = it.markerShape,
+                    markerColor = it.markerColor,
+                    description = it.description,
+                )
+            }
         )
         locations.addAll(waypointRepository.findAll().map { it.toMapMarker() })
         return locations
@@ -182,37 +180,41 @@ class LocationService(
 
     fun getRecentLocations(): List<LocationEntity> {
         val range = clock.getTimeInSeconds() + 600
-        return tokenToLocationMapping.values.filter { it.timestamp < range }
+        return locationRepository.findAllByTimestampGreaterThan(range)
+    }
+
+    @Scheduled(fixedRate = 60000)
+    fun cleanupStaleLocations() {
+        val visibilityDuration = locationComponent.visibleDuration
+        val cutoff = clock.getTimeInSeconds() - visibilityDuration
+        val staleLocations = locationRepository.findAllByTimestampGreaterThan(cutoff)
+
+        if (staleLocations.isNotEmpty()) {
+            log.info("Cleaning up {} stale locations", staleLocations.size)
+            locationRepository.deleteAll(staleLocations)
+        }
     }
 
     override fun findAll() = findAllLocation()
 
-    override fun count() = findAllLocation().size.toLong()
+    override fun count() = locationRepository.count()
 
     override fun deleteAll() = clean()
 
     override fun <S : LocationEntity> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
-        return entities.map { save(it) }.toMutableList()
+        return locationRepository.saveAll(entities)
     }
 
     override fun <S : LocationEntity> save(entity: S): S {
-        val keyToUpdate = tokenToLocationMapping.entries.find { it.value.id == entity.id }?.key
-        if (keyToUpdate != null)
-            tokenToLocationMapping[keyToUpdate] = entity
-        return entity
+        return locationRepository.save(entity)
     }
 
     override fun delete(entity: LocationEntity) {
-        val keyToRemove = tokenToLocationMapping.entries.find { it.value.id == entity.id }?.key
-        if (keyToRemove != null)
-            tokenToLocationMapping.remove(keyToRemove)
+        locationRepository.delete(entity)
     }
 
     override fun findById(id: Int): Optional<LocationEntity> {
-        return Optional.ofNullable(tokenToLocationMapping.entries
-            .filter { it.value.id == id }
-            .map { it.value }
-            .firstOrNull())
+        return locationRepository.findById(id)
     }
 
 }

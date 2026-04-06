@@ -31,6 +31,11 @@ data class LocationEntity(
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
+    @Column(nullable = false, unique = true)
+    @field:JsonView(value = [ Edit::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    var token: String = "",
+
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)

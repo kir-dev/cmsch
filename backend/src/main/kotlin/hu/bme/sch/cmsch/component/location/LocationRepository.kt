@@ -12,5 +12,14 @@ interface LocationRepository : CrudRepository<LocationEntity, Int>,
     EntityPageDataSource<LocationEntity, Int> {
 
     fun findByUserId(userId: Int): Optional<LocationEntity>
+
+    fun findByToken(token: String): Optional<LocationEntity>
+
+    fun findAllByGroupNameOrderByGroupNameAsc(groupName: String): List<LocationEntity>
+
+    fun findAllByTimestampGreaterThan(timestamp: Long): List<LocationEntity>
+
+    fun deleteByUserId(userId: Int)
+
     override fun findAll(): MutableIterable<LocationEntity>
 }
