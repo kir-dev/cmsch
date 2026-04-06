@@ -47,4 +47,9 @@ class PushNotificationComponent(
     var permissionAllowNeverShowAgain by BooleanSettingRef(true, fieldName = "Tiltás megjegyzése",
         description = "Ha a felhasználó letiltotta az értesítéseket, akkor többet nem nem kérdez rá az alkalmazás")
 
+    val tokenManagementGroup by SettingGroup(fieldName = "Token kezelés")
+
+    var tokenStaleDays by NumberSettingRef(30, fieldName = "Token lejárati idő (nap)",
+        description = "Ennyi nap inaktivitás után törlődnek a régi FCM tokenek (FCM ajánlás: 30 nap)")
+
 }

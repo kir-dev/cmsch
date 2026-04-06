@@ -170,6 +170,9 @@ riddle:
   managementToken: ""
   msNodeName: NOT_SET
 
+pushnotification:
+  tokenStaleDays: 30
+
 startupProbe:
   failureThreshold: 60
   periodSeconds: 5

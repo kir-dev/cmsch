@@ -68,5 +68,6 @@ data:
   RIDDLE_MICROSERVICE: {{ .Values.riddle.microservice | quote }}
   MANAGEMENT_TOKEN: {{ .Values.riddle.managementToken | quote }}
   MS_NODE_NAME: {{ .Values.riddle.msNodeName | quote }}
+  PUSH_TOKEN_STALE_DAYS: {{ .Values.pushnotification.tokenStaleDays | quote }}
   METRICS_NAME: {{ .Release.Name | quote }}
   SWAGGER_ENABLED: {{ .Values.swaggerEnabled | quote }}

@@ -19,5 +19,11 @@ open class MessagingTokenEntity(
     open var userId: Int = 0,
 
     @Column(name = "token", nullable = false)
-    open var token: String = ""
+    open var token: String = "",
+
+    @Column(name = "createdAt", nullable = false)
+    open var createdAt: Long = 0,
+
+    @Column(name = "updatedAt", nullable = false)
+    open var updatedAt: Long = 0
 )
