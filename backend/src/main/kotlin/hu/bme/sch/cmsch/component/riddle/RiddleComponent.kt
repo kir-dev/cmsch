@@ -100,16 +100,6 @@ class RiddleComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val microserviceGroup by SettingGroup(fieldName = "Riddle microservice",
-        description = "A riddle megoldások ellenőrzése kiszervezhető egy külső szolgáltatásba")
-
-    var microserviceNodeBaseUrl by StringSettingRef("http://<pod>.<namespace>.svc.cluster.local",
-        serverSideOnly = true, type = SettingType.URL, fieldName = "Riddle node belső URL-je",
-        description = "A riddle node elérhetősége a belső hálózaton (pl. Kubernetes clusteren belül)")
-
-    var microserviceSyncEnabled by BooleanSettingRef(false, fieldName = "Beállítások szinkronizálása",
-        description = "Bekapcsolt állapotban a rendszer értesíti a node-ot a riddle-ök módosításáról a cache invalidálásához (nincs implementálva)")
-
     override fun onPersist() {
         super.onPersist()
         updateBanLists()
