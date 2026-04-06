@@ -4,7 +4,9 @@ export type GalleryView = {
 
 export type GalleryItemView = {
   title: string
+  description: string
   highlighted: boolean
   showOnHomePage: boolean
   url: string
+  thumbnailUrl: string
 }

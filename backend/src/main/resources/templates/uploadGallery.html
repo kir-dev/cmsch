@@ -1,0 +1,190 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head>
+    <th:block th:replace="~{layout4 :: head(${context.siteName})}"></th:block>
+    <style>
+        .image-preview {
+            margin-top: 3em;
+            max-width: 250px;
+            max-height: 150px;
+            border-radius: 4px;
+            object-fit: cover;
+            display: block;
+        }
+
+        h5.file-name {
+            margin: 1em 0 0;
+        }
+
+        .preview-container {
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}">
+        </div>
+
+        <div class="content">
+            <h1 class="narrow">
+                <ins>Képfeltöltés</ins>
+                <span class="material-symbols-outlined color-yellow star-button"
+                      th:class="|material-symbols-outlined color-yellow star-button ${#lists.contains(userContext.favoriteMenus, 'Képfeltöltés') ? 'favorite' : ''}|"
+                      id="star-page"
+                      data-star="Képfeltöltés"
+                      onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
+            </h1>
+
+            <div class="card wide-false" th:if="${uploaded != null && uploaded != 'no'}">
+                <h4>Fájlok feltöltve</h4>
+                <p>A következő képek sikeresen hozzáadva a galériához:</p>
+                <ul class="desc" th:each="name : ${#strings.arraySplit(uploaded, ',')}">
+                    <li th:text="${name}">Kép neve</li>
+                </ul>
+            </div>
+
+            <div class="card wide-false">
+                <h4>Új képek hozzáadása a galériához</h4>
+                <form id="file-form" th:action="|@{/admin/control}/gallery-upload|" method="post"
+                      enctype="multipart/form-data">
+
+                    <div id="file-name-inputs"></div>
+
+                    <div class="field-group">
+                        <label for="imageField">
+                            Képek (többet is kiválaszhatsz)
+                        </label>
+                        <div style="clear: both"></div>
+                        <input type="file"
+                               class="file-input"
+                               name="files"
+                               id="imageField"
+                               multiple="multiple"
+                               accept="image/*"
+                               required
+                        />
+
+                        <script>
+                            document.getElementById('imageField').addEventListener('change', function () {
+                                const fileNameInputs = document.getElementById("file-name-inputs")
+                                fileNameInputs.innerHTML = "";
+                                const fileNameInputTemplate = document.getElementById("name-input-template")
+
+                                for (let i = 0; i < this.files.length; i++) {
+                                    const file = this.files[i]
+                                    const fileNameInput = fileNameInputTemplate.content.cloneNode(true)
+
+                                    fileNameInput.querySelector('.file-name').innerText = file.name
+
+                                    const hCheck = fileNameInput.querySelector('.highlighted-check')
+                                    const hHidden = fileNameInput.querySelector('.highlighted-hidden')
+                                    const hLabel = fileNameInput.querySelector('.highlighted-label')
+                                    const hId = `highlighted_${i}`
+                                    hCheck.id = hId
+                                    hLabel.setAttribute('for', hId)
+                                    hCheck.addEventListener('change', function () {
+                                        hHidden.value = this.checked
+                                    })
+
+                                    const sCheck = fileNameInput.querySelector('.show-check')
+                                    const sHidden = fileNameInput.querySelector('.show-hidden')
+                                    const sLabel = fileNameInput.querySelector('.show-label')
+                                    const sId = `show_${i}`
+                                    sCheck.id = sId
+                                    sLabel.setAttribute('for', sId)
+                                    sCheck.addEventListener('change', function () {
+                                        sHidden.value = this.checked
+                                    })
+
+                                    const previewImg = fileNameInput.querySelector('.image-preview')
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        previewImg.src = e.target.result;
+                                    }
+                                    reader.readAsDataURL(file);
+
+                                    fileNameInputs.appendChild(fileNameInput)
+                                }
+                            });
+                        </script>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined regular">upload</span>
+                            <ins>Feltöltés</ins>
+                        </button>
+                        <a th:href="@{/admin/control/gallery}" class="btn btn-secondary">
+                            <span class="material-symbols-outlined regular">photo_library</span>
+                            <ins>Galéria kezelése</ins>
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card wide-false" th:if="${user.isAdmin()}">
+                <h4>Jogosultságok</h4>
+
+                <div class="options">
+                    <div class="option">
+                        <div><span class="material-symbols-outlined">local_police</span></div>
+                        <div>
+                            <h5 th:text="${permission}">PERMISSION_NAME</h5>
+                            <span>Ez a jog szükséges ennek az oldalnak az módosításához és olvasásához.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="name-input-template">
+    <div class="gallery-upload-card">
+        <div class="preview-container">
+            <img class="image-preview" src="" alt="preview">
+            <h5 class="file-name"></h5>
+        </div>
+
+        <div class="form-container">
+            <div class="field-group">
+                <label>Cím</label>
+                <input type="text" class="name-input" name="names" autocomplete="off" />
+            </div>
+
+            <div class="field-group">
+                <label>Leírás</label>
+                <textarea name="descriptions" style="width: 100%; min-height: 50px;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 20px;">
+                <div class="field-group" style="flex: 1;">
+                    <label class="highlighted-label">Kiemelt</label>
+                    <div style="clear:both"></div>
+                    <input type="hidden" name="highlighted" value="false" class="highlighted-hidden">
+                    <label class="switch">
+                        <input type="checkbox" class="highlighted-check">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="field-group" style="flex: 1;">
+                    <label class="show-label">Kezdőlapra</label>
+                    <div style="clear:both"></div>
+                    <input type="hidden" name="showOnHomePage" value="false" class="show-hidden">
+                    <label class="switch">
+                        <input type="checkbox" class="show-check">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+</body>
+</html>

@@ -114,6 +114,8 @@ export interface Home {
 
 export interface Gallery {
   title: string
+  topMessage: string
+  bottomMessage: string
 }
 
 export interface News {
