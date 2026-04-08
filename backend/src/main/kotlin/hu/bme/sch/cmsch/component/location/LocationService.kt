@@ -39,9 +39,12 @@ class LocationService(
             return LocationResponse("jogosulatlan", "n/a")
         }
 
-        val existingLocation = locationRepository.findByToken(locationDto.token)
-        val entity = if (existingLocation.isPresent) {
-            existingLocation.get()
+        val existingByUserId = locationRepository.findByUserId(userEntity.id)
+        val existingByToken = locationRepository.findByToken(locationDto.token)
+        val entity = if (existingByUserId.isPresent) {
+            existingByUserId.get()
+        } else if (existingByToken.isPresent) {
+            existingByToken.get()
         } else {
             LocationEntity(
                 id = 0,
@@ -111,6 +114,7 @@ class LocationService(
                 location.userName = userEntity.fullName
                 location.alias = userEntity.alias
                 location.groupName = userEntity.groupName
+                location.markerColor = resolveColor(userEntity.groupName)
                 locationRepository.save(location)
             }
         }
@@ -179,7 +183,7 @@ class LocationService(
     }
 
     fun getRecentLocations(): List<LocationEntity> {
-        val range = clock.getTimeInSeconds() + 600
+        val range = clock.getTimeInSeconds() - 600
         return locationRepository.findAllByTimestampGreaterThan(range)
     }
 
@@ -187,7 +191,7 @@ class LocationService(
     fun cleanupStaleLocations() {
         val visibilityDuration = locationComponent.visibleDuration
         val cutoff = clock.getTimeInSeconds() - visibilityDuration
-        val staleLocations = locationRepository.findAllByTimestampGreaterThan(cutoff)
+        val staleLocations = locationRepository.findAllByTimestampLessThan(cutoff)
 
         if (staleLocations.isNotEmpty()) {
             log.info("Cleaning up {} stale locations", staleLocations.size)

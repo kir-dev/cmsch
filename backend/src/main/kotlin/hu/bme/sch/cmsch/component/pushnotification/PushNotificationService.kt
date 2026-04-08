@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.retry.RetryTemplate
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
@@ -90,10 +91,11 @@ class PushNotificationService(
                         }.getOrElse { e ->
                             val invalidToken = e is WebClientResponseException.NotFound ||
                                     (e is WebClientResponseException.BadRequest && e.responseBodyAsString.contains("UNREGISTERED", ignoreCase = true))
+                            val redactedToken = token.takeLast(6)
                             if (invalidToken) {
-                                log.warn("Invalid token detected, will be removed: {}", token)
+                                log.warn("Invalid token detected, will be removed: ...{}", redactedToken)
                             } else {
-                                log.warn("Failed to send notification to token {}: {}", token, e.message)
+                                log.warn("Failed to send notification to token ...{}: {}", redactedToken, e.message)
                             }
                             SendResult(success = false, token = token, invalidToken = invalidToken)
                         }
@@ -133,13 +135,22 @@ class PushNotificationService(
             return
         }
 
-        log.debug("Inserting messaging token for user: {}, token: {}", userId, token)
-        messagingTokenRepository.save(MessagingTokenEntity(
-            userId = userId,
-            token = token,
-            createdAt = now,
-            updatedAt = now
-        ))
+        try {
+            log.debug("Inserting messaging token for user: {}, token: {}", userId, token)
+            messagingTokenRepository.save(MessagingTokenEntity(
+                userId = userId,
+                token = token,
+                createdAt = now,
+                updatedAt = now
+            ))
+        } catch (e: DataIntegrityViolationException) {
+            log.debug("Conflict inserting messaging token for user: {}, updating existing", userId)
+            val existingAfterConflict = messagingTokenRepository.findByUserIdAndToken(userId, token)
+            if (existingAfterConflict.isPresent) {
+                existingAfterConflict.get().updatedAt = now
+                messagingTokenRepository.save(existingAfterConflict.get())
+            }
+        }
     }
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
@@ -150,12 +161,13 @@ class PushNotificationService(
 
     @Scheduled(fixedRate = 86400000)
     fun cleanupStaleTokens() {
-        val staleThreshold = pushNotificationComponent.tokenStaleDays.toLong() * 24 * 60 * 60
+        val staleDays = if (pushNotificationComponent.tokenStaleDays < 1) 1 else pushNotificationComponent.tokenStaleDays
+        val staleThreshold = staleDays.toLong() * 24 * 60 * 60
         val cutoff = clock.getTimeInSeconds() - staleThreshold
         try {
             val deleted = messagingTokenRepository.deleteByUpdatedAtBefore(cutoff)
             if (deleted > 0) {
-                log.info("Cleaned up {} stale messaging tokens (older than {} days)", deleted, pushNotificationComponent.tokenStaleDays)
+                log.info("Cleaned up {} stale messaging tokens (older than {} days)", deleted, staleDays)
             }
         } catch (e: Exception) {
             log.error("Failed to cleanup stale tokens", e)

@@ -19,6 +19,8 @@ interface LocationRepository : CrudRepository<LocationEntity, Int>,
 
     fun findAllByTimestampGreaterThan(timestamp: Long): List<LocationEntity>
 
+    fun findAllByTimestampLessThan(timestamp: Long): List<LocationEntity>
+
     fun deleteByUserId(userId: Int)
 
     override fun findAll(): MutableIterable<LocationEntity>

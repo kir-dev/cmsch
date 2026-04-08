@@ -26,8 +26,11 @@ class RiddleBusinessLogicService(
     override fun listRiddlesForUser(user: CmschUser): List<RiddleCategoryDto> {
         val categories = riddleCategoryRepository.findAll()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissions = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
-            .groupBy { riddleEntityRepository.findById(it.riddleId).orElse(null)?.categoryId ?: 0 }
+        val submissionsList = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
             .filterKeys { it != 0 }
 
         return mapRiddles(categories, submissions)
@@ -40,8 +43,11 @@ class RiddleBusinessLogicService(
 
         val categories = riddleCategoryRepository.findAll()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissions = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
-            .groupBy { riddleEntityRepository.findById(it.riddleId).orElse(null)?.categoryId ?: 0 }
+        val submissionsList = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
             .filterKeys { it != 0 }
 
         return mapRiddles(categories, submissions)
@@ -50,29 +56,35 @@ class RiddleBusinessLogicService(
     private fun mapRiddles(
         categories: List<RiddleCategoryEntity>,
         submissions: Map<Int, List<RiddleMappingEntity>>
-    ) = categories.map { category ->
-        val riddles = riddleEntityRepository.findAll()
-            .filter { it.categoryId == category.categoryId }
-        val total = riddles.size
-        val nextRiddleIds = findNextTo(category.categoryId, submissions[category.categoryId] ?: listOf())
+    ): List<RiddleCategoryDto> {
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddlesByCategory = allRiddles.groupBy { it.categoryId }
 
-        RiddleCategoryDto(
-            categoryId = category.categoryId,
-            title = category.title,
-            nextRiddles = nextRiddleIds,
-            completed = submissions[category.categoryId]?.size ?: 0,
-            total = total
-        )
+        return categories.map { category ->
+            val riddles = riddlesByCategory[category.categoryId] ?: emptyList()
+            val total = riddles.size
+            val nextRiddleIds = findNextTo(category.categoryId, submissions[category.categoryId] ?: listOf(), allRiddles)
+
+            RiddleCategoryDto(
+                categoryId = category.categoryId,
+                title = category.title,
+                nextRiddles = nextRiddleIds,
+                completed = submissions[category.categoryId]?.size ?: 0,
+                total = total
+            )
+        }
     }
 
     @Transactional(readOnly = true)
     override fun getRiddleForUser(user: CmschUser, riddleId: Int): RiddleView? {
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        val category = riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val category = allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val riddleIdsInCategory = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
             .filter { it.categoryId == riddle.categoryId }
             .map { it.id }
         val submissions = riddleMappingRepository.findAllByOwnerUserId(user.id)
@@ -86,11 +98,13 @@ class RiddleBusinessLogicService(
             return null
 
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        val category = riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val category = allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val riddleIdsInCategory = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
             .filter { it.categoryId == riddle.categoryId }
             .map { it.id }
         val submissions = riddleMappingRepository.findAllByOwnerGroupId(groupId)
@@ -145,7 +159,8 @@ class RiddleBusinessLogicService(
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
@@ -175,7 +190,8 @@ class RiddleBusinessLogicService(
             return null
 
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
@@ -210,7 +226,8 @@ class RiddleBusinessLogicService(
             return RiddleSubmissionView(status = RiddleSubmissionStatus.SUBMITTER_BANNED)
         }
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
@@ -295,7 +312,8 @@ class RiddleBusinessLogicService(
         }
 
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
-        riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
             .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
@@ -420,41 +438,54 @@ class RiddleBusinessLogicService(
         .replace("ű", "u")
 
     private fun getNextRiddlesUser(user: CmschUser, riddle: RiddleEntity): List<RiddleView> {
-        val riddleIdsInCategory = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
             .filter { it.categoryId == riddle.categoryId }
             .map { it.id }
         val submissions = riddleMappingRepository.findAllByOwnerUserId(user.id)
             .filter { it.riddleId in riddleIdsInCategory }
-        return findNextTo(riddle.categoryId, submissions)
+        return findNextTo(riddle.categoryId, submissions, allRiddles)
     }
 
     private fun getNextRiddlesGroup(groupId: Int, riddle: RiddleEntity): List<RiddleView> {
-        val riddleIdsInCategory = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
             .filter { it.categoryId == riddle.categoryId }
             .map { it.id }
         val submissions = riddleMappingRepository.findAllByOwnerGroupId(groupId)
             .filter { it.riddleId in riddleIdsInCategory }
-        return findNextTo(riddle.categoryId, submissions)
+        return findNextTo(riddle.categoryId, submissions, allRiddles)
     }
 
     private fun findNextTo(
         categoryId: Int,
-        submissions: List<RiddleMappingEntity>
+        submissions: List<RiddleMappingEntity>,
+        allRiddles: List<RiddleEntity>
     ): List<RiddleView> =
-        riddleEntityRepository.findAll()
+        allRiddles
             .filter { it.categoryId == categoryId }
             .filter { filter -> submissions.none { it.completed && it.riddleId == filter.id } }
             .sortedBy { it.order }
             .take(riddleComponent.visibleRiddlesPerCategory.toInt())
             .map { mapRiddleView(submissions, it) }
 
+    private fun findNextTo(
+        categoryId: Int,
+        submissions: List<RiddleMappingEntity>
+    ): List<RiddleView> {
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        return findNextTo(categoryId, submissions, allRiddles)
+    }
+
 
     @Transactional(readOnly = true)
     override fun getCompletedRiddleCountUser(user: CmschUser): Int {
-        val categoryIds = riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
             .filter { it.visible && it.minRole.value <= user.role.value }
             .map { it.categoryId }
-        val riddleIds = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIds = allRiddles
             .filter { it.categoryId in categoryIds }
             .map { it.id }
         return riddleMappingRepository.countAllByCompletedTrueAndOwnerUserIdAndRiddleIdIn(user.id, riddleIds)
@@ -464,10 +495,12 @@ class RiddleBusinessLogicService(
     override fun getCompletedRiddleCountGroup(user: CmschUser, groupId: Int?): Int {
         if (groupId == null)
             return 0
-        val categoryIds = riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
             .filter { it.visible && it.minRole.value <= user.role.value }
             .map { it.categoryId }
-        val riddleIds = riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIds = allRiddles
             .filter { it.categoryId in categoryIds }
             .map { it.id }
         return riddleMappingRepository.countAllByCompletedTrueAndOwnerGroupIdAndRiddleIdIn(groupId, riddleIds)
@@ -475,24 +508,29 @@ class RiddleBusinessLogicService(
 
     @Transactional(readOnly = true)
     override fun getTotalRiddleCount(user: CmschUser): Int {
-        val categoryIds = riddleCategoryRepository.findAll()
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
             .filter { it.visible && it.minRole.value <= user.role.value }
             .map { it.categoryId }
-        return riddleEntityRepository.findAll()
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        return allRiddles
             .count { it.categoryId in categoryIds }
     }
 
     @Transactional(readOnly = true)
     override fun listRiddleHistoryForUser(user: CmschUser): Map<String, List<RiddleViewWithSolution>> {
-        val categories = riddleCategoryRepository.findAll()
+        val categories = riddleCategoryRepository.findAll().toList()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissions = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
-            .groupBy { riddleEntityRepository.findById(it.riddleId).orElse(null)?.categoryId ?: 0 }
+        val submissionsList = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
             .filterKeys { it != 0 }
 
         return categories.associate { category ->
             category.title to submissions.getOrDefault(category.categoryId, listOf())
-                        .map { mapping -> mapping to riddleEntityRepository.findById(mapping.riddleId).orElse(null) }
+                        .map { mapping -> mapping to riddlesById[mapping.riddleId] }
                         .sortedBy { it.second?.order }
                         .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
                         .toList()
@@ -504,15 +542,18 @@ class RiddleBusinessLogicService(
         if (groupId == null)
             return mapOf()
 
-        val categories = riddleCategoryRepository.findAll()
+        val categories = riddleCategoryRepository.findAll().toList()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissions = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
-            .groupBy { riddleEntityRepository.findById(it.riddleId).orElse(null)?.categoryId ?: 0 }
+        val submissionsList = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
             .filterKeys { it != 0 }
 
         return categories.associate { category ->
             category.title to submissions.getOrDefault(category.categoryId, listOf())
-                .map { mapping -> mapping to riddleEntityRepository.findById(mapping.riddleId).orElse(null) }
+                .map { mapping -> mapping to riddlesById[mapping.riddleId] }
                 .sortedBy { it.second?.order }
                 .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
                 .toList()

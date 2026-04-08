@@ -18,6 +18,7 @@ import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.service.UserService
 import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.PlatformTransactionManager
 import java.util.*
@@ -39,6 +40,39 @@ class LoginService(
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    private fun saveUserWithConflictRecovery(user: UserEntity): UserEntity {
+        return try {
+            users.save(user)
+        } catch (e: DataIntegrityViolationException) {
+            log.warn("Conflict saving user with internalId ${user.internalId}, attempting recovery", e)
+            val canonical = users.findByInternalId(user.internalId)
+                .or { if (user.email.isNotBlank()) users.findByEmailIgnoreCase(user.email) else Optional.empty() }
+                .orElseThrow { IllegalStateException("Cannot resolve conflicting user after constraint violation") }
+
+            canonical.internalId = user.internalId
+            if (user.email.isNotBlank()) {
+                canonical.email = user.email
+            }
+            canonical.fullName = user.fullName
+            canonical.neptun = user.neptun
+            canonical.role = user.role
+            canonical.groupName = user.groupName
+            canonical.group = user.group
+            canonical.guild = user.guild
+            canonical.major = user.major
+            canonical.permissions = user.permissions
+            canonical.profilePicture = user.profilePicture
+            canonical.profileTopMessage = user.profileTopMessage
+            canonical.detailsImported = user.detailsImported
+            canonical.provider = user.provider
+            canonical.unitScopes = user.unitScopes
+            canonical.alias = user.alias
+            canonical.cmschId = user.cmschId
+
+            users.save(canonical)
+        }
+    }
 
     fun fetchUserEntity(profile: ProfileResponse): UserEntity {
         var user: UserEntity
@@ -71,9 +105,9 @@ class LoginService(
             }
         }
         transactionManager.transaction(readOnly = true) { updateFieldsForAuthsch(user, profile) }
-        transactionManager.transaction(readOnly = false) { users.save(user) }
-        adminMenuService.invalidateUser(user.internalId)
-        return user
+        val savedUser = transactionManager.transaction(readOnly = false) { saveUserWithConflictRecovery(user) }
+        adminMenuService.invalidateUser(savedUser.internalId)
+        return savedUser
     }
 
     fun fetchGoogleUserEntity(profile: GoogleUserInfoResponse): UserEntity {
@@ -107,9 +141,9 @@ class LoginService(
             }
         }
         transactionManager.transaction(readOnly = true) { updateFieldsForGoogle(user) }
-        transactionManager.transaction(readOnly = false) { users.save(user) }
-        adminMenuService.invalidateUser(user.internalId)
-        return user
+        val savedUser = transactionManager.transaction(readOnly = false) { saveUserWithConflictRecovery(user) }
+        adminMenuService.invalidateUser(savedUser.internalId)
+        return savedUser
     }
 
     private fun updateFieldsForGoogle(user: UserEntity) {
@@ -414,9 +448,9 @@ class LoginService(
             }
         }
         updateFieldsForKeycloak(profile, user)
-        users.save(user)
-        adminMenuService.invalidateUser(user.internalId)
-        return user
+        val savedUser = saveUserWithConflictRecovery(user)
+        adminMenuService.invalidateUser(savedUser.internalId)
+        return savedUser
     }
 
     private fun updateFieldsForKeycloak(profile: KeycloakUserInfoResponse, user: UserEntity) {

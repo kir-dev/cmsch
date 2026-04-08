@@ -1,5 +1,6 @@
 package hu.bme.sch.cmsch.component.location
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
@@ -32,7 +33,7 @@ data class LocationEntity(
     override var id: Int = 0,
 
     @Column(nullable = false, unique = true)
-    @field:JsonView(value = [ Edit::class, FullDetails::class ])
+    @JsonIgnore
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     var token: String = "",
 
