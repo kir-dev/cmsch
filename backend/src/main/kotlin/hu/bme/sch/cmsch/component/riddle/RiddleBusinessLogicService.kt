@@ -26,7 +26,7 @@ class RiddleBusinessLogicService(
     override fun listRiddlesForUser(user: CmschUser): List<RiddleCategoryDto> {
         val categories = riddleCategoryRepository.findAll()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissionsList = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
+        val submissionsList = riddleMappingRepository.findAllByOwnerUserId(user.id)
         val riddleIds = submissionsList.map { it.riddleId }.toSet()
         val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
         val submissions = submissionsList
@@ -43,7 +43,7 @@ class RiddleBusinessLogicService(
 
         val categories = riddleCategoryRepository.findAll()
             .filter { it.visible && it.minRole.value <= user.role.value }
-        val submissionsList = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
+        val submissionsList = riddleMappingRepository.findAllByOwnerGroupId(groupId)
         val riddleIds = submissionsList.map { it.riddleId }.toSet()
         val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
         val submissions = submissionsList

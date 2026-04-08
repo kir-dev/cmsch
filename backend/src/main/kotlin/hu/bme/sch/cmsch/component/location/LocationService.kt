@@ -67,7 +67,7 @@ class LocationService(
         entity.altitudeAccuracy = locationDto.altitudeAccuracy
         entity.heading = locationDto.heading
         entity.timestamp = clock.getTimeInSeconds()
-        entity.broadcast = locationDto.broadcastEnabled && shareLocationAllowed(locationDto.token)
+        entity.broadcast = locationDto.broadcastEnabled && shareLocationAllowed(userEntity)
 
         locationRepository.save(entity)
         return LocationResponse(if (entity.broadcast) "OK" else "BROADCAST", entity.groupName)
@@ -76,6 +76,10 @@ class LocationService(
     private fun shareLocationAllowed(token: String): Boolean {
         val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
         return user.getOrNull()?.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString) ?: false
+    }
+
+    private fun shareLocationAllowed(user: UserEntity): Boolean {
+        return user.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString)
     }
 
     private fun resolveColor(groupName: String): String {

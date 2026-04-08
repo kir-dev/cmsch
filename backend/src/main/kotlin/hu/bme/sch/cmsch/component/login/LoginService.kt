@@ -43,7 +43,8 @@ class LoginService(
 
     private fun saveUserWithConflictRecovery(user: UserEntity): UserEntity {
         return try {
-            users.save(user)
+            val savedUser = users.save(user)
+            savedUser
         } catch (e: DataIntegrityViolationException) {
             log.warn("Conflict saving user with internalId ${user.internalId}, attempting recovery", e)
             val canonical = users.findByInternalId(user.internalId)
@@ -70,7 +71,8 @@ class LoginService(
             canonical.alias = user.alias
             canonical.cmschId = user.cmschId
 
-            users.save(canonical)
+            val savedCanonical = users.save(canonical)
+            savedCanonical
         }
     }
 

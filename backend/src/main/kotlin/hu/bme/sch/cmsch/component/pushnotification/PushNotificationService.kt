@@ -149,6 +149,8 @@ class PushNotificationService(
             if (existingAfterConflict.isPresent) {
                 existingAfterConflict.get().updatedAt = now
                 messagingTokenRepository.save(existingAfterConflict.get())
+            } else {
+                throw e
             }
         }
     }
