@@ -8,7 +8,7 @@ import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import java.sql.SQLException
+import org.springframework.dao.DataAccessException
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
@@ -155,7 +155,7 @@ class RiddleBusinessLogicService(
         )
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
         val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
@@ -183,7 +183,7 @@ class RiddleBusinessLogicService(
         return riddle.hint
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForGroup(user: CmschUser, groupId: Int?, groupName: String, riddleId: Int): String? {
         if (groupId == null)
@@ -213,7 +213,7 @@ class RiddleBusinessLogicService(
         return riddle.hint
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun submitRiddleForUser(
         user: CmschUser,
@@ -293,7 +293,7 @@ class RiddleBusinessLogicService(
         }
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun submitRiddleForGroup(
         user: CmschUser,

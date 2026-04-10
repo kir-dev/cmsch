@@ -2,6 +2,7 @@ package hu.bme.sch.cmsch.component.location
 
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.model.RoleType
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -58,6 +59,14 @@ class LocationService(
                         && userEntity.hasPermission(StaffPermissions.PERMISSION_BROADCAST_LOCATION.permissionString)
             )
         }
+
+        // Refresh user metadata for existing entities to avoid stale data
+        entity.token = locationDto.token
+        entity.userId = userEntity.id
+        entity.userName = userEntity.fullName
+        entity.alias = userEntity.alias
+        entity.groupName = userEntity.groupName
+        entity.markerColor = resolveColor(userEntity.groupName)
 
         entity.longitude = locationDto.longitude
         entity.latitude = locationDto.latitude
