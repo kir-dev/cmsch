@@ -3,10 +3,10 @@ package hu.bme.sch.cmsch.component.errorlog
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 @ConditionalOnBean(ErrorLogComponent::class)
@@ -16,26 +16,32 @@ class ErrorLogService(
     private val clock: TimeService
 ) {
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
+    @Retryable(
+        value = [DataIntegrityViolationException::class],
+        maxRetries = 3,
+        delay = 100,
+        multiplier = 2.0,
+        jitter = 25,
+    )
     fun submit(message: String, stack: String, userAgent: String, href: String, role: RoleType) {
         if (!errorLogComponent.receiveReports) return
 
-        val existingLog = errorLogRepository
-            .findByMessageAndStackAndUserAgentAndHrefAndRole(message, stack, userAgent, href, role).getOrNull()
+        val existingLog =
+            errorLogRepository.findByMessageAndStackAndUserAgentAndHrefAndRole(message, stack, userAgent, href, role)
 
-        val logToSave = existingLog ?: ErrorLogEntity(
-            message = message,
-            stack = stack,
-            userAgent = userAgent,
-            href = href,
-            role = role,
-        )
-        logToSave.apply {
-            count = count + 1
-            lastReportedAt = clock.getTimeInSeconds()
+        if (existingLog.isPresent) {
+            errorLogRepository.incrementCount(existingLog.get().id, clock.getTimeInSeconds())
+        } else {
+            val newLog = ErrorLogEntity(
+                message = message,
+                stack = stack,
+                userAgent = userAgent,
+                href = href,
+                role = role,
+            )
+            errorLogRepository.save(newLog)
         }
-
-        errorLogRepository.save(logToSave)
     }
 
 }
