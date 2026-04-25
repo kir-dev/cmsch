@@ -45,7 +45,7 @@ data class ProductEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, order = 2, label = "Ár", min = 1, defaultValue = "100", note = "JMF-ben természetesen")
-    @property:GenerateOverview(columnName = "Ár", order = 1, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Ár", order = 1, centered = true)
     @property:ImportFormat
     var price: Int = 0,
 

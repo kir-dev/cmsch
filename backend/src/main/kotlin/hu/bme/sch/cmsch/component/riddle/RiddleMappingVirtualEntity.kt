@@ -9,7 +9,7 @@ data class RiddleMappingVirtualEntity(
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
     override var id: Int = 0,
 
-    @property:GenerateOverview(columnName = "Kat. id", order = 1)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Kat. id", order = 1)
     var category: Int = 0,
 
     @property:GenerateOverview(columnName = "Riddle", order = 2)
@@ -24,7 +24,7 @@ data class RiddleMappingVirtualEntity(
     @property:GenerateOverview(columnName = "Átugorva", order = 4, centered = true, renderer = OverviewType.BOOLEAN)
     var skipped: Boolean = false,
 
-    @property:GenerateOverview(columnName = "Próbálkozás", order = 5, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Próbálkozás", order = 5, centered = true)
     var attempt: Int = 0,
 
     @property:GenerateOverview(columnName = "Beadva", order = 6, centered = true, renderer = OverviewType.DATE)
