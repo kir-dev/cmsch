@@ -41,7 +41,7 @@ class LoginComponent(
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!")
 
     var authschScopesRaw by StringSettingRef(
-        listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT).joinToString(","),
+        listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT, Scope.MAIL).joinToString(","),
         serverSideOnly = true, fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: " + Scope.entries.joinToString(", ") { it.name })
 
