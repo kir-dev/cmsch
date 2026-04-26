@@ -48,6 +48,7 @@ const EventListPage = () => {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilteredEvents(upcomingEvents)
   }, [upcomingEvents])
 

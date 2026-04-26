@@ -62,6 +62,7 @@ const TaskPage = () => {
   const { isLoading, isError, data, isSuccess, refetch } = useTaskFullDetailsQuery(id || 'UNKNOWN')
   useEffect(() => {
     if (!isSuccess && data?.submission && data?.task?.format === TaskFormat.CODE) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCodeAnswer(data.submission.textAnswer)
     }
   }, [isSuccess, data])

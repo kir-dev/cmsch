@@ -36,6 +36,7 @@ export function MemberRow({ member, onDelete, onAccept, onRoleChange, onPromoteL
       setTitle(title)
       setPrompt(prompt)
       setIsOpen(true)
+      // eslint-disable-next-line react-hooks/refs
       onContinue.current = action
     }
   }

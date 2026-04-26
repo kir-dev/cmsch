@@ -16,6 +16,7 @@ export const EventFilterOption = ({ name, events, forceOpen }: EventFilterOption
   const [isOpen, setIsOpen] = useState(false)
   const now = useTime(10000)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(forceOpen)
   }, [forceOpen])
 

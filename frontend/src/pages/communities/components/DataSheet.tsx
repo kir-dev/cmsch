@@ -1,4 +1,4 @@
-import { AtSign, Building, Clock, Edit, Facebook, Instagram, Link, Users } from 'lucide-react'
+import { AtSign, Building, Clock, Edit, Link, Users } from 'lucide-react'
 import type { FC, ReactNode } from 'react'
 import { Link as RouterLink } from 'react-router'
 
@@ -80,12 +80,12 @@ export const DataSheet: FC<DataSheetProps> = ({ organization }) => {
         )}
         {organization.facebook && (
           <LinkButton href={organization.facebook} external className="flex items-center gap-2 bg-[#1877F2] hover:bg-[#1877F2]/90">
-            <Facebook className="h-4 w-4" /> Facebook
+            Facebook
           </LinkButton>
         )}
         {organization.instagram && (
           <LinkButton href={organization.instagram} external className="flex items-center gap-2 bg-[#E4405F] hover:bg-[#E4405F]/90">
-            <Instagram className="h-4 w-4" /> Instagram
+            Instagram
           </LinkButton>
         )}
       </div>
