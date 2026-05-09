@@ -11,10 +11,10 @@ data class TinderCommunityVirtualEntity(
     @property:GenerateOverview(columnName = "Név", order = 1)
     val name: String,
 
-    @property:GenerateOverview(columnName = "Jobbra húzva", order = 2)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Jobbra húzva", order = 2)
     val likes: Int,
 
-    @property:GenerateOverview(columnName = "Balra húzva", order = 3)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Balra húzva", order = 3)
     val dislikes: Int,
 
 ) : IdentifiableEntity
