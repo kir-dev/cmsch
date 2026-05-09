@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 @ConditionalOnBean(RiddleComponent::class)
-@Suppress("FunctionName", "kotlin:S100") // This is the valid naming conversion of spring-data
+@Suppress("FunctionName", "kotlin:S100")
 interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int>,
     EntityPageDataSource<RiddleMappingEntity, Int> {
 
@@ -19,5 +19,20 @@ interface RiddleMappingRepository : CrudRepository<RiddleMappingEntity, Int>,
 
     fun countAllByOwnerGroupIdAndCompletedTrueAndSkippedTrue(groupId: Int): Int
 
+    fun findAllByOwnerUserIdAndCompletedTrue(userId: Int): List<RiddleMappingEntity>
+
+    fun findAllByOwnerGroupIdAndCompletedTrue(groupId: Int): List<RiddleMappingEntity>
+
+    fun findAllByOwnerUserIdAndRiddleId(userId: Int, riddleId: Int): List<RiddleMappingEntity>
+
+    fun findAllByOwnerGroupIdAndRiddleId(groupId: Int, riddleId: Int): List<RiddleMappingEntity>
+
+    fun countAllByCompletedTrueAndRiddleIdIn(riddleIds: List<Int>): Int
+
+    fun countAllByCompletedTrueAndOwnerUserIdAndRiddleIdIn(userId: Int, riddleIds: List<Int>): Int
+
+    fun countAllByCompletedTrueAndOwnerGroupIdAndRiddleIdIn(groupId: Int, riddleIds: List<Int>): Int
+
+    fun countAllByCompletedTrueAndSkippedFalseAndRiddleId(riddleId: Int): Int
 
 }

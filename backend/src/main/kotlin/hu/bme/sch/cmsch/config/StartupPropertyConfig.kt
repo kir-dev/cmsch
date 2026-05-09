@@ -33,12 +33,6 @@ data class StartupPropertyConfig @ConstructorBinding constructor(
     // Increased session
     val increasedSessionTime: Int,
 
-    // Microservice
-    val masterRole: Boolean,
-    val riddleMicroserviceEnabled: Boolean,
-    val managementToken: String,
-    val nodeName: String,
-
     // Storage
     val storageImplementation: StorageImplementation,
     val storageCacheMaxAge: Long,

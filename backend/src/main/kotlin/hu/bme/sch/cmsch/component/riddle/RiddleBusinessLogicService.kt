@@ -7,14 +7,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import java.sql.SQLException
+import org.springframework.dao.DataAccessException
 
 @Service
 @ConditionalOnBean(RiddleComponent::class)
 class RiddleBusinessLogicService(
-    private val riddleCacheManager: RiddleCacheManager,
+    private val riddleEntityRepository: RiddleEntityRepository,
+    private val riddleCategoryRepository: RiddleCategoryRepository,
+    private val riddleMappingRepository: RiddleMappingRepository,
     private val userService: UserService,
     private val clock: TimeService,
     private val riddleComponent: RiddleComponent,
@@ -23,10 +24,14 @@ class RiddleBusinessLogicService(
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     override fun listRiddlesForUser(user: CmschUser): List<RiddleCategoryDto> {
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role)
-        val submissions = riddleCacheManager.findAllMappingByOwnerUserIdAndCompletedTrue(user.id)
-            .groupBy { it.riddleCategoryId }
-            .toMap()
+        val categories = riddleCategoryRepository.findAll()
+            .filter { it.visible && it.minRole.value <= user.role.value }
+        val submissionsList = riddleMappingRepository.findAllByOwnerUserId(user.id)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
+            .filterKeys { it != 0 }
 
         return mapRiddles(categories, submissions)
     }
@@ -36,10 +41,14 @@ class RiddleBusinessLogicService(
         if (groupId == null)
             return listOf()
 
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role)
-        val submissions = riddleCacheManager.findAllMappingByOwnerGroupIdAndCompletedTrue(groupId)
-            .groupBy { it.riddleCategoryId }
-            .toMap()
+        val categories = riddleCategoryRepository.findAll()
+            .filter { it.visible && it.minRole.value <= user.role.value }
+        val submissionsList = riddleMappingRepository.findAllByOwnerGroupId(groupId)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
+            .filterKeys { it != 0 }
 
         return mapRiddles(categories, submissions)
     }
@@ -47,27 +56,39 @@ class RiddleBusinessLogicService(
     private fun mapRiddles(
         categories: List<RiddleCategoryEntity>,
         submissions: Map<Int, List<RiddleMappingEntity>>
-    ) = categories.map { category ->
-        val riddles = riddleCacheManager.findAllRiddleByCategoryId(category.categoryId)
-        val total = riddles.size
-        val nextRiddleIds = findNextTo(category.categoryId, submissions[category.categoryId] ?: listOf())
+    ): List<RiddleCategoryDto> {
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddlesByCategory = allRiddles.groupBy { it.categoryId }
 
-        RiddleCategoryDto(
-            categoryId = category.categoryId,
-            title = category.title,
-            nextRiddles = nextRiddleIds,
-            completed = submissions[category.categoryId]?.size ?: 0,
-            total = total
-        )
+        return categories.map { category ->
+            val riddles = riddlesByCategory[category.categoryId] ?: emptyList()
+            val total = riddles.size
+            val nextRiddleIds = findNextTo(category.categoryId, submissions[category.categoryId] ?: listOf(), allRiddles)
+
+            RiddleCategoryDto(
+                categoryId = category.categoryId,
+                title = category.title,
+                nextRiddles = nextRiddleIds,
+                completed = submissions[category.categoryId]?.size ?: 0,
+                total = total
+            )
+        }
     }
 
     @Transactional(readOnly = true)
     override fun getRiddleForUser(user: CmschUser, riddleId: Int): RiddleView? {
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val category = allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val submissions = riddleCacheManager.findAllMappingByOwnerUserIdAndRiddleCategoryId(user.id, riddle.categoryId)
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
+            .filter { it.categoryId == riddle.categoryId }
+            .map { it.id }
+        val submissions = riddleMappingRepository.findAllByOwnerUserId(user.id)
+            .filter { it.riddleId in riddleIdsInCategory }
         return getRiddleIfAllowedToRead(riddle, submissions)
     }
 
@@ -76,11 +97,18 @@ class RiddleBusinessLogicService(
         if (groupId == null)
             return null
 
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val category = allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val submissions = riddleCacheManager.findAllMappingByGroupUserIdAndRiddleCategoryId(groupId, riddle.categoryId)
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
+            .filter { it.categoryId == riddle.categoryId }
+            .map { it.id }
+        val submissions = riddleMappingRepository.findAllByOwnerGroupId(groupId)
+            .filter { it.riddleId in riddleIdsInCategory }
         return getRiddleIfAllowedToRead(riddle, submissions)
     }
 
@@ -127,24 +155,27 @@ class RiddleBusinessLogicService(
         )
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
+        val submission = riddleMappingRepository.findAllByOwnerUserId(user.id)
+            .firstOrNull { it.riddleId == riddleId }
         if (submission != null) {
             submission.hintUsed = true
-            riddleCacheManager.updateMapping(submission)
+            riddleMappingRepository.save(submission)
         } else {
             val nextRiddles = getNextRiddlesUser(user, riddle)
             if (nextRiddles.find { it.id == riddle.id } == null)
                 return null
 
             val userEntity = userService.getById(user.internalId)
-            riddleCacheManager.createNewMapping(
+            riddleMappingRepository.save(
                 RiddleMappingEntity(0, riddle.id, userEntity.id, 0,
                     hintUsed = true, completed = false, skipped = false, attemptCount = 0)
             )
@@ -152,26 +183,29 @@ class RiddleBusinessLogicService(
         return riddle.hint
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForGroup(user: CmschUser, groupId: Int?, groupName: String, riddleId: Int): String? {
         if (groupId == null)
             return null
 
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
-        val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
+        val submission = riddleMappingRepository.findAllByOwnerGroupId(groupId)
+            .firstOrNull { it.riddleId == riddleId }
         if (submission != null) {
             submission.hintUsed = true
-            riddleCacheManager.updateMapping(submission)
+            riddleMappingRepository.save(submission)
         } else {
             val nextRiddles = getNextRiddlesGroup(groupId, riddle)
             if (nextRiddles.find { it.id == riddle.id } == null)
                 return null
 
-            riddleCacheManager.createNewMapping(
+            riddleMappingRepository.save(
                 RiddleMappingEntity(0, riddle.id, 0, groupId,
                     hintUsed = true, completed = false, skipped = false, attemptCount = 0)
             )
@@ -179,8 +213,8 @@ class RiddleBusinessLogicService(
         return riddle.hint
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun submitRiddleForUser(
         user: CmschUser,
         riddleId: Int,
@@ -191,8 +225,10 @@ class RiddleBusinessLogicService(
         if (banStatus == SubmissionModerationStatus.HARD_BAN) {
             return RiddleSubmissionView(status = RiddleSubmissionStatus.SUBMITTER_BANNED)
         }
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
         if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled))
@@ -201,13 +237,14 @@ class RiddleBusinessLogicService(
         if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
             return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
         }
-        val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
+        val submission = riddleMappingRepository.findAllByOwnerUserId(user.id)
+            .firstOrNull { it.riddleId == riddleId }
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
                     submission.attemptCount += 1
                     submission.completedAt = clock.getTimeInSeconds()
-                    riddleCacheManager.updateMapping(submission, lazyPersist = true)
+                    riddleMappingRepository.save(submission)
                 }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
@@ -217,10 +254,10 @@ class RiddleBusinessLogicService(
                 submission.skipped = skip
                 submission.attemptCount += 1
                 submission.completedAt = clock.getTimeInSeconds()
-                riddleCacheManager.updateMapping(submission)
+                riddleMappingRepository.save(submission)
                 if (!skip && riddle.firstSolver.isBlank()) {
                     riddle.firstSolver = user.userName
-                    riddleCacheManager.updateRiddle(riddle)
+                    riddleEntityRepository.save(riddle)
                 }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesUser(user, riddle))
@@ -232,7 +269,7 @@ class RiddleBusinessLogicService(
             val userEntity = userService.getById(user.internalId)
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
-                    riddleCacheManager.createNewMapping(
+                    riddleMappingRepository.save(
                         RiddleMappingEntity(
                             0, riddle.id, userEntity.id, 0,
                             hintUsed = false, completed = false, skipped = false,
@@ -243,21 +280,21 @@ class RiddleBusinessLogicService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
 
-            riddleCacheManager.createNewMapping(
+            riddleMappingRepository.save(
                 RiddleMappingEntity(0, riddle.id, userEntity.id, 0,
                     hintUsed = false, completed = true, skipped = skip,
                     completedAt = clock.getTimeInSeconds(), attemptCount = 1)
             )
             if (!skip && riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = user.userName
-                riddleCacheManager.updateRiddle(riddle)
+                riddleEntityRepository.save(riddle)
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesUser(user, riddle))
         }
     }
 
-    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    @Retryable(value = [DataAccessException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun submitRiddleForGroup(
         user: CmschUser,
         groupId: Int?,
@@ -274,8 +311,10 @@ class RiddleBusinessLogicService(
             return RiddleSubmissionView(status = RiddleSubmissionStatus.SUBMITTER_BANNED)
         }
 
-        val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
-        riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
+        val riddle = riddleEntityRepository.findById(riddleId).orElse(null) ?: return null
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        allCategories
+            .firstOrNull { it.categoryId == riddle.categoryId && it.visible && it.minRole.value <= user.role.value }
             ?: return null
 
         if (skip && (cannotSkip(riddle) || !riddleComponent.skipEnabled))
@@ -285,13 +324,14 @@ class RiddleBusinessLogicService(
             return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
         }
 
-        val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
+        val submission = riddleMappingRepository.findAllByOwnerGroupId(groupId)
+            .firstOrNull { it.riddleId == riddleId }
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
                     submission.attemptCount += 1
                     submission.completedAt = clock.getTimeInSeconds()
-                    riddleCacheManager.updateMapping(submission, lazyPersist = true)
+                    riddleMappingRepository.save(submission)
                 }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
@@ -301,10 +341,10 @@ class RiddleBusinessLogicService(
                 submission.skipped = skip
                 submission.attemptCount += 1
                 submission.completedAt = clock.getTimeInSeconds()
-                riddleCacheManager.updateMapping(submission)
+                riddleMappingRepository.save(submission)
                 if (!skip && riddle.firstSolver.isBlank()) {
                     riddle.firstSolver = groupName
-                    riddleCacheManager.updateRiddle(riddle)
+                    riddleEntityRepository.save(riddle)
                 }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesGroup(groupId, riddle))
@@ -315,7 +355,7 @@ class RiddleBusinessLogicService(
                 return null
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
-                    riddleCacheManager.createNewMapping(
+                    riddleMappingRepository.save(
                         RiddleMappingEntity(
                             0, riddle.id, 0, groupId,
                             hintUsed = false, completed = false, skipped = false,
@@ -326,7 +366,7 @@ class RiddleBusinessLogicService(
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
 
-            riddleCacheManager.createNewMapping(
+            riddleMappingRepository.save(
                 RiddleMappingEntity(0, riddle.id, 0, groupId,
                     hintUsed = false, completed = true, skipped = skip,
                     completedAt = clock.getTimeInSeconds(), attemptCount = 1
@@ -334,14 +374,14 @@ class RiddleBusinessLogicService(
             )
             if (!skip && riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = groupName
-                riddleCacheManager.updateRiddle(riddle)
+                riddleEntityRepository.save(riddle)
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesGroup(groupId, riddle))
         }
     }
 
     private fun cannotSkip(riddle: RiddleEntity): Boolean {
-        return riddleCacheManager.countAllMappingByCompletedNotSkippedAndRiddleId(riddle.id) <
+        return riddleMappingRepository.countAllByCompletedTrueAndSkippedFalseAndRiddleId(riddle.id) <
                 riddleComponent.skipAfterGroupsSolved
     }
 
@@ -398,57 +438,99 @@ class RiddleBusinessLogicService(
         .replace("ű", "u")
 
     private fun getNextRiddlesUser(user: CmschUser, riddle: RiddleEntity): List<RiddleView> {
-        val submissions = riddleCacheManager.findAllMappingByOwnerUserIdAndRiddleCategoryId(user.id, riddle.categoryId)
-        return findNextTo(riddle.categoryId, submissions)
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
+            .filter { it.categoryId == riddle.categoryId }
+            .map { it.id }
+        val submissions = riddleMappingRepository.findAllByOwnerUserId(user.id)
+            .filter { it.riddleId in riddleIdsInCategory }
+        return findNextTo(riddle.categoryId, submissions, allRiddles)
     }
 
     private fun getNextRiddlesGroup(groupId: Int, riddle: RiddleEntity): List<RiddleView> {
-        val submissions = riddleCacheManager.findAllMappingByGroupUserIdAndRiddleCategoryId(groupId, riddle.categoryId)
-        return findNextTo(riddle.categoryId, submissions)
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIdsInCategory = allRiddles
+            .filter { it.categoryId == riddle.categoryId }
+            .map { it.id }
+        val submissions = riddleMappingRepository.findAllByOwnerGroupId(groupId)
+            .filter { it.riddleId in riddleIdsInCategory }
+        return findNextTo(riddle.categoryId, submissions, allRiddles)
     }
 
     private fun findNextTo(
         categoryId: Int,
-        submissions: List<RiddleMappingEntity>
+        submissions: List<RiddleMappingEntity>,
+        allRiddles: List<RiddleEntity>
     ): List<RiddleView> =
-        riddleCacheManager.findAllRiddleByCategoryId(categoryId)
+        allRiddles
+            .filter { it.categoryId == categoryId }
             .filter { filter -> submissions.none { it.completed && it.riddleId == filter.id } }
             .sortedBy { it.order }
             .take(riddleComponent.visibleRiddlesPerCategory.toInt())
             .map { mapRiddleView(submissions, it) }
 
+    private fun findNextTo(
+        categoryId: Int,
+        submissions: List<RiddleMappingEntity>
+    ): List<RiddleView> {
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        return findNextTo(categoryId, submissions, allRiddles)
+    }
+
 
     @Transactional(readOnly = true)
     override fun getCompletedRiddleCountUser(user: CmschUser): Int {
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role).map { it.categoryId }
-        return riddleCacheManager.countAllMappingByCompletedTrueAndOwnerUserIdAndRiddleCategoryIdIn(user.id, categories)
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
+            .filter { it.visible && it.minRole.value <= user.role.value }
+            .map { it.categoryId }
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIds = allRiddles
+            .filter { it.categoryId in categoryIds }
+            .map { it.id }
+        return riddleMappingRepository.countAllByCompletedTrueAndOwnerUserIdAndRiddleIdIn(user.id, riddleIds)
     }
 
     @Transactional(readOnly = true)
     override fun getCompletedRiddleCountGroup(user: CmschUser, groupId: Int?): Int {
         if (groupId == null)
             return 0
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role).map { it.categoryId }
-        return riddleCacheManager.countAllMappingByCompletedTrueAndOwnerGroupIdAndRiddleCategoryIdIn(groupId, categories)
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
+            .filter { it.visible && it.minRole.value <= user.role.value }
+            .map { it.categoryId }
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        val riddleIds = allRiddles
+            .filter { it.categoryId in categoryIds }
+            .map { it.id }
+        return riddleMappingRepository.countAllByCompletedTrueAndOwnerGroupIdAndRiddleIdIn(groupId, riddleIds)
     }
 
     @Transactional(readOnly = true)
     override fun getTotalRiddleCount(user: CmschUser): Int {
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role)
+        val allCategories = riddleCategoryRepository.findAll().toList()
+        val categoryIds = allCategories
+            .filter { it.visible && it.minRole.value <= user.role.value }
             .map { it.categoryId }
-        return riddleCacheManager.countAllRiddleByCategoryIdIn(categories)
+        val allRiddles = riddleEntityRepository.findAll().toList()
+        return allRiddles
+            .count { it.categoryId in categoryIds }
     }
 
     @Transactional(readOnly = true)
     override fun listRiddleHistoryForUser(user: CmschUser): Map<String, List<RiddleViewWithSolution>> {
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role)
-        val submissions = riddleCacheManager.findAllMappingByOwnerUserIdAndCompletedTrue(user.id)
-            .groupBy { riddleCacheManager.getRiddleById(it.riddleId)?.categoryId ?: 0 }
-            .toMap()
+        val categories = riddleCategoryRepository.findAll().toList()
+            .filter { it.visible && it.minRole.value <= user.role.value }
+        val submissionsList = riddleMappingRepository.findAllByOwnerUserIdAndCompletedTrue(user.id)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
+            .filterKeys { it != 0 }
 
         return categories.associate { category ->
             category.title to submissions.getOrDefault(category.categoryId, listOf())
-                        .map { riddle -> riddle to riddleCacheManager.getRiddleById(riddle.riddleId) }
+                        .map { mapping -> mapping to riddlesById[mapping.riddleId] }
                         .sortedBy { it.second?.order }
                         .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
                         .toList()
@@ -460,14 +542,18 @@ class RiddleBusinessLogicService(
         if (groupId == null)
             return mapOf()
 
-        val categories = riddleCacheManager.findAllCategoriesByVisibleTrueAndMinRoleAtMost(user.role)
-        val submissions = riddleCacheManager.findAllMappingByOwnerGroupIdAndCompletedTrue(groupId)
-            .groupBy { riddleCacheManager.getRiddleById(it.riddleId)?.categoryId ?: 0 }
-            .toMap()
+        val categories = riddleCategoryRepository.findAll().toList()
+            .filter { it.visible && it.minRole.value <= user.role.value }
+        val submissionsList = riddleMappingRepository.findAllByOwnerGroupIdAndCompletedTrue(groupId)
+        val riddleIds = submissionsList.map { it.riddleId }.toSet()
+        val riddlesById = riddleEntityRepository.findAllById(riddleIds).associateBy { it.id }
+        val submissions = submissionsList
+            .groupBy { riddlesById[it.riddleId]?.categoryId ?: 0 }
+            .filterKeys { it != 0 }
 
         return categories.associate { category ->
             category.title to submissions.getOrDefault(category.categoryId, listOf())
-                .map { riddle -> riddle to riddleCacheManager.getRiddleById(riddle.riddleId) }
+                .map { mapping -> mapping to riddlesById[mapping.riddleId] }
                 .sortedBy { it.second?.order }
                 .mapNotNull { it.second?.let { riddle -> mapRiddle(it.first, riddle) } }
                 .toList()

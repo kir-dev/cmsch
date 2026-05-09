@@ -23,7 +23,6 @@ class RiddleCategoryController(
     transactionManager: PlatformTransactionManager,
     env: Environment,
     storageService: StorageService,
-    private val riddleCacheManager: RiddleCacheManager
 ) : OneDeepEntityPage<RiddleCategoryEntity>(
     "riddle-categories",
     RiddleCategoryEntity::class, ::RiddleCategoryEntity,
@@ -55,10 +54,4 @@ class RiddleCategoryController(
     adminMenuPriority = 2,
 
     searchSettings = calculateSearchSettings<RiddleCategoryEntity>(false)
-) {
-
-    override fun onEntityChanged(entity: RiddleCategoryEntity) {
-        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
-    }
-
-}
+)

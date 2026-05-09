@@ -23,7 +23,6 @@ class RiddleController(
     transactionManager: PlatformTransactionManager,
     env: Environment,
     storageService: StorageService,
-    private val riddleCacheManager: RiddleCacheManager
 ) : OneDeepEntityPage<RiddleEntity>(
     "riddles",
     RiddleEntity::class, ::RiddleEntity,
@@ -55,14 +54,4 @@ class RiddleController(
     adminMenuPriority = 1,
 
     searchSettings = calculateSearchSettings<RiddleEntity>(false)
-) {
-
-    override fun onEntityChanged(entity: RiddleEntity) {
-        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
-    }
-
-    override fun onImported() {
-        riddleCacheManager.resetCache(persistMapping = false, overrideMappings = false)
-    }
-
-}
+)

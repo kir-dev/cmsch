@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.pushnotification
 
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 
 @Entity
@@ -19,5 +20,13 @@ open class MessagingTokenEntity(
     open var userId: Int = 0,
 
     @Column(name = "token", nullable = false)
-    open var token: String = ""
+    open var token: String = "",
+
+    @ColumnDefault("0")
+    @Column(name = "createdAt", nullable = false)
+    open var createdAt: Long = 0,
+
+    @ColumnDefault("0")
+    @Column(name = "updatedAt", nullable = false)
+    open var updatedAt: Long = 0
 )

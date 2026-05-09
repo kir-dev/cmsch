@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import java.util.*
 
 @ConditionalOnBean(PushNotificationComponent::class)
 interface MessagingTokenRepository : CrudRepository<MessagingTokenEntity, Long> {
@@ -25,4 +26,10 @@ interface MessagingTokenRepository : CrudRepository<MessagingTokenEntity, Long> 
     fun existsByUserIdAndToken(userId: Int, token: String): Boolean
 
     fun deleteByTokenIn(tokens: List<String>): Long
+
+    fun findByUserIdAndToken(userId: Int, token: String): Optional<MessagingTokenEntity>
+
+    fun deleteByUpdatedAtBefore(timestamp: Long): Long
+
+    fun findByUpdatedAtBefore(timestamp: Long): List<MessagingTokenEntity>
 }

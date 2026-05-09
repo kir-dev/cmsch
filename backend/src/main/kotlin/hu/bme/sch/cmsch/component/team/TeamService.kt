@@ -6,7 +6,8 @@ import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.qrfight.QrFightService
 import hu.bme.sch.cmsch.component.race.DEFAULT_CATEGORY
 import hu.bme.sch.cmsch.component.race.RaceService
-import hu.bme.sch.cmsch.component.riddle.RiddleReadonlyService
+import hu.bme.sch.cmsch.component.riddle.RiddleEntityRepository
+import hu.bme.sch.cmsch.component.riddle.RiddleMappingRepository
 import hu.bme.sch.cmsch.component.task.TasksService
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
@@ -46,7 +47,8 @@ class TeamService(
     private val tasksService: Optional<TasksService>,
     private val formsService: Optional<FormService>,
     private val qrFightService: Optional<QrFightService>,
-    private val riddleReadonlyService: Optional<RiddleReadonlyService>,
+    private val riddleMappingRepository: Optional<RiddleMappingRepository>,
+    private val riddleEntityRepository: Optional<RiddleEntityRepository>,
     private val clock: TimeService,
     private val storageService: StorageService
 ) {
@@ -384,13 +386,15 @@ class TeamService(
         }
 
         if (teamComponent.riddleStatEnabled) {
-            riddleReadonlyService.ifPresent { riddles ->
-                val details = riddles.getRiddleDetails(group.id)
+            riddleMappingRepository.ifPresent { repo ->
+                val solved = repo.countAllByOwnerGroupIdAndCompletedTrue(group.id)
+                val skipped = repo.countAllByOwnerGroupIdAndCompletedTrueAndSkippedTrue(group.id)
+                val total = riddleEntityRepository.map { it.count() }.orElse(0L)
                 stats.add(TeamStatView(
                     name = teamComponent.riddleStatHeader,
-                    value1 = "${details.solved} db",
-                    value2 = "Ebből átugrott ${details.skipped} db",
-                    percentage = if (details.all == 0) 1f else (details.solved / details.all).toFloat(),
+                    value1 = "$solved db",
+                    value2 = "Ebből átugrott $skipped db",
+                    percentage = if (total == 0L) 0f else (solved.toFloat() / total.toFloat()),
                     navigate = "/riddle"
                 ))
             }
