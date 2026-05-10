@@ -7,7 +7,8 @@ enum class RiddleSubmissionStatus {
     CORRECT,
     WRONG,
     CANNOT_SKIP,
-    SUBMITTER_BANNED
+    SUBMITTER_BANNED,
+    NOT_SOLVABLE
 }
 
 data class RiddleSubmissionView(
