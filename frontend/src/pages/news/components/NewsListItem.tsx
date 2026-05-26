@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { stringifyTimeStamp } from '@/util/core-functions.util'
 import { AbsolutePaths } from '@/util/paths'
 import type { NewsArticleView } from '@/util/views/news.view'
-import { FaExclamation } from 'react-icons/fa'
+import { CircleAlert } from 'lucide-react'
 import { Link } from 'react-router'
 
 type Props = {
@@ -28,7 +28,7 @@ export const NewsListItem = ({ news, fontSize, useLink }: Props) => {
             {!!news.timestamp && <div className="mb-2 text-sm font-light">Közzétéve: {stringifyTimeStamp(news.timestamp)}</div>}
             {news.highlighted && (
               <div>
-                <FaExclamation className="h-8 w-8 text-primary" />
+                <CircleAlert className="h-8 w-8 text-primary" />
               </div>
             )}
           </div>

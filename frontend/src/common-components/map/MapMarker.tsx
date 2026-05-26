@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { getTextColorFromLuminance } from '@/util/color.utils'
 import { MapMarkerShape } from '@/util/views/map.view'
-import { FaBroadcastTower, FaCampground, FaCar, FaCrosshairs, FaHome, FaInfo, FaMarker, FaUser } from 'react-icons/fa'
+import { Car, Crosshair, Home, Info, MapPin, RadioTower, Tent, User } from 'lucide-react'
 
 interface MapMarkerProps {
   color: string
@@ -33,21 +33,21 @@ export function MapMarker({ color, text, markerShape = MapMarkerShape.CIRCLE }: 
 function MarkerShapeIcon({ markerShape, color, size }: { markerShape?: MapMarkerShape; color: string; size: number }) {
   switch (markerShape) {
     case MapMarkerShape.INFO:
-      return <FaInfo color={color} size={size} />
+      return <Info color={color} size={size} />
     case MapMarkerShape.CAR:
-      return <FaCar color={color} size={size} />
+      return <Car color={color} size={size} />
     case MapMarkerShape.CROSSHAIRS:
-      return <FaCrosshairs color={color} size={size} />
+      return <Crosshair color={color} size={size} />
     case MapMarkerShape.CAMP:
-      return <FaCampground color={color} size={size} />
+      return <Tent color={color} size={size} />
     case MapMarkerShape.TOWER:
-      return <FaBroadcastTower color={color} size={size} />
+      return <RadioTower color={color} size={size} />
     case MapMarkerShape.MARKER:
-      return <FaMarker color={color} size={size} />
+      return <MapPin color={color} size={size} />
     case MapMarkerShape.HOME:
-      return <FaHome color={color} size={size} />
+      return <Home color={color} size={size} />
     case MapMarkerShape.PERSON:
-      return <FaUser color={color} size={size} />
+      return <User color={color} size={size} />
   }
   return null
 }
