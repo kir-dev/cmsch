@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { stringifyTimeStamp } from '@/util/core-functions.util'
 import { AbsolutePaths } from '@/util/paths'
 import type { NewsArticleView } from '@/util/views/news.view'
-import { FaArrowLeft } from 'react-icons/fa'
+import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router'
 
 interface NewsProps {
@@ -30,7 +30,7 @@ const News = ({ news }: NewsProps) => {
       <Markdown text={news.content} />
       <Button asChild className="mt-4">
         <Link to={AbsolutePaths.NEWS}>
-          <FaArrowLeft className="mr-2" />
+          <ArrowLeft className="mr-2" />
           Vissza a hírekhez
         </Link>
       </Button>

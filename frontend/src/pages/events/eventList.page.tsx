@@ -12,9 +12,8 @@ import { useTime } from '@/hooks/useDate.ts'
 import { Paths } from '@/util/paths'
 import type { EventListView } from '@/util/views/event.view'
 import uniq from 'lodash/uniq'
-import { Search } from 'lucide-react'
+import { Calendar, Search } from 'lucide-react'
 import { createRef, useEffect, useMemo, useState } from 'react'
-import { FaCalendar } from 'react-icons/fa'
 import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
@@ -62,7 +61,7 @@ const EventListPage = () => {
         {event.topMessage && <Markdown text={event.topMessage} />}
       </div>
       <LinkButton className="mb-5" href={Paths.CALENDAR}>
-        <FaCalendar className="mr-2" />
+        <Calendar className="mr-2" />
         Megtekintés a naptárban
       </LinkButton>
 

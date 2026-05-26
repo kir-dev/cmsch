@@ -3,8 +3,8 @@ import { WalletButton } from '@/common-components/WalletButton'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import type { ProfileView } from '@/util/views/profile.view'
+import { QrCode } from 'lucide-react'
 import { useState } from 'react'
-import { FaQrcode } from 'react-icons/fa'
 import QRCode from 'react-qr-code'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
@@ -15,7 +15,7 @@ export const ProfileQR = ({ profile, component }: { profile: ProfileView; compon
       <div className="flex flex-col items-center">
         <span className="text-3xl font-medium">{component.qrTitle}</span>
         <Button className="mt-5" onClick={() => setIsOpen(true)}>
-          <FaQrcode className="mr-2" />
+          <QrCode className="mr-2" />
           QR kód felmutatása
         </Button>
         <span className="my-5 text-sm text-primary">vagy</span>
