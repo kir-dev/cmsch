@@ -40,7 +40,7 @@ data class RiddleCategoryEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 2, label = "Kategória id-je")
-    @property:GenerateOverview(columnName = "Kategória", order = 2)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Kategória", order = 2)
     @property:ImportFormat
     var categoryId: Int = 0,
 

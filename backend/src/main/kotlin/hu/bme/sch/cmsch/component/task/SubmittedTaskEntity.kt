@@ -104,7 +104,7 @@ data class SubmittedTaskEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, order = 10, label = "Adott pont")
-    @property:GenerateOverview(columnName = "Pont", order = 5, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER,columnName = "Pont", order = 5, centered = true)
     var score: Int = 0,
 
     @ColumnDefault("''")

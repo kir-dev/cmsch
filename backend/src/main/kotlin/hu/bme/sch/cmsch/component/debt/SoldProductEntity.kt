@@ -36,7 +36,7 @@ data class SoldProductEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 2, label = "Ár", enabled = false, ignore = true, note = "Az árak JMF-ben értendőek")
-    @property:GenerateOverview(columnName = "Ár", order = 2)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Ár", order = 2)
     @property:ImportFormat
     var price: Int = 0,
 

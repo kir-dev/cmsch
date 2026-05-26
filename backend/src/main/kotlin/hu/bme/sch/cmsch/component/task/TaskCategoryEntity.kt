@@ -46,7 +46,7 @@ data class TaskCategoryEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.NUMBER, min = 0, order = 2, label = "Kategória id-je. " +
             "Egyedinek kell lennie, különben összeakad a rendszer!")
-    @property:GenerateOverview(columnName = "ID", order = 2)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "ID", order = 2)
     @property:ImportFormat
     var categoryId: Int = 0,
 

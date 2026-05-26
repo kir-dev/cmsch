@@ -12,10 +12,10 @@ data class RiddleStatsVirtualEntity(
     @property:GenerateOverview(columnName = "Beadó", order = 1)
     var owner: String = "",
 
-    @property:GenerateOverview(columnName = "Elfogadott", order = 2, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Elfogadott", order = 2, centered = true)
     var completed: Int = 0,
 
-    @property:GenerateOverview(columnName = "Hintek felhasználva", order = 3, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Hintek felhasználva", order = 3, centered = true)
     var hintsUsed: Int = 0,
 
 ) : IdentifiableEntity

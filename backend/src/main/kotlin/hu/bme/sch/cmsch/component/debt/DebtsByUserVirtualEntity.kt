@@ -15,13 +15,13 @@ data class DebtsByUserVirtualEntity(
     @property:GenerateOverview(columnName = "Csoport", order = 2, centered = true)
     var groupName: String = "",
 
-    @property:GenerateOverview(columnName = "Totál [JMF]", order = 3, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Totál [JMF]", order = 3, centered = true)
     var total: Int = 0,
 
-    @property:GenerateOverview(columnName = "Fizetetlen [JMF]", order = 4, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Fizetetlen [JMF]", order = 4, centered = true)
     var notPayed: Int = 0,
 
-    @property:GenerateOverview(columnName = "Lezáratlan [JMF]", order = 5, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Lezáratlan [JMF]", order = 5, centered = true)
     var notFinished: Int = 0
 
 ) : IdentifiableEntity
