@@ -17,10 +17,10 @@ jobs:
 
     steps:
     - name: Check out Git repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Set up Node.js 25
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 25
 
@@ -37,7 +37,7 @@ jobs:
       run: npm run lint:typescript
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarqube-scan-action@v5
+      uses: SonarSource/sonarqube-scan-action@v8
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
