@@ -7,7 +7,6 @@
   "dependencies": {
     "@firebase/app": "0.14.12",
     "@firebase/messaging": "0.12.26",
-    "@nivo/bar": "0.99.0",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",
     "@radix-ui/react-avatar": "1.1.11",
@@ -53,6 +52,7 @@
     "react-qr-code": "2.0.21",
     "react-router": "7.15.1",
     "react-simple-code-editor": "0.14.1",
+    "recharts": "^2.15.4",
     "remark-gfm": "4.0.1",
     "tailwind-merge": "3.6.0",
     "tailwindcss-animate": "1.0.7",
