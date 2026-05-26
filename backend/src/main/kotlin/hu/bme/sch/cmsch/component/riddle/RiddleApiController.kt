@@ -50,6 +50,7 @@ class RiddleApiController(
             OwnershipType.GROUP -> riddleService.getRiddleForGroup(user, user.groupId, riddleId)?.let { ResponseEntity.ok(it) }
                 ?: ResponseEntity.notFound().build()
         }
+
     }
 
     @JsonView(FullDetails::class)
@@ -101,6 +102,9 @@ class RiddleApiController(
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         log.info("User '{}' is submitting '{}' for riddle id:{}", user.userName, body.solution, riddleId)
+
+        if (body.solution == "")
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         return when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.submitRiddleForUser(user, riddleId, body.solution)
