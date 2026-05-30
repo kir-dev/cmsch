@@ -30,6 +30,25 @@
     </style>
 
     <script>
+      window.config = {
+        API_BASE_URL: '%VITE_API_BASE_URL%',
+        DISABLE_APP_CONFIG_CACHE: '%VITE_DISABLE_APP_CONFIG_CACHE%',
+        APP_CONFIG_CACHE_TTL_SECONDS: '%VITE_APP_CONFIG_CACHE_TTL_SECONDS%',
+        HIDE_KIR_DEV_IN_FOOTER: '%VITE_HIDE_KIR_DEV_IN_FOOTER%',
+        CLIENT_BASE_URL: '%VITE_CLIENT_BASE_URL%',
+        OFFICIAL_LANGUAGE: '%VITE_OFFICIAL_LANGUAGE%',
+        PASS_SERVER_URL: '%VITE_PASS_SERVER_URL%',
+        PASS_TEMPLATE: '%VITE_PASS_TEMPLATE%',
+        FIREBASE_PROJECT_ID: '%VITE_FIREBASE_PROJECT_ID%',
+        FIREBASE_APP_ID: '%VITE_FIREBASE_APP_ID%',
+        FIREBASE_API_KEY: '%VITE_FIREBASE_API_KEY%',
+        FIREBASE_SENDER_ID: '%VITE_FIREBASE_SENDER_ID%',
+        FIREBASE_WEB_PUSH_PUBLIC_KEY: '%VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY%',
+        PLAUSIBLE_URL: '%VITE_PLAUSIBLE_URL%'
+      }
+    </script>
+
+    <script>
       function reportError(message, stack) {
         const report = {
           message: message,
@@ -38,7 +57,8 @@
           href: window.location.href
         }
 
-        fetch('%VITE_API_BASE_URL%/api/error/submit', {
+        const apiBase = window.config.API_BASE_URL || 'http://localhost:8080'
+        fetch(apiBase + '/api/error/submit', {
           body: JSON.stringify(report),
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
