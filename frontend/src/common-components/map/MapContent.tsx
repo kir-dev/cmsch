@@ -32,7 +32,8 @@ export function MapContent({ showUserLocation, mapData, className, height = 400 
     return [latSum / mapData.length, lonSum / mapData.length] as [number, number]
   }, [mapData])
 
-  const center: [number, number] = (showUserLocation && coords) ? [coords.latitude, coords.longitude] : (markersCenter ?? [47.47303, 19.0531])
+  const fallbackCenter: [number, number] = markersCenter ?? [47.47303, 19.0531]
+  const center: [number, number] = showUserLocation && coords ? [coords.latitude, coords.longitude] : fallbackCenter
 
   useEffect(() => {
     if (showUserLocation) getPosition()
