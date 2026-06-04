@@ -37,7 +37,7 @@ class LocationService(
                 if (userEntity.role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
                         LocationEntity(
-                            id = 0,
+                            id = userEntity.id,
                             userId = userEntity.id,
                             userName = userEntity.fullName,
                             alias = userEntity.alias,
@@ -113,16 +113,23 @@ class LocationService(
                 .forEach { token ->
                     tokenToLocationMapping[token]?.let {
                         val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
-                        it.userId = user.get().id
-                        it.userName = user.get().fullName
-                        it.alias = user.get().alias
-                        it.groupName = user.get().groupName
+                        if (user.isPresent) {
+                            val u = user.get()
+                            it.id = u.id
+                            it.userId = u.id
+                            it.userName = u.fullName
+                            it.alias = u.alias
+                            it.groupName = u.groupName
+                        }
                     }
                 }
     }
 
     fun findLocationsOfGroup(groupId: Int): List<LocationEntity> {
-        return tokenToLocationMapping.values.filter { it.id == groupId }
+        return tokenToLocationMapping.values.filter {
+            val user = userRepository.findById(it.userId)
+            user.isPresent && user.get().group?.id == groupId
+        }
     }
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
