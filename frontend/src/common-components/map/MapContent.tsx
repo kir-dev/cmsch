@@ -50,7 +50,13 @@ export function MapContent({ showUserLocation, mapData, className, height = 400 
       <Map center={center} provider={OsmProvider} height={height} dprs={[1, 2]}>
         <ZoomControl />
         {mapData.map((mapDataItem) => (
-          <Marker hover key={mapDataItem.displayName} width={200} height={3} anchor={[mapDataItem.latitude, mapDataItem.longitude]}>
+          <Marker
+            hover
+            key={`${mapDataItem.latitude}-${mapDataItem.longitude}-${mapDataItem.displayName}`}
+            width={200}
+            height={3}
+            anchor={[mapDataItem.latitude, mapDataItem.longitude]}
+          >
             <MapMarker color={mapDataItem.markerColor} text={mapDataItem.displayName} markerShape={mapDataItem.markerShape} />
           </Marker>
         ))}

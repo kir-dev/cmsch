@@ -9,15 +9,25 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { l } from '@/util/language'
 import { X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function MapPage() {
   const [showUserLocation, setShowUserLocation] = useState(false)
   const [fullScreen, setFullScreen] = useState(false)
+  const [fullscreenHeight, setFullscreenHeight] = useState(() => (typeof window !== 'undefined' ? window.innerHeight : 800))
   const locationQuery = useLocationQuery()
   const config = useConfigContext()
   const component = config?.components?.location
   const devWebsiteUrl = config?.components?.footer?.devWebsiteUrl || 'https://kir-dev.hu/project/cmsch'
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const handleResize = () => {
+      setFullscreenHeight(window.innerHeight)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <CmschPage title={component?.title || 'Térkép'}>
@@ -67,7 +77,7 @@ export default function MapPage() {
           mapData={locationQuery.data ?? []}
           showUserLocation={showUserLocation}
           className={fullScreen ? 'h-screen w-screen' : ''}
-          height={fullScreen ? (typeof window !== 'undefined' ? window.innerHeight : 800) : 400}
+          height={fullScreen ? fullscreenHeight : 400}
         />
       </div>
       <p className="mt-4">{l('location-description')}</p>

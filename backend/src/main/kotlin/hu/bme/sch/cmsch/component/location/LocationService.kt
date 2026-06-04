@@ -126,10 +126,18 @@ class LocationService(
     }
 
     fun findLocationsOfGroup(groupId: Int): List<LocationEntity> {
-        return tokenToLocationMapping.values.filter {
-            val user = userRepository.findById(it.userId)
-            user.isPresent && user.get().group?.id == groupId
+        val locations = tokenToLocationMapping.values.toList()
+        if (locations.isEmpty()) return emptyList()
+
+        val userIds = locations.map { it.userId }
+        val userIdsInGroup = transactionManager.transaction(readOnly = true) {
+            userRepository.findAllById(userIds)
+                .filter { it.group?.id == groupId }
+                .map { it.id }
+                .toSet()
         }
+
+        return locations.filter { it.userId in userIdsInGroup }
     }
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
