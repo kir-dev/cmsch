@@ -87,6 +87,7 @@ data class UserEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
+    @property:ImportFormat
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
