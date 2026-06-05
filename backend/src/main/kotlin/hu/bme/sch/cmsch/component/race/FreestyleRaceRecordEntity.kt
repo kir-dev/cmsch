@@ -64,7 +64,7 @@ data class FreestyleRaceRecordEntity(
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = InputType.FLOAT3, order = 4, label = "Mért idő", defaultValue = "0.0",
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
-    @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.TIME, columnName = "Idő", order = 4, centered = true)
     @property:ImportFormat
     var time: Float = 0.0f,
 

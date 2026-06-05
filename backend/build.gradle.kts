@@ -5,10 +5,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.owasp.dependencycheck") version "12.2.1"
+    id("org.owasp.dependencycheck") version "12.2.2"
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.spring") version "2.3.21"
-    id("org.sonarqube") version "7.2.3.7755"
+    id("org.sonarqube") version "7.3.0.8198"
 }
 
 group = "hu.bme.sch"
@@ -52,7 +52,7 @@ dependencies {
     implementation("tools.jackson.dataformat:jackson-dataformat-csv")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-    implementation("com.google.auth:google-auth-library-oauth2-http:1.46.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.47.0")
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.google.zxing:javase:3.5.4")
     implementation("com.itextpdf:itext-core:9.6.0")
@@ -61,7 +61,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
     implementation("io.jsonwebtoken:jjwt-api")
-    implementation(platform("io.micrometer:micrometer-bom:1.16."))
+    implementation(platform("io.micrometer:micrometer-bom:1.16.5"))
     runtimeOnly("io.micrometer:micrometer-core")
     runtimeOnly("io.micrometer:micrometer-observation")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -74,7 +74,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -85,7 +85,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webclient")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("software.amazon.awssdk:s3:2.42.40")
+    implementation("software.amazon.awssdk:s3:2.44.12")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

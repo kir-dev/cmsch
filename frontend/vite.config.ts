@@ -15,7 +15,7 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       optimization: { inlineConst: true, pifeForModuleWrappers: true },
-      output: { inlineDynamicImports: true }
+      output: { codeSplitting: false }
     }
   },
   server: {

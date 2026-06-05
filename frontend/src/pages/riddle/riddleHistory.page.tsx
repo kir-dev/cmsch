@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { l } from '@/util/language'
 import { AbsolutePaths } from '@/util/paths'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { SpoilerText } from './components/SpoilerText'
 
@@ -122,12 +122,12 @@ const RiddleHistoryPage = () => {
 
             <div className="my-3 flex justify-between">
               <Button onClick={() => setIndex(index - 1)} disabled={index === 0}>
-                <FaArrowLeft className="mr-2" />
+                <ArrowLeft className="mr-2" />
                 Előző
               </Button>
               <Button onClick={() => setIndex(index + 1)} disabled={index === riddleList?.length - 1}>
                 Következő
-                <FaArrowRight className="ml-2" />
+                <ArrowRight className="ml-2" />
               </Button>
             </div>
             <div className="flex justify-center">

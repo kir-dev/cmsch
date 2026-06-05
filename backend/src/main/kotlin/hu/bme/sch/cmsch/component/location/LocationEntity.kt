@@ -56,13 +56,13 @@ data class LocationEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 9, label = "Longitude", type = InputType.FLOAT)
-    @property:GenerateOverview(columnName = "Longitude", order = 4)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Longitude", order = 4)
     var longitude: Double = 0.0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 8, label = "Latitude", type = InputType.FLOAT)
-    @property:GenerateOverview(columnName = "Latitude", order = 3)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Latitude", order = 3)
     var latitude: Double = 0.0,
 
     @Column(nullable = false)
@@ -74,7 +74,7 @@ data class LocationEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(maxLength = 32, order = 11, label = "Pontosság", defaultValue = "0", type = InputType.FLOAT)
-    @property:GenerateOverview(columnName = "Pontosság", order = 5)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Pontosság", order = 5)
     var accuracy: Float = 0.0f,
 
     @Column(nullable = false)

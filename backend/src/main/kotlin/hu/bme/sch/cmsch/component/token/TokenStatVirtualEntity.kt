@@ -15,7 +15,7 @@ data class TokenStatVirtualEntity(
     @property:GenerateOverview(columnName = "Típus", order = 2)
     var type: String = "",
 
-    @property:GenerateOverview(columnName = "Beolvasás", order = 3, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Beolvasás", order = 3, centered = true)
     var count: Int = 0
 
 ) : IdentifiableEntity

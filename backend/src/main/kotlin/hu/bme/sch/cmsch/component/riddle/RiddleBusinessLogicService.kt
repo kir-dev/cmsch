@@ -67,8 +67,12 @@ class RiddleBusinessLogicService(
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
+        if (riddle.id !in listRiddlesForUser(user).flatMap { it.nextRiddles }.map { it.id })
+            return null
+
         val submissions = riddleCacheManager.findAllMappingByOwnerUserIdAndRiddleCategoryId(user.id, riddle.categoryId)
-        return getRiddleIfAllowedToRead(riddle, submissions)
+        val nextRiddles = findNextTo(riddle.categoryId, submissions)
+        return nextRiddles.find { it.id == riddle.id }
     }
 
     @Transactional(readOnly = true)
@@ -80,16 +84,10 @@ class RiddleBusinessLogicService(
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
+        if (riddle.id !in listRiddlesForGroup(user, user.groupId).flatMap { it.nextRiddles }.map { it.id })
+            return null
+
         val submissions = riddleCacheManager.findAllMappingByGroupUserIdAndRiddleCategoryId(groupId, riddle.categoryId)
-        return getRiddleIfAllowedToRead(riddle, submissions)
-    }
-
-    private fun getRiddleIfAllowedToRead(riddle: RiddleEntity, submissions: List<RiddleMappingEntity>): RiddleView? {
-        val isRiddleCompleted = submissions.filter { it.completed }.find { it.riddleId == riddle.id } != null
-        if (isRiddleCompleted) {
-            return mapRiddleView(submissions, riddle)
-        }
-
         val nextRiddles = findNextTo(riddle.categoryId, submissions)
         return nextRiddles.find { it.id == riddle.id }
     }
@@ -202,6 +200,10 @@ class RiddleBusinessLogicService(
             return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
         }
         val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
+
+        if (riddle.id !in listRiddlesForUser(user).flatMap { it.nextRiddles }.map { it.id })
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.NOT_SOLVABLE)
+
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
@@ -284,6 +286,9 @@ class RiddleBusinessLogicService(
         if (banStatus == SubmissionModerationStatus.SHADOW_BAN) {
             return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
         }
+
+        if (riddle.id !in listRiddlesForGroup(user, user.groupId).flatMap { it.nextRiddles }.map { it.id })
+            return RiddleSubmissionView(status = RiddleSubmissionStatus.NOT_SOLVABLE)
 
         val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
         if (submission != null) {
