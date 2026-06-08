@@ -31,7 +31,7 @@ class TokenApiController(
 
     @JsonView(FullDetails::class)
     @GetMapping("/tokens")
-    fun riddle(auth: Authentication?): ResponseEntity<TokenView> {
+    fun tokens(auth: Authentication?): ResponseEntity<TokenView> {
         val user = auth.getUserOrNull() ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(tokens.getTokenViewForUser(user))
     }

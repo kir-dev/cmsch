@@ -52,8 +52,8 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(maxLength = 32, order = 4, label = "Típus")
-    @property:GenerateOverview(columnName = "Típus", order = 3)
+    @property:GenerateInput(maxLength = 32, order = 4, label = "Kategória", note = "Ha QR Fightban beolvasandó token, a szint kategóriájával meg kell egyezzen")
+    @property:GenerateOverview(columnName = "Kategória", order = 3)
     @property:ImportFormat
     var type: String = "",
 
@@ -82,7 +82,7 @@ data class TokenEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(maxLength = 32, order = 7, label = "Kiváltott esemény",
-        note = "QR fighthoz az akció amit kivált. capture:<tower>, history:<tower> vagy enslave:<tower>")
+        note = "QR fighthoz az akció amit kivált. capture:<tower>, history:<tower> vagy enslave:<tower>, vagy treasure:<idx>")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var action: String = "",
