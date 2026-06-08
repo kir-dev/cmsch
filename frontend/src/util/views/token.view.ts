@@ -29,7 +29,8 @@ export const ScanStatus = {
   QR_TOTEM_ENSLAVED: 'QR_TOTEM_ENSLAVED',
   QR_TOTEM_ALREADY_ENSLAVED: 'QR_TOTEM_ALREADY_ENSLAVED',
   QR_FIGHT_TOTEM_LOCKED: 'QR_FIGHT_TOTEM_LOCKED',
-  QR_TOWER_DAILY_LIMIT_EXCEEDED: 'QR_TOWER_DAILY_LIMIT_EXCEEDED'
+  QR_TOWER_DAILY_LIMIT_EXCEEDED: 'QR_TOWER_DAILY_LIMIT_EXCEEDED',
+  QR_TREASURE_NOT_AVAILABLE: 'QR_TREASURE_NOT_AVAILABLE'
 }
 export type ScanStatus = (typeof ScanStatus)[keyof typeof ScanStatus]
 
@@ -51,7 +52,8 @@ export const ScanMessages: Record<ScanStatus, string> = {
   [ScanStatus.QR_TOTEM_ENSLAVED]: 'QR totem elfoglalva',
   [ScanStatus.QR_TOTEM_ALREADY_ENSLAVED]: 'Ez a QR totem már el van foglalva',
   [ScanStatus.QR_FIGHT_TOTEM_LOCKED]: 'QR totem zárva',
-  [ScanStatus.QR_TOWER_DAILY_LIMIT_EXCEEDED]: 'Ezt a tornyot az elmúlt 24 órában már elfoglaltad elégszer, próbáld meg holnap újra'
+  [ScanStatus.QR_TOWER_DAILY_LIMIT_EXCEEDED]: 'Ezt a tornyot az elmúlt 24 órában már elfoglaltad elégszer, próbáld meg holnap újra',
+  [ScanStatus.QR_TREASURE_NOT_AVAILABLE]: 'Ezt a kincset még nem szerezheted meg, nincsen elég kicsed'
 }
 
 export interface ScanResponseView {
