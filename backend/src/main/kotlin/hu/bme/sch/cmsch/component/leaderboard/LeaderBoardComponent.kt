@@ -72,6 +72,8 @@ class LeaderBoardComponent(
     var tokenPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "QR Kódok szorzó (%)", description = "100 = 1x, 0 = nem számít bele")
 
+    var addUserScoresForGroupScore by BooleanSettingRef(serverSideOnly = true, fieldName = "Felhasználói pontok felhasználása pontszámításnál", description = "Ha igaz, akkor a USER Ownershippel rendelkező pontok is beleszámolódnak a Csapatos pontszámításba")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val displayGroup by SettingGroup(fieldName = "Kijelzés")
