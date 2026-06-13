@@ -467,6 +467,14 @@ class QrFightService(
                 log.info("Level '{}' is not unlocked for user '{}'", level.displayName, user.fullName)
                 return TokenSubmittedView(QR_FIGHT_LEVEL_LOCKED, token.title, null, null)
             }
+            if (level.treasureHuntLevel && token.action.startsWith("treasure:")){
+                val treasuresRequired = token.action.removePrefix("treasure:").toInt()
+                val treasuresFound = repo.countAllByOwnerUser_IdAndToken_Type(user.id, token.type)
+                if (treasuresFound < treasuresRequired){
+                    log.info("Treasure hunt token '{}' requires {} treasures but user '{}' has only found {}", token.title, treasuresRequired, user.fullName, treasuresFound)
+                    return TokenSubmittedView(QR_TREASURE_NOT_AVAILABLE, token.title, null, null)
+                }
+            }
         }
 
         // Check for TOWERS
