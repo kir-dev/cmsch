@@ -319,6 +319,7 @@ open class LeaderBoardService(
                     submissions
                         .findAll()
                         .groupBy { it.ownerGroup }
+                        .filter { it.key?.races ?: false }
                         .map { (group, tokens) ->
                             val groupId = group?.id ?: 0
                             val groupName = group?.name ?: "n/a"
