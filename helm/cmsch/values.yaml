@@ -141,6 +141,7 @@ load:
   form: false
   groupselection: false
   impressum: false
+  kirpay: false
   leaderboard: false
   location: false
   messaging: false

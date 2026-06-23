@@ -2,7 +2,6 @@ import type { DebtView } from './debt.view'
 import type { GroupLeaderView } from './groupLeader.view'
 import type { GroupMemberLocationView } from './groupMemberLocation.view'
 import type { TokenView } from './token.view'
-import type { TopListAbstractEntryView } from './toplistAbstractEntry.view'
 
 export interface ProfileView {
   cmschId?: string
@@ -38,13 +37,13 @@ export interface ProfileView {
 
   locations?: GroupMemberLocationView[]
   debts?: DebtView[]
-  leaderboard?: TopListAbstractEntryView[]
 
   profileIsComplete?: boolean
   incompleteTasks?: string[]
 
   groupMessage?: string
   userMessage?: string
+  kirPayBalance?: number
 }
 
 export interface RaceStatsView {

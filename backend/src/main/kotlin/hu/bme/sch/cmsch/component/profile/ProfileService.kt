@@ -2,10 +2,9 @@ package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.admission.AdmissionService
 import hu.bme.sch.cmsch.component.bmejegy.CheersBmejegyService
-import hu.bme.sch.cmsch.component.bmejegy.LegacyBmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
-import hu.bme.sch.cmsch.component.groupselection.GroupSelectionComponent
+import hu.bme.sch.cmsch.component.kirpay.KirPayService
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.component.login.LoginComponent
@@ -32,6 +31,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
 import java.util.*
+import kotlin.jvm.optionals.getOrDefault
 
 @Service
 @ConditionalOnBean(ProfileComponent::class)
@@ -50,14 +50,15 @@ class ProfileService(
     private val clock: TimeService,
     private val startupPropertyConfig: StartupPropertyConfig,
     private val admissionService: Optional<AdmissionService>,
-    private val cheersBmejegyService: CheersBmejegyService?
+    private val cheersBmejegyService: CheersBmejegyService?,
+    private val kirPayService: Optional<KirPayService>
 ) {
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun getProfileForUser(user: UserEntity): ProfileView {
         val group = user.group
         val leavable = fetchWhetherGroupLeavable(group)
-        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.orElse(ALL_TOKEN_TYPE)
+        val tokenCategoryToDisplay = tokenComponent.map { it.collectRequiredType }.getOrDefault(ALL_TOKEN_TYPE)
         val incompleteTasks = tasksService.map { it.getTasksThatNeedsToBeCompleted(user) }.orElse(null)
 
         val raceStats: RaceStatsView? = raceService.map { it.getRaceStats(user) }.orElse(null)
@@ -117,8 +118,8 @@ class ProfileService(
             // Debt controller
             debts = fetchDebts(user).orElse(null),
 
-            // Leaderboard controller
-            leaderboard = null
+            // Kir-Pay balance
+            kirPayBalance = fetchKirPayBalance(user).orElse(null)
         )
     }
 
@@ -126,7 +127,7 @@ class ProfileService(
         val canSeeQr = profileComponent.showQrMinRole.isAvailableForRole(user.role) && profileComponent.showQr
 
         if (profileComponent.showQrOnlyIfTicketPresent && (canSeeQr || profileComponent.showProfilePicture)) {
-            return if (admissionService.map { it.hasTicket(user.cmschId) }.orElse(false)) user.cmschId else null
+            return if (admissionService.map { it.hasTicket(user.cmschId) }.getOrDefault(false)) user.cmschId else null
         }
 
         return if (canSeeQr || profileComponent.showProfilePicture) {
@@ -163,6 +164,7 @@ class ProfileService(
                     repo.getTokensForUserWithCategory(user, tokenCategoryToDisplay)
                 }
             }
+
             OwnershipType.GROUP -> if (group == null) Optional.of(0) else tokenService.map { repo ->
                 if (tokenCategoryToDisplay == ALL_TOKEN_TYPE) {
                     repo.countTokensForGroup(group)
@@ -175,7 +177,7 @@ class ProfileService(
     private fun fetchFallbackGroup() =
         profileComponent.selectionEnabled.mapIfTrue {
             groupRepository
-                .findByName(loginComponent.map { it.fallbackGroupName }.orElse("Vendég"))
+                .findByName(loginComponent.map { it.fallbackGroupName }.getOrDefault("Vendég"))
                 .map { it.id }
                 .orElse(null)
         }
@@ -229,7 +231,12 @@ class ProfileService(
             .associate { Pair(it.id, it.name) }
     }
 
-    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
+    private fun fetchKirPayBalance(user: UserEntity) =
+        kirPayService
+            .filter { profileComponent.showKirPayBalance }
+            .map { it.getBalanceByEmail(user.email) }
+
+    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun changeAlias(user: UserEntity, newAlias: String): Boolean {
         return if (newAlias.matches(Regex(profileComponent.aliasRegex))) {

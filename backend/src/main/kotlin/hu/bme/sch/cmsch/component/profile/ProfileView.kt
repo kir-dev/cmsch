@@ -97,11 +97,11 @@ data class ProfileView(
     val debts: List<DebtDto>? = null,
 
     @field:JsonView(FullDetails::class)
-    val leaderboard: List<LeaderBoardEntry>? = null,
-
-    @field:JsonView(FullDetails::class)
     val groupMessage: String? = null,
 
     @field:JsonView(FullDetails::class)
     val userMessage: String? = null,
+
+    @field:JsonView(FullDetails::class)
+    val kirPayBalance: Long? = null,
 )

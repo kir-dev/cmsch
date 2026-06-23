@@ -26,6 +26,7 @@ export interface Components {
   gallery?: Gallery
   impressum?: Impressum
   leaderboard?: Leaderboard
+  kirpay?: KirPay
   location?: Location
   login?: Login
   news?: News
@@ -184,6 +185,13 @@ export interface Leaderboard {
   topMessage: string
 }
 
+export interface KirPay {
+  title: string
+  leaderboardEnabled: boolean
+  leaderboardMaxEntries: number
+  kirPayCurrency: string
+}
+
 export interface Profile {
   aliasChangeEnabled: boolean
   title: string
@@ -215,6 +223,8 @@ export interface Profile {
   minTokenDoneMessage: string
   profileIncomplete: string
   showIncompleteProfile: boolean
+  showKirPayBalance: boolean
+  kirPayCurrency: string
   profileComplete: string
 }
 

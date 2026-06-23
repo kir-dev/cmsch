@@ -143,6 +143,15 @@ class ProfileComponent(
         description = "Ennyi ideig (másodpercben) jelenjen meg a helyzet az utolsó frissítés után")
 
     /// -------------------------------------------------------------------------------------------------------------------
+    ///
+
+    val kirPayGroup by SettingGroup(fieldName = "Kir-Pay",
+        description = "A Kir-Pay komponensnek is be kell kapcsolva lennie, hogy az itteni beállítások működjenek")
+
+    var showKirPayBalance by BooleanSettingRef(true,
+        fieldName = "Kir-Pay egyenleg látható", description = "Megjelenjen-e a Kir-Pay egyenleg a profilban")
+
+    /// -------------------------------------------------------------------------------------------------------------------
 
     val tokenGoalGroup by SettingGroup(fieldName = "Token cél megjelenítése",
         description = "A token komponensben meghatározott cél elérésére vonatkozó üzenet (a token komponensnek aktívnak kell lennie)")
