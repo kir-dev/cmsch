@@ -1,6 +1,9 @@
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import type { Profile } from '@/api/contexts/config/types.ts'
 import { useServiceContext } from '@/api/contexts/service/ServiceContext'
 import { useGroupChangeMutation } from '@/api/hooks/group-change/useGroupChangeMutation'
 import { useProfileQuery } from '@/api/hooks/profile/useProfileQuery.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
 import { CmschPage } from '@/common-components/layout/CmschPage'
 import { LinkButton } from '@/common-components/LinkButton'
 import { PageStatus } from '@/common-components/PageStatus.tsx'
@@ -16,13 +19,25 @@ import { Navigate, useNavigate } from 'react-router'
 export function ProfileGroupChangePage() {
   const { isLoading, isError, data: profile, refetch } = useProfileQuery()
 
+  const config = useConfigContext()?.components
+  const component = config?.profile
+
+  if (!component) return <ComponentUnavailable />
   if (isError || isLoading || !profile) return <PageStatus isLoading={isLoading} isError={isError} />
   if (!profile || !profile.groupSelectionAllowed) return <Navigate to={AbsolutePaths.PROFILE} />
 
-  return <ProfileGroupChangeBody profile={profile} refetch={refetch} />
+  return <ProfileGroupChangeBody profile={profile} profileComponent={component} refetch={refetch} />
 }
 
-function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; refetch: () => void }) {
+function ProfileGroupChangeBody({
+  profile,
+  profileComponent,
+  refetch
+}: {
+  profile: ProfileView
+  profileComponent: Profile
+  refetch: () => void
+}) {
   const availableGroups = profile.availableGroups
     ? Object.entries<string>(profile.availableGroups).toSorted((a, b) => a[1].localeCompare(b[1]))
     : []
@@ -40,7 +55,7 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
         navigate(AbsolutePaths.PROFILE)
         break
       case GroupChangeStatus.INVALID_GROUP:
-        setError('Érvénytelen tankör!')
+        setError(`Érvénytelen ${profileComponent.groupTitle}!`)
         break
       case GroupChangeStatus.LEAVE_DENIED:
         setError('Nem engedélyezett a módosítás!')
@@ -60,14 +75,16 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
 
   const onSubmit = () => {
     if (value) mutate(value)
-    else setError('Válassz tankört!')
+    else setError(`Válassz ${profileComponent.groupTitle}-t!`)
   }
 
   return (
-    <CmschPage title="Tankör beállítása">
-      <h1 className="text-4xl font-bold tracking-tight">Tankör beállítása</h1>
-      <p className="mt-10 text-center">Állítsd be a tankörödet, hogy részt vehess a feladatokban!</p>
-      <p className="text-center text-muted-foreground">Csak helyesen beállított tankörrel fog érvényesülni a tanköri jelenlét!</p>
+    <CmschPage title={`${profileComponent.groupTitle} beállítása`}>
+      <h1 className="text-4xl font-bold tracking-tight">{`${profileComponent.groupTitle} beállítása`}</h1>
+      <p className="mt-10 text-center">Állíts be saját {profileComponent.groupTitle}-t, hogy részt vehess a feladatokban!</p>
+      {profileComponent.showMinimumTokenMessage && (
+        <p className="text-center text-muted-foreground">Csak helyesen beállított tankör esetén fog érvényesülni a tanköri jelenlét!</p>
+      )}
       {availableGroups.length ? (
         <form
           onSubmit={(e) => {
@@ -77,10 +94,10 @@ function ProfileGroupChangeBody({ profile, refetch }: { profile: ProfileView; re
         >
           <div className="mx-auto mt-10 flex max-w-80 flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="group">Melyik tankörbe tartozol?</Label>
+              <Label htmlFor="group">Melyik {profileComponent.groupTitle}-be tartozol?</Label>
               <Select value={value} onValueChange={setValue}>
                 <SelectTrigger id="group">
-                  <SelectValue placeholder="Válassz tankört!" />
+                  <SelectValue placeholder={`Válassz ${profileComponent.groupTitle}-t!`} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableGroups?.map((entry) => (
