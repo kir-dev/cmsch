@@ -21,4 +21,9 @@ interface ImportMeta {
   readonly env: ImportMetaEnv
 }
 
+interface Window {
+  __env__?: Record<string, string>
+  processAndReportError?: (error: unknown) => void
+}
+
 function processAndReportError(error)
