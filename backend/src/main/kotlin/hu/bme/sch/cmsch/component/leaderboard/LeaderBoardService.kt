@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.sql.SQLException
 import java.util.*
+import kotlin.collections.listOf
 
 @Suppress("RedundantModalityModifier") // Spring transactional proxy requires it not to be final
 @Service
@@ -142,13 +143,14 @@ open class LeaderBoardService(
             log.info("Recalculating is disabled now")
             return
         }
-        forceRecalculateForGroups()
         forceRecalculateForUsers()
+        forceRecalculateForGroups()
     }
 
     @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     open fun forceRecalculateForGroups() {
+        val userIdToGroup by lazy{ users.findAll().associate { it.id to it.group } }
         val hintPercentage: Float = riddleComponent.map { it.hintScorePercent }.orElse(0) / 100f
         val details = mutableMapOf<Int, TopListDetails>()
         log.info("Recalculating group top list cache; hint:{}", hintPercentage)
@@ -166,7 +168,21 @@ open class LeaderBoardService(
                             taskScore = (it.value.sumOf { s -> s.score } * tasksPercent).toInt())
                     }
             }
-            OwnershipType.USER -> listOf()
+            OwnershipType.USER -> {
+                if (leaderBoardComponent.addUserScoresForGroupScore) {
+                    taskSubmissions.map { it.findAll() }.orElse(mutableListOf())
+                        .groupBy { userIdToGroup[it.userId ?: 0] }
+                        .filter { it.key?.races?:false }
+                        .map {
+                            LeaderBoardAsGroupEntryDto(
+                                it.key!!.id,
+                                it.key!!.name,
+                                taskScore = (it.value.sumOf { s -> s.score } * tasksPercent).toInt())
+                        }
+                } else {
+                    listOf()
+                }
+            }
         }
         val tasksTitle = taskComponent.map { it.menuDisplayName }.orElse("")
         tasks.forEach { task ->
@@ -192,7 +208,26 @@ open class LeaderBoardService(
                                 } * riddlesPercent).toInt())
                     }
             }
-            OwnershipType.USER -> listOf()
+            OwnershipType.USER -> {
+                if (leaderBoardComponent.addUserScoresForGroupScore) {
+                    riddleSubmissions.map { it.findAll() }.orElse(mutableListOf())
+                        .groupBy { userIdToGroup[it.ownerUserId] }
+                        .filter { it.key?.races ?: false }
+                        .map { riddleGroup ->
+                            LeaderBoardAsGroupEntryDto(
+                                riddleGroup.key?.id ?: 0,
+                                riddleGroup.key?.name ?: "n/a",
+                                riddleScore = (riddleGroup.value
+                                    .filter { it.completed && !it.skipped }
+                                    .sumOf { s ->
+                                        ((riddleCache[s.riddleId]?.score?.toFloat() ?: 0f) * (if (s.hintUsed) hintPercentage else 1f)).toInt()
+                                    } * riddlesPercent).toInt()
+                            )
+                        }
+                } else {
+                    listOf()
+                }
+            }
         }
         val riddleTitle = riddleComponent.map { it.menuDisplayName }.orElse("")
         riddles.forEach { riddle ->
@@ -220,18 +255,71 @@ open class LeaderBoardService(
                             challengeScore = entity.value.sumOf { s -> (s.score * challengesPercent).toInt() })
                     }
             }
-            OwnershipType.USER -> listOf()
+            OwnershipType.USER -> {
+                if (leaderBoardComponent.addUserScoresForGroupScore) {
+                    challengeSubmissions.map { it.findAll() }.orElse(mutableListOf())
+                        .groupBy { userIdToGroup[it.userId ?: 0] }
+                        .filter { it.key?.races ?: false }
+                        .map { entity ->
+                            entity.value.forEach { challenge ->
+                                details.computeIfAbsent(entity.key!!.id) {
+                                    key -> TopListDetails(key, entity.value[0].groupName)
+                                }.items.compute(challenge.category) {
+                                    _, value -> (value ?: 0) + (challenge.score * challengesPercent).toInt()
+                                }
+                            }
+                            LeaderBoardAsGroupEntryDto(
+                                entity.key!!.id,
+                                entity.key!!.name,
+                                challengeScore = entity.value.sumOf { s -> (s.score * challengesPercent).toInt() }
+                            )
+                        }
+                } else {
+                    listOf()
+                }
+            }
         }
 
         val tokenPercent = leaderBoardComponent.tokenPercent / 100.0f
         val tokenTitle = tokenComponent.map { it.menuDisplayName }.orElse("")
         val pointsFromTokens = when (startupPropertyConfig.tokenOwnershipMode) {
-            OwnershipType.USER -> listOf()
+            OwnershipType.USER -> {
+                if (leaderBoardComponent.addUserScoresForGroupScore) {
+                    tokenSubmissions.map { it.findAll() }.orElse(mutableListOf())
+                        .groupBy { userIdToGroup[it.ownerUser?.id ?: 0] }
+                        .filter { it.key?.races ?: false }
+                        .map { (group, tokens) ->
+                            val groupId = group?.id ?: 0
+                            val groupName = group?.name ?: "n/a"
+                            val tokenScore = (tokens.sumOf { s -> s.token?.score ?: 0 } * tokenPercent).toInt()
+
+                            val groupDetails = details.computeIfAbsent(groupId) { TopListDetails(groupId, groupName) }
+                            groupDetails.items.compute(tokenTitle) { _, value -> (value ?: 0) + tokenScore }
+
+                            if (leaderBoardComponent.showTokenCountByRarity)
+                                groupDetails.tokenRarities = tokens
+                                    .groupBy { it.token?.rarity }
+                                    .mapNotNull { (rarity, tokens) ->
+                                        if (rarity.isNullOrBlank()) null
+                                        else (rarity to tokens.size)
+                                    }.toMap()
+
+                            LeaderBoardAsGroupEntryDto(
+                                groupId,
+                                groupName,
+                                tokenScore = tokenScore
+                            )
+                        }
+                } else {
+                    listOf()
+                }
+            }
             OwnershipType.GROUP -> {
                 tokenSubmissions.map { submissions ->
                     submissions
                         .findAll()
                         .groupBy { it.ownerGroup }
+                        .filter { it.key?.races ?: false }
                         .map { (group, tokens) ->
                             val groupId = group?.id ?: 0
                             val groupName = group?.name ?: "n/a"
