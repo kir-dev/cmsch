@@ -55,5 +55,8 @@ data class UserConfig(
     var favoriteMenus: MutableList<String> = mutableListOf(),
 
     @param:JsonProperty(required = false)
-    var dismissedMotd: String = ""
+    var dismissedMotd: String = "",
+
+    @param:JsonProperty(required = false)
+    var supportDefaultName: String = ""
 )

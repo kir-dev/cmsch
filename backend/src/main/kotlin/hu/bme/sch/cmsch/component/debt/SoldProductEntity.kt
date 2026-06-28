@@ -81,7 +81,7 @@ data class SoldProductEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateOverview(columnName = "Kezelő neve", order = 4)
+    @property:GenerateOverview(columnName = "Felelős neve", order = 4)
     @property:ImportFormat
     var responsibleName: String = "",
 

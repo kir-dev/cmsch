@@ -28,9 +28,12 @@ class SettingsController(
     private val permissionsService: PermissionsService,
     private val permissionGroupService: PermissionGroupService,
     private val userService: UserService,
+    private val settingsExtensions: List<AdminSettingsExtension> = emptyList()
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    data class SettingsExtensionCard(val title: String, val description: String, val formHtml: String)
 
     @GetMapping("/settings")
     fun setting(model: Model, auth: Authentication): String {
@@ -62,6 +65,11 @@ class SettingsController(
 
         model.addAttribute("permissionGroups", permissionGroupService.allPermissionGroups
             .filter { userPermissionGroups.contains(it.key) })
+
+        val extensionCards = settingsExtensions
+            .filter { it.isAvailableFor(user) }
+            .map { SettingsExtensionCard(it.getCardTitle(), it.getCardDescription(), it.getCardFormHtml(user)) }
+        model.addAttribute("settingsExtensions", extensionCards)
 
         return "settings"
     }

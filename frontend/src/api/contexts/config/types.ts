@@ -40,6 +40,7 @@ export interface Components {
   qrFight?: QrFight
   communities?: Communities
   footer?: Footer
+  support?: Support
 }
 
 export interface App {
@@ -381,6 +382,16 @@ export interface Signup {
   langAccepted: string
   langGroupInsufficient: string
   langNoSubmission?: string
+}
+
+export interface Support {
+  siteTitle: string
+  topMessage: string
+  newThreadButtonLabel: string
+  adminLabel: string
+  newThreadTopMessage: string
+  newThreadBottomMessage: string
+  maxOpenThreads: number
 }
 
 export interface Communities {

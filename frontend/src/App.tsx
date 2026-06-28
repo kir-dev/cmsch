@@ -51,6 +51,9 @@ import TeamListPage from './pages/teams/teamList.page.tsx'
 import TokenListPage from './pages/token/tokenList.page.tsx'
 import TokenScanPage from './pages/token/tokenScan.page.tsx'
 import TokenScanResultPage from './pages/token/tokenScanResult.page.tsx'
+import SupportListPage from './pages/support/supportList.page.tsx'
+import SupportNewPage from './pages/support/supportNew.page.tsx'
+import SupportThreadPage from './pages/support/supportThread.page.tsx'
 import { l } from './util/language'
 import { Paths } from './util/paths.ts'
 import { TitleProvider } from './util/TitleProvider.tsx'
@@ -144,6 +147,11 @@ export function App() {
                     <Route index element={<TeamDetailsPage />} />
                     <Route path={Paths.RACE} element={<RaceByTeamPage />} />
                   </Route>
+                </Route>
+                <Route path={Paths.SUPPORT}>
+                  <Route path="new" element={<SupportNewPage />} />
+                  <Route path=":uuid" element={<SupportThreadPage />} />
+                  <Route index element={<SupportListPage />} />
                 </Route>
                 <Route path={Paths.TOKEN_SCANNED} element={<TokenScanResultPage />} />
                 <Route path={Paths.TOKEN}>

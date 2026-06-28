@@ -30,7 +30,8 @@ export const Paths = {
   MAP: 'map',
   DEBT: 'debt',
   GALLERY: 'gallery',
-  RESET_PASSWORD: 'reset-password'
+  RESET_PASSWORD: 'reset-password',
+  SUPPORT: 'support'
 } as const
 export type Paths = (typeof Paths)[keyof typeof Paths]
 
@@ -65,7 +66,8 @@ export const AbsolutePaths = {
   MAP: '/map',
   DEBT: '/debt',
   GALLERY: '/gallery',
-  RESET_PASSWORD: '/reset-password'
+  RESET_PASSWORD: '/reset-password',
+  SUPPORT: '/support'
 } as const
 export type AbsolutePaths = (typeof AbsolutePaths)[keyof typeof AbsolutePaths]
 
@@ -112,6 +114,8 @@ export const ApiPaths = {
   REGISTER: '/api/register',
   FORGOT_PASSWORD: '/api/forgot-password',
   RESET_PASSWORD: '/api/reset-password',
-  AUTH_STATUS: '/api/auth-status'
+  AUTH_STATUS: '/api/auth-status',
+  SUPPORT_THREADS: '/api/support/threads',
+  SUPPORT_THREAD: '/api/support/thread'
 } as const
 export type ApiPaths = (typeof ApiPaths)[keyof typeof ApiPaths]

@@ -34,6 +34,8 @@ export const QueryKeys = {
   HOME_NEWS: 'HOME_NEWS',
   DEBTS: 'DEBTS',
   GALLERY: 'GALLERY',
-  HOME_GALLERY: 'HOME_GALLERY'
+  HOME_GALLERY: 'HOME_GALLERY',
+  SUPPORT_THREADS: 'SUPPORT_THREADS',
+  SUPPORT_THREAD: 'SUPPORT_THREAD'
 }
 export type QueryKeys = (typeof QueryKeys)[keyof typeof QueryKeys]

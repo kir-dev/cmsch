@@ -32,6 +32,7 @@ import hu.bme.sch.cmsch.component.riddle.RiddleComponent
 import hu.bme.sch.cmsch.component.script.ScriptComponent
 import hu.bme.sch.cmsch.component.sheets.SheetsComponent
 import hu.bme.sch.cmsch.component.staticpage.StaticPageComponent
+import hu.bme.sch.cmsch.component.support.SupportComponent
 import hu.bme.sch.cmsch.component.task.TaskComponent
 import hu.bme.sch.cmsch.component.team.TeamComponent
 import hu.bme.sch.cmsch.component.token.TokenComponent
@@ -435,6 +436,13 @@ object ControlPermissions : PermissionGroup {
         component = ScriptComponent::class
     )
 
+    val PERMISSION_CONTROL_SUPPORT = PermissionValidator(
+        "SUPPORT_CONTROL",
+        "Ügyfélszolgálat komponens testreszabása",
+        readOnly = false,
+        component = SupportComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_CONTROL_NEWS,
         PERMISSION_CONTROL_TASKS,
@@ -480,6 +488,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_CONFERENCE,
         PERMISSION_CONTROL_SHEETS,
         PERMISSION_CONTROL_SCRIPT,
+        PERMISSION_CONTROL_SUPPORT,
     )
 
 }
@@ -1624,6 +1633,22 @@ object StaffPermissions : PermissionGroup {
         component = ScriptComponent::class
     )
 
+    /// SupportComponent
+
+    val PERMISSION_SHOW_SUPPORT_THREADS = PermissionValidator(
+        "SUPPORT_SHOW",
+        "Ügyfélszolgálat megkeresések megtekintése",
+        readOnly = true,
+        component = SupportComponent::class
+    )
+
+    val PERMISSION_ANSWER_SUPPORT_THREADS = PermissionValidator(
+        "SUPPORT_ANSWER",
+        "Ügyfélszolgálat megkeresésekre válaszolás és lezárás",
+        readOnly = false,
+        component = SupportComponent::class
+    )
+
     override fun allPermissions() = listOf(
         PERMISSION_RATE_TASKS,
         PERMISSION_SHOW_TASKS,
@@ -1804,6 +1829,9 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_CREATE_SCRIPTS,
         PERMISSION_DELETE_SCRIPTS,
         PERMISSION_EXECUTE_SCRIPTS,
+
+        PERMISSION_SHOW_SUPPORT_THREADS,
+        PERMISSION_ANSWER_SUPPORT_THREADS,
     )
 
 }

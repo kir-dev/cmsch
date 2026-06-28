@@ -1,0 +1,195 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="hu">
+<head th:replace="~{layout4 :: head(${context.siteName})}">
+</head>
+<body>
+
+<style>
+    .support-messages { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .support-message { padding: 12px 16px; border-radius: 8px; max-width: 80%; }
+    .support-message.from-admin { align-self: flex-end; background-color: #2d4a6e; color: #fff; }
+    .support-message.from-customer { align-self: flex-start; background-color: #3a3a3a; color: #ddd; }
+    .support-message.internal { align-self: flex-end; background-color: #4a3a00; color: #ffd; border: 1px dashed #aa8800; }
+    .support-message .msg-meta { font-size: 0.75rem; opacity: 0.75; margin-bottom: 4px; }
+    .support-message .msg-content { white-space: pre-wrap; word-break: break-word; }
+    .support-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .status-WAITING_FOR_ADMIN { background: #b85c00; color: #fff; }
+    .status-WAITING_FOR_CUSTOMER { background: #006b3a; color: #fff; }
+    .status-DONE { background: #555; color: #ccc; }
+    .reply-form textarea { width: 100%; box-sizing: border-box; min-height: 100px; }
+    .thread-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-bottom: 16px; }
+    .thread-meta-item label { font-size: 0.75rem; opacity: 0.6; display: block; }
+    .thread-meta-item span { font-weight: 500; }
+    .internal-badge { font-size: 0.7rem; background: #aa8800; color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+    .waiting-time { color: #e06030; font-weight: bold; }
+    .switch-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+    .switch-row label.desc { margin: 0; cursor: pointer; font-size: 0.9rem; }
+</style>
+
+<div th:replace="~{layout4 :: mobile(null)}"></div>
+<div th:replace="~{layout4 :: siteBegin(${userContext}, ${context})}"></div>
+
+<div class="group">
+    <div class="app">
+        <div th:replace="~{layout4 :: menus(${userContext}, ${context})}"></div>
+
+        <div class="content">
+            <h1><ins th:text="|${thread.title}|">Szál</ins></h1>
+            <div class="details">Megkeresés részletes nézete</div>
+
+            <div class="card">
+                <h4>Szál adatai</h4>
+                <div class="thread-meta-grid">
+                    <div class="thread-meta-item">
+                        <label>Státusz</label>
+                        <span th:class="|support-status status-${thread.status}|" th:text="${thread.status}">STATUS</span>
+                    </div>
+                    <div class="thread-meta-item">
+                        <label>Felelős</label>
+                        <span th:text="${thread.solver.isBlank() ? '–' : thread.solver}">–</span>
+                    </div>
+                    <div class="thread-meta-item">
+                        <label>Felhasználó neve</label>
+                        <span th:text="${thread.userName}">–</span>
+                    </div>
+                    <div class="thread-meta-item" th:if="${threadUserRole != null}">
+                        <label>Szerepkör</label>
+                        <span th:text="${threadUserRole}">–</span>
+                    </div>
+                    <div class="thread-meta-item">
+                        <label>Email</label>
+                        <span th:text="${thread.userEmail}">–</span>
+                    </div>
+                    <div class="thread-meta-item" th:if="${thread.status.name() != 'DONE'}">
+                        <label>Várakozás</label>
+                        <span class="waiting-time" th:text="${waitingTime}">–</span>
+                    </div>
+                    <div class="thread-meta-item" th:if="${thread.lastCustomerAnswerAt > 0}">
+                        <label>Utolsó ügyfél válasz</label>
+                        <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"></span>
+                    </div>
+                </div>
+
+                <div class="button-group" th:if="${extensionButtons != null && !extensionButtons.isEmpty()}">
+                    <a th:each="btn : ${extensionButtons}"
+                       th:href="${btn.url}"
+                       th:target="${btn.newPage ? '_blank' : '_self'}"
+                       class="btn">
+                        <span class="material-symbols-outlined" th:text="${btn.icon}">open_in_new</span>
+                        <ins th:text="${btn.label}">Bővítmény</ins>
+                    </a>
+                </div>
+
+                <div class="button-group" th:if="${canAnswer}">
+                    <form th:if="${thread.status.name() != 'DONE'}"
+                          th:action="|@{/admin/control/support/close/}${thread.id}|" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-secondary"
+                                onclick="return confirm('Biztosan le szeretnéd zárni ezt a szálat?')">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            <ins>Lezárás</ins>
+                        </button>
+                    </form>
+                    <form th:if="${thread.status.name() == 'DONE'}"
+                          th:action="|@{/admin/control/support/reopen/}${thread.id}|" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-secondary">
+                            <span class="material-symbols-outlined">restart_alt</span>
+                            <ins>Újranyitás</ins>
+                        </button>
+                    </form>
+                    <form th:action="|@{/admin/control/support/claim/}${thread.id}|" method="post" style="display: inline;">
+                        <button type="submit" class="btn">
+                            <span class="material-symbols-outlined">person_pin</span>
+                            <ins>Lefoglalás</ins>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Üzenetek</h4>
+
+                <div class="support-messages" th:if="${!messages.isEmpty()}">
+                    <div th:each="msg : ${messages}"
+                         th:class="|support-message ${msg.internalOnly ? 'internal' : (msg.fromAdmin ? 'from-admin' : 'from-customer')}|">
+                        <div class="msg-meta">
+                            <span th:text="${msg.fromAdmin ? msg.realAuthorName : msg.authorName}">Név</span>
+                            <span th:if="${msg.fromAdmin && !msg.realAuthorName.equals(msg.authorName)}"
+                                  th:text="| (megjelenítve: ${msg.authorName})|" style="font-style: italic;"></span>
+                            <span th:if="${msg.internalOnly}" class="internal-badge">BELSŐ</span>
+                        </div>
+                        <div class="msg-content" th:text="${msg.content}">Üzenet tartalma</div>
+                    </div>
+                </div>
+
+                <p th:if="${messages.isEmpty()}" style="opacity: 0.6;">Még nincsenek üzenetek ebben a szálban.</p>
+            </div>
+
+            <div class="card reply-form" th:if="${canAnswer}">
+                <h4>Válasz / Megjegyzés</h4>
+                <p style="opacity: 0.7; font-size: 0.85rem;">
+                    A normál válasz email értesítőt küld és a státuszt WAITING_FOR_CUSTOMER-re állítja.
+                    A belső megjegyzés csak adminoknak látható, nem kerül ki az ügyfélhez és nem vált státuszt.
+                </p>
+
+                <form th:action="|@{/admin/control/support/reply/}${thread.id}|" method="post" id="replyForm">
+                    <div class="field-group">
+                        <label>Megjelenített felelős neve</label>
+                        <input type="text" name="solver" id="solverInput"
+                               th:value="${defaultSolverName}"
+                               placeholder="Az admin neve, ahogy az ügyfélnek megjelenik">
+                    </div>
+                    <div class="field-group">
+                        <label>Üzenet / Megjegyzés szövege <span style="color:#e55;">*</span></label>
+                        <textarea name="content" required placeholder="Ide írd a szöveget..."></textarea>
+                    </div>
+                    <div class="switch-row">
+                        <label class="switch">
+                            <input type="checkbox" name="internalOnly" id="internalOnlyCheck" value="true">
+                            <span class="slider"></span>
+                        </label>
+                        <label class="desc" for="internalOnlyCheck">Belső megjegyzés (nem kerül ki, nem küld emailt)</label>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-symbols-outlined">send</span>
+                            <ins>Küldés</ins>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card" th:if="${thread.status.name() == 'DONE' && !canAnswer}">
+                <p style="opacity: 0.6; text-align: center; padding: 8px 0;">
+                    <span class="material-symbols-outlined" style="vertical-align: middle;">check_circle</span>
+                    Ez a szál le van zárva.
+                </p>
+            </div>
+
+            <div class="button-group" style="margin-top: 8px;">
+                <a href="#" class="btn" th:href="@{/admin/control/support}">
+                    <span class="material-symbols-outlined">undo</span>
+                    <ins>VISSZA</ins>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const currentAdminName = /*[[${currentAdminName}]]*/ '';
+    const replyForm = document.getElementById('replyForm');
+    if (replyForm) {
+        replyForm.addEventListener('submit', function(e) {
+            const solverVal = document.getElementById('solverInput').value.trim();
+            const isInternal = document.getElementById('internalOnlyCheck').checked;
+            if (!isInternal && solverVal && solverVal !== currentAdminName) {
+                if (!confirm('A felelős neve (' + solverVal + ') nem egyezik a te nevedddel (' + currentAdminName + '). Biztosan te válaszolsz erre a szálra?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
