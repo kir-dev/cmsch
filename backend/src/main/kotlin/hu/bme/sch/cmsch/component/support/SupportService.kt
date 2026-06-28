@@ -1,0 +1,457 @@
+package hu.bme.sch.cmsch.component.support
+
+import hu.bme.sch.cmsch.component.app.ApplicationComponent
+import hu.bme.sch.cmsch.component.email.EmailService
+import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.component.support.dto.IncomingEmailDto
+import hu.bme.sch.cmsch.repository.UserRepository
+import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.service.UserService
+import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import java.util.UUID
+
+@Service
+@ConditionalOnBean(SupportComponent::class)
+class SupportService(
+    private val threadRepository: SupportThreadRepository,
+    private val messageRepository: SupportMessageRepository,
+    private val scheduleRepository: SupportScheduleRepository,
+    private val clock: TimeService,
+    private val supportComponent: SupportComponent,
+    private val appComponent: ApplicationComponent,
+    private val emailService: EmailService,
+    private val userRepository: UserRepository,
+    private val userService: UserService
+) {
+
+    private val log = LoggerFactory.getLogger(SupportService::class.java)
+
+    private val hungarianDateFormatter = DateTimeFormatter.ofPattern("yyyy. MMMM d. HH:mm", Locale.forLanguageTag("hu"))
+
+    companion object {
+        private const val PARTIAL_SUBJECT_MIN_LENGTH = 10
+    }
+
+    fun formatHungarianDate(epochSeconds: Long): String {
+        if (epochSeconds <= 0L) return "–"
+        return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochSeconds), clock.timeZone)
+            .format(hungarianDateFormatter)
+    }
+
+    fun stripEmailQuotes(body: String): String {
+        val lines = body.lines()
+        val result = mutableListOf<String>()
+        var i = 0
+        while (i < lines.size) {
+            val line = lines[i]
+            if (line.startsWith(">")) break
+            val nextLine = if (i + 1 < lines.size) lines[i + 1].trimStart() else ""
+            val isAttribution = line.startsWith("On ") &&
+                (line.contains("wrote:") || nextLine.startsWith("wrote:"))
+            if (isAttribution) break
+            result.add(line)
+            i++
+        }
+        return result.joinToString("\n").trimEnd()
+    }
+
+    fun toMessageHtml(text: String): String =
+        text.replace("\n", "<br>")
+            .replace(Regex("\\*([^*\n]+)\\*"), "<b>$1</b>")
+
+    fun normalizeSubject(subject: String): String {
+        var s = subject.trim()
+        val prefixes = listOf("re:", "fwd:", "fw:")
+        var changed = true
+        while (changed) {
+            changed = false
+            for (prefix in prefixes) {
+                if (s.lowercase().startsWith(prefix)) {
+                    s = s.substring(prefix.length).trim()
+                    changed = true
+                }
+            }
+        }
+        return s
+    }
+
+    private fun subjectsPartiallyMatch(incoming: String, existing: String): Boolean {
+        val a = incoming.lowercase()
+        val b = existing.lowercase()
+        if (a.length < PARTIAL_SUBJECT_MIN_LENGTH && b.length < PARTIAL_SUBJECT_MIN_LENGTH) return false
+        if (a.length >= PARTIAL_SUBJECT_MIN_LENGTH && b.contains(a)) return true
+        if (b.length >= PARTIAL_SUBJECT_MIN_LENGTH && a.contains(b)) return true
+        return false
+    }
+
+    @Transactional(readOnly = true)
+    fun findMatchingThread(normalizedSubject: String, email: String): SupportThreadEntity? {
+        val candidates = threadRepository.findByUserEmail(email)
+            .filter { it.status != SupportThreadStatus.DONE }
+            .sortedByDescending { it.updatedAt }
+        candidates.firstOrNull { normalizeSubject(it.title).equals(normalizedSubject, ignoreCase = true) }
+            ?.let { return it }
+        return candidates.firstOrNull { subjectsPartiallyMatch(normalizedSubject, normalizeSubject(it.title)) }
+    }
+
+    @Transactional(readOnly = true)
+    fun findByUuid(uuid: String): SupportThreadEntity? = threadRepository.findByUuid(uuid).orElse(null)
+
+    @Transactional(readOnly = true)
+    fun findByUuidAndSecret(uuid: String, secret: String): SupportThreadEntity? {
+        val thread = threadRepository.findByUuid(uuid).orElse(null) ?: return null
+        return if (thread.uuidSecret == secret) thread else null
+    }
+
+    @Transactional(readOnly = true)
+    fun countOpenThreadsForUser(internalId: String, email: String): Long {
+        return if (internalId.isNotBlank())
+            threadRepository.countOpenByUserInternalId(internalId)
+        else
+            threadRepository.countOpenByAnonymousEmail(email)
+    }
+
+    private fun isBlocked(userInternalId: String, userEmail: String): Boolean {
+        if (supportComponent.blockedEmails.isNotBlank()) {
+            val blocked = supportComponent.blockedEmails.split(",").map { it.trim() }
+            if (userEmail.isNotBlank() && blocked.any { it.equals(userEmail, ignoreCase = true) }) return true
+        }
+        if (supportComponent.blockedUserIds.isNotBlank() && userInternalId.isNotBlank()) {
+            val blocked = supportComponent.blockedUserIds.split(",").map { it.trim() }
+            if (blocked.contains(userInternalId)) return true
+        }
+        return false
+    }
+
+    private fun countTrailingCustomerResponses(threadUuid: String): Int {
+        val messages = messageRepository.findByThreadUuidAndInternalOnlyFalseOrderByCreatedAtAsc(threadUuid)
+        var count = 0
+        for (msg in messages.reversed()) {
+            if (msg.fromAdmin) break
+            count++
+        }
+        return count
+    }
+
+    fun isBlockedUser(userInternalId: String, userEmail: String): Boolean = isBlocked(userInternalId, userEmail)
+
+    fun isContentTooLong(content: String): Boolean =
+        supportComponent.maxResponseLength > 0 && content.length > supportComponent.maxResponseLength
+
+    fun hasTooManyConsecutiveCustomerResponses(threadUuid: String): Boolean {
+        val max = supportComponent.maxCustomerResponsesWithoutAnswer
+        return max > 0 && countTrailingCustomerResponses(threadUuid) >= max
+    }
+
+    @Transactional
+    fun createThread(title: String, content: String, userInternalId: String, userEmail: String, userName: String): SupportThreadEntity {
+        val now = clock.getTimeInSeconds()
+        val hasContent = content.isNotBlank()
+        val thread = SupportThreadEntity(
+            uuid = UUID.randomUUID().toString(),
+            uuidSecret = UUID.randomUUID().toString(),
+            title = title,
+            status = SupportThreadStatus.WAITING_FOR_ADMIN,
+            solver = "",
+            createdAt = now,
+            updatedAt = now,
+            userInternalId = userInternalId,
+            userEmail = userEmail,
+            userName = userName,
+            lastCustomerAnswerAt = if (hasContent) now else 0
+        )
+        val savedThread = threadRepository.save(thread)
+        if (hasContent) {
+            messageRepository.save(SupportMessageEntity(
+                threadUuid = savedThread.uuid,
+                content = content,
+                createdAt = now,
+                authorName = userName,
+                authorEmail = userEmail,
+                fromAdmin = false
+            ))
+        }
+        if (userEmail.isNotBlank()) {
+            val confirmSelector = supportComponent.newThreadEmailTemplateSelector.trim()
+            if (confirmSelector.isNotBlank()) {
+                val template = emailService.getTemplateBySelector(confirmSelector)
+                if (template != null) {
+                    emailService.sendTemplatedEmail(
+                        responsible = null,
+                        template = template,
+                        values = mapOf(
+                            "title" to title,
+                            "message" to content,
+                            "solver" to "",
+                            "threadUrl" to buildThreadUrl(savedThread),
+                            "creationDate" to formatHungarianDate(now),
+                            "lastAnswerDate" to formatHungarianDate(now)
+                        ),
+                        to = listOf(userEmail),
+                        rawValues = mapOf("messageHtml" to toMessageHtml(content))
+                    )
+                } else {
+                    log.warn("New thread confirmation template '{}' not found, skipping", confirmSelector)
+                }
+            }
+        }
+        if (supportComponent.scheduleEnabled) {
+            autoAssignSupportUser(savedThread, content, userName, now)
+        }
+        return savedThread
+    }
+
+    @Transactional
+    fun addCustomerMessage(threadUuid: String, content: String, authorName: String, authorEmail: String): SupportMessageEntity? {
+        val thread = threadRepository.findByUuid(threadUuid).orElse(null) ?: return null
+        if (thread.status == SupportThreadStatus.DONE) return null
+        val now = clock.getTimeInSeconds()
+        thread.status = SupportThreadStatus.WAITING_FOR_ADMIN
+        thread.updatedAt = now
+        thread.lastCustomerAnswerAt = now
+        threadRepository.save(thread)
+        val message = messageRepository.save(SupportMessageEntity(
+            threadUuid = threadUuid,
+            content = content,
+            createdAt = now,
+            authorName = authorName,
+            authorEmail = authorEmail,
+            fromAdmin = false
+        ))
+        if (supportComponent.scheduleEnabled) {
+            autoAssignSupportUser(thread, content, authorName, now)
+        }
+        return message
+    }
+
+    @Transactional
+    fun addAdminReply(threadId: Int, content: String, adminUser: CmschUser, displayName: String, internalOnly: Boolean) {
+        val thread = threadRepository.findById(threadId).orElse(null) ?: return
+        if (thread.status == SupportThreadStatus.DONE) return
+        val now = clock.getTimeInSeconds()
+        if (!internalOnly) {
+            thread.status = SupportThreadStatus.WAITING_FOR_CUSTOMER
+            thread.solver = displayName
+        }
+        thread.updatedAt = now
+        threadRepository.save(thread)
+        messageRepository.save(SupportMessageEntity(
+            threadUuid = thread.uuid,
+            content = content,
+            createdAt = now,
+            authorName = displayName,
+            realAuthorName = adminUser.userName,
+            authorEmail = "",
+            fromAdmin = true,
+            internalOnly = internalOnly
+        ))
+        if (!internalOnly && supportComponent.sendEmailOnAdminReply) {
+            val threadUrl = buildThreadUrl(thread)
+            val template = emailService.getTemplateBySelector(supportComponent.answerEmailTemplateSelector)
+            if (template != null) {
+                emailService.sendTemplatedEmail(
+                    responsible = adminUser,
+                    template = template,
+                    values = mapOf(
+                        "title" to thread.title,
+                        "message" to content,
+                        "solver" to displayName,
+                        "threadUrl" to threadUrl,
+                        "creationDate" to formatHungarianDate(thread.createdAt),
+                        "lastAnswerDate" to formatHungarianDate(now)
+                    ),
+                    to = listOf(thread.userEmail),
+                    subjectOverride = "RE: ${thread.title}",
+                    rawValues = mapOf("messageHtml" to toMessageHtml(content))
+                )
+            } else {
+                log.warn("Email template '{}' not found, skipping notification", supportComponent.answerEmailTemplateSelector)
+            }
+        }
+    }
+
+    @Transactional
+    fun claimThread(threadId: Int, adminUser: CmschUser, displayName: String = adminUser.userName) {
+        val thread = threadRepository.findById(threadId).orElse(null) ?: return
+        thread.solver = displayName.ifBlank { adminUser.userName }
+        thread.updatedAt = clock.getTimeInSeconds()
+        threadRepository.save(thread)
+    }
+
+    @Transactional
+    fun closeThread(threadId: Int) {
+        val thread = threadRepository.findById(threadId).orElse(null) ?: return
+        thread.status = SupportThreadStatus.DONE
+        thread.updatedAt = clock.getTimeInSeconds()
+        threadRepository.save(thread)
+    }
+
+    @Transactional
+    fun reopenThread(threadId: Int) {
+        val thread = threadRepository.findById(threadId).orElse(null) ?: return
+        thread.status = SupportThreadStatus.WAITING_FOR_ADMIN
+        thread.updatedAt = clock.getTimeInSeconds()
+        threadRepository.save(thread)
+    }
+
+    fun decodeSrsEmail(rawAddress: String): String {
+        val local = rawAddress.substringBefore("@")
+        val srsIndex = local.uppercase().indexOf("SRS=")
+        if (srsIndex < 0) return rawAddress
+        val afterSrs = local.substring(srsIndex + 4)
+        val parts = afterSrs.split("=")
+        if (parts.size < 4) return rawAddress
+        val domain = parts[parts.size - 2]
+        val user = parts[parts.size - 1]
+        return if (domain.isNotBlank() && user.isNotBlank()) "$user@$domain" else rawAddress
+    }
+
+    @Transactional
+    fun processIncomingEmail(dto: IncomingEmailDto) {
+        val rawFrom = dto.addresses.from.address.trim()
+        val toAddress = dto.addresses.to.address.trim()
+        val resentFrom = dto.addresses.resentFrom.address.trim()
+        val subject = dto.subject.trim()
+        val body = stripEmailQuotes(dto.body.text.ifBlank { dto.body.html })
+
+        if (rawFrom.isBlank() || subject.isBlank()) {
+            log.warn("Incoming email ignored: from='{}', subject='{}'", rawFrom, subject)
+            return
+        }
+
+        val allowedTo = supportComponent.allowedToAddress.trim()
+        if (allowedTo.isNotBlank() && !toAddress.equals(allowedTo, ignoreCase = true)) {
+            log.warn("Incoming email rejected: 'To' address '{}' does not match configured '{}'", toAddress, allowedTo)
+            return
+        }
+
+        val allowedResentFrom = supportComponent.allowedResentFromAddress.trim()
+        if (allowedResentFrom.isNotBlank() && !resentFrom.equals(allowedResentFrom, ignoreCase = true)) {
+            log.warn("Incoming email rejected: 'Resent-From' '{}' does not match configured '{}'", resentFrom, allowedResentFrom)
+            return
+        }
+
+        val realEmail = decodeSrsEmail(rawFrom)
+
+        val normalized = normalizeSubject(subject)
+        val existing = findMatchingThread(normalized, realEmail)
+        val user = userRepository.findByEmailIgnoreCase(realEmail).orElse(null)
+        if (existing != null) {
+            addCustomerMessage(existing.uuid, body, user?.fullName ?: realEmail, realEmail)
+        } else {
+            createThread(subject, body, user?.internalId ?: "", realEmail, user?.fullName ?: realEmail)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun getThreadsForUser(userInternalId: String): List<SupportThreadEntity> {
+        return threadRepository.findByUserInternalId(userInternalId)
+            .sortedWith(compareBy<SupportThreadEntity> { if (it.status == SupportThreadStatus.DONE) 1 else 0 }
+                .thenByDescending { it.updatedAt })
+    }
+
+    @Transactional(readOnly = true)
+    fun getMessagesForThread(threadUuid: String): List<SupportMessageEntity> {
+        return messageRepository.findByThreadUuidOrderByCreatedAtAsc(threadUuid)
+    }
+
+    @Transactional(readOnly = true)
+    fun getPublicMessagesForThread(threadUuid: String): List<SupportMessageEntity> {
+        return messageRepository.findByThreadUuidAndInternalOnlyFalseOrderByCreatedAtAsc(threadUuid)
+    }
+
+    private fun buildThreadUrl(thread: SupportThreadEntity): String {
+        val base = appComponent.siteUrl.trimEnd('/')
+        return if (base.isNotBlank()) "$base/support/${thread.uuid}?secret=${thread.uuidSecret}" else ""
+    }
+
+    private fun buildAdminThreadUrl(thread: SupportThreadEntity): String {
+        val base = appComponent.adminSiteUrl.trimEnd('/')
+        return if (base.isNotBlank()) "$base/admin/control/support/view/${thread.id}" else ""
+    }
+
+    private fun resolveDisplayName(internalId: String): String {
+        val user = userRepository.findByInternalId(internalId).orElse(null) ?: return internalId
+        val configName = userService.resolveConfig(user.config).supportDefaultName
+        return configName.ifBlank { user.fullName }.ifBlank { internalId }
+    }
+
+    private fun pickAvailableSupportUser(): Pair<String, String>? {
+        val now = clock.getTimeInSeconds()
+        val schedules = scheduleRepository.findAll().toList()
+        val available = schedules.filter { schedule ->
+            schedule.supportUserId.isNotBlank()
+                && schedule.from > 0
+                && schedule.to > 0
+                && now >= schedule.from
+                && now <= schedule.to
+        }
+        if (available.isNotEmpty()) {
+            val pickedId = available.random().supportUserId
+            return pickedId to resolveDisplayName(pickedId)
+        }
+        val defaults = supportComponent.defaultSupportUserIds
+            .split(",")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+        if (defaults.isNotEmpty()) {
+            val pickedId = defaults.random()
+            return pickedId to resolveDisplayName(pickedId)
+        }
+        return null
+    }
+
+    private fun autoAssignSupportUser(thread: SupportThreadEntity, messageContent: String, customerName: String, messageTime: Long) {
+        val assignSelector = supportComponent.assignEmailTemplateSelector.trim()
+        if (assignSelector.isBlank()) return
+
+        val picked = pickAvailableSupportUser() ?: run {
+            log.warn("Schedule enabled but no support user available for thread {}", thread.uuid)
+            return
+        }
+        val (userId, userName) = picked
+
+        if (thread.solver.isBlank()) {
+            thread.solver = userName
+            thread.updatedAt = clock.getTimeInSeconds()
+            threadRepository.save(thread)
+        }
+
+        val supportUser = userRepository.findByInternalId(userId).orElse(null)
+        val supportUserEmail = supportUser?.email ?: run {
+            log.warn("Could not find email for support user '{}', skipping assignment notification", userId)
+            return
+        }
+        if (supportUserEmail.isBlank()) {
+            log.warn("Support user '{}' has no email address, skipping assignment notification", userId)
+            return
+        }
+
+        val template = emailService.getTemplateBySelector(assignSelector) ?: run {
+            log.warn("Assignment email template '{}' not found, skipping", assignSelector)
+            return
+        }
+
+        emailService.sendTemplatedEmail(
+            responsible = null,
+            template = template,
+            values = mapOf(
+                "title" to thread.title,
+                "message" to messageContent,
+                "userName" to customerName,
+                "creationDate" to formatHungarianDate(thread.createdAt),
+                "lastAnswerDate" to formatHungarianDate(messageTime),
+                "adminUrl" to buildAdminThreadUrl(thread)
+            ),
+            to = listOf(supportUserEmail),
+            rawValues = mapOf("messageHtml" to toMessageHtml(messageContent))
+        )
+    }
+}

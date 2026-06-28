@@ -53,6 +53,26 @@
                 </div>
             </div>
 
+            <div class="card wide-false settings-extension-card" th:each="ext : ${settingsExtensions}">
+                <h4 th:text="${ext.title}">Bővítmény</h4>
+                <div class="desc" th:text="${ext.description}"></div>
+                <div th:utext="${ext.formHtml}"></div>
+            </div>
+
+            <script th:if="${!settingsExtensions.isEmpty()}" th:inline="javascript">
+                (function () {
+                    const csrfParam = /*[[${_csrf.parameterName}]]*/ '_csrf';
+                    const csrfToken = /*[[${_csrf.token}]]*/ '';
+                    document.querySelectorAll('.settings-extension-card form').forEach(function (form) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = csrfParam;
+                        input.value = csrfToken;
+                        form.appendChild(input);
+                    });
+                })();
+            </script>
+
             <div class="card wide-false">
                 <h4>Jogosultságok</h4>
                 <div class="desc">Az egyes jogosultságok egy vagy több menü vagy funkció használatára jogosít fel. Adminoknak majdnem minden menüben ki van írva, hogy ahhoz a menühöz milyen jogosultságra van szükség. Ezáltal könnyedén tudnak jogokat adni 1-1 funkcióhoz.</div>
