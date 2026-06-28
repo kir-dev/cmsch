@@ -7,6 +7,7 @@ import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 @ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.support"])
@@ -23,13 +24,8 @@ class SupportComponent(
     env
 ) {
 
-    val supportGroup by SettingGroup(fieldName = "Ügyfélszolgálat")
-
-    final override var menuDisplayName by StringSettingRef("Ügyfélszolgálat", serverSideOnly = true,
-        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
-
-    final override var minRole by MinRoleSettingRef(setOf(RoleType.BASIC),
-        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
+    // -----------------------------------------------------------------------------------------------------------------
+    val megjelenes by SettingGroup(fieldName = "Megjelenés")
 
     var siteTitle by StringSettingRef("Ügyfélszolgálat",
         fieldName = "Oldal neve",
@@ -37,51 +33,36 @@ class SupportComponent(
 
     var topMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Felső üzenet (lista oldal)",
-        description = "Markdown szöveg a threadek listája felett")
+        description = "Markdown szöveg a megkeresések listája felett")
 
     var newThreadButtonLabel by StringSettingRef("Új üzenet",
         fieldName = "Gomb felirata",
-        description = "Az 'Új üzenet' gomb szövege")
+        description = "Az 'Új megkeresés' gomb szövege")
 
     var adminLabel by StringSettingRef("rendező",
         fieldName = "Admin megnevezése",
         description = "Hogyan jelenik meg az admin az ügyfél számára (pl. 'rendező', 'support')")
 
     var newThreadTopMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Felső üzenet (új thread)",
-        description = "Markdown szöveg az új szál form felett")
+        fieldName = "Felső üzenet (új megkeresés)",
+        description = "Markdown szöveg az új megkeresés form felett")
 
     var newThreadBottomMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Alsó üzenet (új thread)",
-        description = "Markdown szöveg az új szál form alatt")
+        fieldName = "Alsó üzenet (új megkeresés)",
+        description = "Markdown szöveg az új megkeresés form alatt")
 
-    var roleMappings by StringSettingRef("BASIC=Résztvevő,ATTENDEE=Résztvevő,PRIVILEGED=Kiemelt,STAFF=Rendező,ADMIN=Adminisztrátor", serverSideOnly = true,
-        fieldName = "Szerepkör megnevezések",
-        description = "Vesszővel elválasztott SZEREPKÖR=Megnevezés párok (pl. BASIC=Résztvevő,STAFF=Rendező)")
+    // -----------------------------------------------------------------------------------------------------------------
+    val mukodes by SettingGroup(fieldName = "Működés")
 
-    var sendEmailOnAdminReply by BooleanSettingRef(true, serverSideOnly = true,
-        fieldName = "Email küldése admin válaszkor",
-        description = "Ha be van kapcsolva, az admin válasza emailben értesíti az ügyfelet")
+    final override var menuDisplayName by StringSettingRef("Ügyfélszolgálat", serverSideOnly = true,
+        fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    var answerEmailTemplateSelector by StringSettingRef("support_answer",
-        fieldName = "Válasz email sablon",
-        description = "A válaszoláshoz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{solver}}, {{threadUrl}}")
-
-    var emailWebhookEnabled by BooleanSettingRef(false, serverSideOnly = true,
-        fieldName = "Bejövő email webhook engedélyezve",
-        description = "Ha ki van kapcsolva, a bejövő email webhook endpoint 404-et ad vissza")
-
-    var incomingEmailSecret by StringSettingRef("", serverSideOnly = true,
-        fieldName = "Bejövő email titok",
-        description = "Ha üres, nincs ellenőrzés. Ha meg van adva, X-Support-Secret fejlécként kell küldeni.")
-
-    var allowedSenderHostRegex by StringSettingRef("", serverSideOnly = true,
-        fieldName = "Engedélyezett küldő host regex",
-        description = "Ha üres, nincs ellenőrzés. Ha meg van adva, a bejövő email küldőjének host-ja ennek kell megfeleljen.")
+    final override var minRole by MinRoleSettingRef(setOf(RoleType.BASIC),
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     val maxOpenThreads by NumberSettingRef(5,
-        fieldName = "Max nyitott szálak",
-        description = "Egy felhasználó legfeljebb ennyi nyitott szálat nyithat egyszerre")
+        fieldName = "Max nyitott megkeresések",
+        description = "Egy felhasználó egyszerre legfeljebb ennyi nyitott megkeresést tarthat")
 
     val maxResponseLength by NumberSettingRef(3000, serverSideOnly = true,
         fieldName = "Max válasz hossz (karakter)",
@@ -89,7 +70,22 @@ class SupportComponent(
 
     val maxCustomerResponsesWithoutAnswer by NumberSettingRef(10, serverSideOnly = true,
         fieldName = "Max egymás utáni ügyfél válasz",
-        description = "Ennyi egymás utáni ügyfél üzenet után nem lehet újabb üzenetet küldeni admin válasz nélkül")
+        description = "Ennyi egymás utáni ügyfél üzenet után admin válasz szükséges")
+
+    var roleMappings by StringSettingRef("BASIC=Résztvevő,ATTENDEE=Résztvevő,PRIVILEGED=Kiemelt,STAFF=Rendező,ADMIN=Adminisztrátor", serverSideOnly = true,
+        fieldName = "Szerepkör megnevezések",
+        description = "Vesszővel elválasztott SZEREPKÖR=Megnevezés párok (pl. BASIC=Résztvevő,STAFF=Rendező)")
+
+    var sendEmailOnAdminReply by BooleanSettingRef(true, serverSideOnly = true,
+        fieldName = "Email küldése felelős válaszkor",
+        description = "Ha be van kapcsolva, a felelős válasza emailben értesíti az ügyfelet")
+
+    var answerEmailTemplateSelector by StringSettingRef("support_answer",
+        fieldName = "Válasz email sablon",
+        description = "A válaszoláshoz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{solver}}, {{threadUrl}}")
+
+    // -----------------------------------------------------------------------------------------------------------------
+    val biztonsag by SettingGroup(fieldName = "Biztonság")
 
     var blockedEmails by StringSettingRef("", serverSideOnly = true,
         fieldName = "Tiltott emailek",
@@ -98,4 +94,20 @@ class SupportComponent(
     var blockedUserIds by StringSettingRef("", serverSideOnly = true,
         fieldName = "Tiltott felhasználó azonosítók",
         description = "Vesszővel elválasztott belső azonosítók, amelyek nem küldhetnek üzenetet")
+
+    var emailWebhookEnabled by BooleanSettingRef(false, serverSideOnly = true,
+        fieldName = "Bejövő email webhook engedélyezve",
+        description = "Ha ki van kapcsolva, a bejövő email webhook endpoint 404-et ad vissza")
+
+    var incomingEmailSecret by StringSettingRef(UUID.randomUUID().toString(), serverSideOnly = true,
+        fieldName = "Bejövő email webhook titkos azonosító (UUID)",
+        description = "A webhook URL részét képező titkos azonosító. Az endpoint: /api/support/incoming-email/{titkos-azonosito}")
+
+    var allowedToAddress by StringSettingRef("", serverSideOnly = true,
+        fieldName = "Engedélyezett 'To' cím",
+        description = "Ha meg van adva, csak erre a 'To' email címre érkező emailek kerülnek feldolgozásra")
+
+    var allowedResentFromAddress by StringSettingRef("", serverSideOnly = true,
+        fieldName = "Engedélyezett 'Resent-From' cím",
+        description = "Ha meg van adva, csak az erről a 'Resent-From' email címről érkező emailek kerülnek feldolgozásra")
 }

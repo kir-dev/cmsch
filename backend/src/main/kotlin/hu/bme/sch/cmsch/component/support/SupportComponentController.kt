@@ -79,7 +79,15 @@ Ha az **Email küldése felelős válaszkor** be van kapcsolva, a felelős vála
 
 ## Bejövő email webhook
 
-Ha a **Bejövő email webhook** be van kapcsolva, az emailen érkező megkeresések automatikusan megjelennek a rendszerben. A rendszer a tárgy és a küldő email alapján eldönti, hogy meglévő megkereséshez fűzi-e a levelet, vagy újat nyit. A küldők szűrhetők host regex-szel, és opcionálisan titkos kulccsal is védhető a webhook endpoint.
+Ha a **Bejövő email webhook** be van kapcsolva, az emailen érkező megkeresések automatikusan megjelennek a rendszerben. A rendszer a tárgy és a valódi küldő email alapján eldönti, hogy meglévő megkereséshez fűzi-e a levelet, vagy újat nyit.
+
+A webhook URL tartalmazza a titkos azonosítót: `POST /api/support/incoming-email/{titkos-azonosito}`. A titkos azonosítót a **Biztonság** szekcióban találod; alapértelmezetten véletlenszerű UUID kerül generálásra.
+
+Szűrési lehetőségek:
+- **Engedélyezett 'To' cím** – csak erre a célcímre érkező emailek kerülnek feldolgozásra
+- **Engedélyezett 'Resent-From' cím** – csak erről a továbbítási címről érkező emailek engedélyezettek
+
+Az SRS (Sender Rewriting Scheme) formátumú feladó címek automatikusan dekódolásra kerülnek az eredeti email cím visszanyeréséhez.
 
 ## Statisztikák
 

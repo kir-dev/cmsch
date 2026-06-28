@@ -38,7 +38,7 @@
             <div class="details">Megkeresés részletes nézete</div>
 
             <div class="card">
-                <h4>Szál adatai</h4>
+                <h4>Adatok</h4>
                 <div class="thread-meta-grid">
                     <div class="thread-meta-item">
                         <label>Státusz</label>
@@ -142,12 +142,14 @@
                         <label>Üzenet / Megjegyzés szövege <span style="color:#e55;">*</span></label>
                         <textarea name="content" required placeholder="Ide írd a szöveget..."></textarea>
                     </div>
-                    <div class="switch-row">
-                        <label class="switch">
-                            <input type="checkbox" name="internalOnly" id="internalOnlyCheck" value="true">
-                            <span class="slider"></span>
-                        </label>
-                        <label class="desc" for="internalOnlyCheck">Belső megjegyzés (nem kerül ki, nem küld emailt)</label>
+                    <div class="field-group">
+                        <div class="switch-row">
+                            <label class="switch">
+                                <input type="checkbox" name="internalOnly" id="internalOnlyCheck" value="true">
+                                <span class="slider"></span>
+                            </label>
+                            <label class="desc" for="internalOnlyCheck">Belső megjegyzés (nem kerül ki, nem küld emailt)</label>
+                        </div>
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn btn-primary">
@@ -177,13 +179,15 @@
 
 <script th:inline="javascript">
     const currentAdminName = /*[[${currentAdminName}]]*/ '';
+    const defaultSolverName = /*[[${defaultSolverName}]]*/ '';
     const replyForm = document.getElementById('replyForm');
     if (replyForm) {
         replyForm.addEventListener('submit', function(e) {
             const solverVal = document.getElementById('solverInput').value.trim();
             const isInternal = document.getElementById('internalOnlyCheck').checked;
-            if (!isInternal && solverVal && solverVal !== currentAdminName) {
-                if (!confirm('A felelős neve (' + solverVal + ') nem egyezik a te nevedddel (' + currentAdminName + '). Biztosan te válaszolsz erre a szálra?')) {
+            const isOwnName = solverVal === currentAdminName || (defaultSolverName && solverVal === defaultSolverName);
+            if (!isInternal && solverVal && !isOwnName) {
+                if (!confirm('A felelős neve (' + solverVal + ') nem egyezik a te neveddel (' + currentAdminName + '). Biztosan te válaszolsz erre a megkeresésre?')) {
                     e.preventDefault();
                 }
             }

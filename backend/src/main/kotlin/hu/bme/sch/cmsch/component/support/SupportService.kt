@@ -214,30 +214,52 @@ class SupportService(
         threadRepository.save(thread)
     }
 
+    fun decodeSrsEmail(rawAddress: String): String {
+        val local = rawAddress.substringBefore("@")
+        val srsIndex = local.uppercase().indexOf("SRS=")
+        if (srsIndex < 0) return rawAddress
+        val afterSrs = local.substring(srsIndex + 4)
+        val parts = afterSrs.split("=")
+        if (parts.size < 4) return rawAddress
+        val domain = parts[parts.size - 2]
+        val user = parts[parts.size - 1]
+        return if (domain.isNotBlank() && user.isNotBlank()) "$user@$domain" else rawAddress
+    }
+
     @Transactional
     fun processIncomingEmail(dto: IncomingEmailDto) {
-        val fromEmail = dto.addresses.from.address.trim()
+        val rawFrom = dto.addresses.from.address.trim()
+        val toAddress = dto.addresses.to.address.trim()
+        val resentFrom = dto.addresses.resentFrom.address.trim()
         val subject = dto.subject.trim()
         val body = dto.body.text.ifBlank { dto.body.html }
-        if (fromEmail.isBlank() || subject.isBlank()) {
-            log.warn("Incoming email ignored: from='{}', subject='{}'", fromEmail, subject)
+
+        if (rawFrom.isBlank() || subject.isBlank()) {
+            log.warn("Incoming email ignored: from='{}', subject='{}'", rawFrom, subject)
             return
         }
-        val hostRegex = supportComponent.allowedSenderHostRegex.trim()
-        if (hostRegex.isNotBlank()) {
-            val host = fromEmail.substringAfter("@", "")
-            if (!Regex(hostRegex).containsMatchIn(host)) {
-                log.warn("Incoming email rejected: sender host '{}' did not match regex '{}'", host, hostRegex)
-                return
-            }
+
+        val allowedTo = supportComponent.allowedToAddress.trim()
+        if (allowedTo.isNotBlank() && !toAddress.equals(allowedTo, ignoreCase = true)) {
+            log.warn("Incoming email rejected: 'To' address '{}' does not match configured '{}'", toAddress, allowedTo)
+            return
         }
+
+        val allowedResentFrom = supportComponent.allowedResentFromAddress.trim()
+        if (allowedResentFrom.isNotBlank() && !resentFrom.equals(allowedResentFrom, ignoreCase = true)) {
+            log.warn("Incoming email rejected: 'Resent-From' '{}' does not match configured '{}'", resentFrom, allowedResentFrom)
+            return
+        }
+
+        val realEmail = decodeSrsEmail(rawFrom)
+
         val normalized = normalizeSubject(subject)
-        val existing = findMatchingThread(normalized, fromEmail)
-        val user = userRepository.findByEmailIgnoreCase(fromEmail).orElse(null)
+        val existing = findMatchingThread(normalized, realEmail)
+        val user = userRepository.findByEmailIgnoreCase(realEmail).orElse(null)
         if (existing != null) {
-            addCustomerMessage(existing.uuid, body, user?.fullName ?: fromEmail, fromEmail)
+            addCustomerMessage(existing.uuid, body, user?.fullName ?: realEmail, realEmail)
         } else {
-            createThread(subject, body, user?.internalId ?: "", fromEmail, user?.fullName ?: fromEmail)
+            createThread(subject, body, user?.internalId ?: "", realEmail, user?.fullName ?: realEmail)
         }
     }
 

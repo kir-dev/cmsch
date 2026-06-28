@@ -179,21 +179,20 @@ class SupportApiController(
         return ResponseEntity.ok(PublicMessageView.from(message))
     }
 
-    @PostMapping("/support/incoming-email")
-    @Operation(summary = "Receive an incoming email webhook")
+    @PostMapping("/support/incoming-email/{secret}")
+    @Operation(summary = "Receive an incoming email webhook (secret is part of the URL)")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Email processed"),
-        ApiResponse(responseCode = "401", description = "Invalid or missing secret")
+        ApiResponse(responseCode = "404", description = "Webhook disabled or invalid secret")
     ])
     fun incomingEmail(
-        @RequestHeader(value = "X-Support-Secret", required = false) secret: String?,
+        @PathVariable secret: String,
         @RequestBody dto: IncomingEmailDto
     ): ResponseEntity<String> {
         if (!supportComponent.emailWebhookEnabled)
             return ResponseEntity.notFound().build()
-        val configuredSecret = supportComponent.incomingEmailSecret
-        if (configuredSecret.isNotBlank() && secret != configuredSecret)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        if (secret != supportComponent.incomingEmailSecret)
+            return ResponseEntity.notFound().build()
         supportService.processIncomingEmail(dto)
         return ResponseEntity.ok("ok")
     }

@@ -12,6 +12,10 @@ data class IncomingEmailDto(
     val addresses: Addresses = Addresses()
 ) {
     data class Body(val text: String = "", val html: String = "")
-    data class Addresses(val from: Address = Address(), val to: Address = Address())
+    data class Addresses(
+        val from: Address = Address(),
+        val to: Address = Address(),
+        @JsonProperty("resent_from") val resentFrom: Address = Address()
+    )
     data class Address(val address: String = "")
 }
