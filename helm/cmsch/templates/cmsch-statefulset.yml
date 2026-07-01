@@ -7,6 +7,7 @@ metadata:
     app: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
 spec:
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -32,7 +33,7 @@ spec:
         - name: {{ .Release.Name }}
           image: {{ .Values.apiImage }}
           securityContext:
-            runAsUser: 0
+            runAsUser: 1000
           ports:
             - name: web
               containerPort: 80

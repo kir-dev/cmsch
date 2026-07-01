@@ -13,6 +13,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.apiHost }}
+        - {{ .Values.frontendHost }}
       secretName: {{ .Release.Name }}-cert
   rules:
     - host: {{ .Values.apiHost }}
@@ -34,4 +35,14 @@ spec:
                 port:
                   number: 80
           {{ end }}
+    - host: {{ .Values.frontendHost }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-frontend
+                port:
+                  number: 80
 {{ end }}

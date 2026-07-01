@@ -1,0 +1,19 @@
+{{ if .Values.frontend.enabled }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: {{ .Release.Name }}-frontend
+    app.kubernetes.io/name: {{ .Release.Name }}-frontend
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http-{{ .Release.Name }}-frontend
+  selector:
+    app: {{ .Release.Name }}-frontend
+    app.kubernetes.io/name: {{ .Release.Name }}-frontend
+  type: ClusterIP
+{{ end }}

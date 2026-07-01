@@ -28,7 +28,7 @@ spec:
         - name: {{ .Release.Name }}
           image: {{ .Values.apiImage }}
           securityContext:
-            runAsUser: 0
+            runAsUser: 1000
           ports:
             - name: web
               containerPort: 80

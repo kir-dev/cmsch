@@ -1,0 +1,81 @@
+{{ if .Values.frontend.enabled }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: {{ .Release.Name }}-frontend
+    app.kubernetes.io/name: {{ .Release.Name }}-frontend
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+      app.kubernetes.io/name: {{ .Release.Name }}-frontend
+  template:
+    metadata:
+      name: {{ .Release.Name }}-frontend
+      labels:
+        app: {{ .Release.Name }}-frontend
+        app.kubernetes.io/name: {{ .Release.Name }}-frontend
+    spec:
+      {{ if .Values.imagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecretName }}
+      {{ end }}
+      containers:
+        - name: {{ .Release.Name }}-frontend
+          image: {{ .Values.frontendImage }}
+          securityContext:
+            runAsUser: 101
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-frontend-config
+          resources:
+            {{ if or (.Values.frontend.resources.limits.cpu) (.Values.frontend.resources.limits.memory) }}
+            limits:
+              {{ if .Values.frontend.resources.limits.cpu }}
+              cpu: {{ .Values.frontend.resources.limits.cpu }}
+              {{ end }}
+              {{ if .Values.frontend.resources.limits.memory }}
+              memory: {{ .Values.frontend.resources.limits.memory }}
+              {{ end }}
+            {{ end }}
+            requests:
+              cpu: {{ .Values.frontend.resources.requests.cpu }}
+              memory: {{ .Values.frontend.resources.requests.memory }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: {{ .Values.frontend.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.frontend.startupProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: {{ .Values.frontend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.frontend.readinessProbe.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: {{ .Values.frontend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.frontend.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.frontend.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.frontend.livenessProbe.failureThreshold }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+{{ end }}

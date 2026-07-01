@@ -1,0 +1,26 @@
+{{ if .Values.frontend.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-frontend
+  name: {{ .Release.Name }}-frontend-config
+data:
+  VITE_API_BASE_URL: "{{ .Values.apiHostProtocol }}://{{ .Values.apiHost }}"
+  VITE_CLIENT_BASE_URL: "{{ .Values.frontendHostProtocol }}://{{ .Values.frontendHost }}"
+  VITE_DISABLE_APP_CONFIG_CACHE: {{ .Values.frontend.env.disableAppConfigCache | quote }}
+  VITE_APP_CONFIG_CACHE_TTL_SECONDS: {{ .Values.frontend.env.appConfigCacheTtlSeconds | quote }}
+  VITE_HIDE_KIR_DEV_IN_FOOTER: {{ .Values.frontend.env.hideKirDevInFooter | quote }}
+  VITE_OFFICIAL_LANGUAGE: {{ .Values.frontend.env.officialLanguage | quote }}
+  VITE_PASS_SERVER_URL: {{ .Values.frontend.env.passServerUrl | quote }}
+  VITE_PASS_TEMPLATE: {{ .Values.frontend.env.passTemplate | quote }}
+  VITE_FIREBASE_PROJECT_ID: {{ .Values.frontend.env.firebaseProjectId | quote }}
+  VITE_FIREBASE_APP_ID: {{ .Values.frontend.env.firebaseAppId | quote }}
+  VITE_FIREBASE_API_KEY: {{ .Values.frontend.env.firebaseApiKey | quote }}
+  VITE_FIREBASE_SENDER_ID: {{ .Values.frontend.env.firebaseSenderId | quote }}
+  VITE_FIREBASE_WEB_PUSH_PUBLIC_KEY: {{ .Values.frontend.env.firebaseWebPushPublicKey | quote }}
+  VITE_NAME: {{ .Values.frontend.env.name | quote }}
+  VITE_DESCRIPTION: {{ .Values.frontend.env.description | quote }}
+  VITE_THEME_COLOR: {{ .Values.frontend.env.themeColor | quote }}
+  VITE_PLAUSIBLE_URL: {{ .Values.frontend.env.plausibleUrl | quote }}
+{{ end }}

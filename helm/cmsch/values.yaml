@@ -8,6 +8,7 @@ apiHostProtocol: https
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
+frontendImage: harbor.sch.bme.hu/org-kir-dev/cmsch-frontend:latest
 imagePullSecretName:
 imagePullPolicy: Always
 
@@ -17,6 +18,46 @@ deploymentStrategy: Recreate # because of resource constraints and H2 allowing o
 backendDistributedMode: false
 replicas: 1
 sessionDurationSeconds: 172800
+
+frontend:
+  enabled: true
+  replicas: 1
+  resources:
+    limits:
+      cpu:
+      memory:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  startupProbe:
+    failureThreshold: 30
+    periodSeconds: 5
+  readinessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 15
+    timeoutSeconds: 3
+    failureThreshold: 3
+  env:
+    disableAppConfigCache: "false"
+    appConfigCacheTtlSeconds: "600"
+    hideKirDevInFooter: "false"
+    officialLanguage: "false"
+    passServerUrl: "https://pass.kir-dev.hu"
+    passTemplate: "generic"
+    firebaseProjectId: ""
+    firebaseAppId: ""
+    firebaseApiKey: ""
+    firebaseSenderId: ""
+    firebaseWebPushPublicKey: ""
+    name: "CMSch"
+    description: "CMSch"
+    themeColor: "#ffffff"
+    plausibleUrl: ""
 
 monitoring:
   enabled: true
