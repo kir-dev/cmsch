@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.communities
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
 import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.service.*
@@ -39,10 +39,10 @@ class OrganizationController(
     objectMapper,
     env,
 
-    showPermission =   StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
-    createPermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+    showPermission =   StaffPermissions.PERMISSION_SHOW_COMMUNITIES,
+    createPermission = StaffPermissions.PERMISSION_CREATE_COMMUNITIES,
     editPermission =   StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
-    deletePermission = StaffPermissions.PERMISSION_EDIT_COMMUNITIES,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_COMMUNITIES,
 
     createEnabled = true,
     editEnabled = true,

@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.email.EmailService
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
@@ -11,8 +11,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -32,7 +31,7 @@ class FormService(
     private val emailService: Optional<EmailService>
 ) {
 
-    internal final val log = LoggerFactory.getLogger(javaClass)
+    internal val log = LoggerFactory.getLogger(javaClass)
 
     private final val objectMapper = jacksonObjectMapper()
     private final val gridReader = objectMapper.readerFor(FormGridValue::class.java)
@@ -82,7 +81,7 @@ class FormService(
         if (form.ownerIsGroup && groupId == null)
             return FormView(status = FormStatus.GROUP_NOT_PERMITTED, message = form.groupRejectedMessage)
 
-        val submission:Optional<ResponseEntity> = if (form.ownerIsGroup) {
+        val submission: Optional<ResponseEntity> = if (form.ownerIsGroup) {
             responseRepository.findByFormIdAndSubmitterGroupId(form.id, groupId ?: 0)
         } else {
             user?.id?.let { responseRepository.findByFormIdAndSubmitterUserId(form.id, it) } ?: Optional.empty()
@@ -123,14 +122,23 @@ class FormService(
         if (isFull(form))
             return FormView(status = FormStatus.FULL)
 
-        return FormView(form = FormEntityDto(form), submission = null, status = FormStatus.NO_SUBMISSION, message = null)
+        return FormView(
+            form = FormEntityDto(form),
+            submission = null,
+            status = FormStatus.NO_SUBMISSION,
+            message = null
+        )
     }
 
     private fun isFull(form: FormEntity): Boolean {
         return form.submissionLimit >= 0 && (responseRepository.countAllByFormIdAndRejectedFalse(form.id) >= form.submissionLimit)
     }
 
-    data class FormSubmissionResult(val status: FormSubmissionStatus, val exitId: Int, val data: FormSubmissionData? = null)
+    data class FormSubmissionResult(
+        val status: FormSubmissionStatus,
+        val exitId: Int,
+        val data: FormSubmissionData? = null
+    )
 
     data class FormSubmissionData(
         val form: FormEntity,
@@ -139,7 +147,7 @@ class FormService(
     )
 
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun submitForm(user: CmschUser?, path: String, data: Map<String, String>, update: Boolean): FormSubmissionResult {
         val form = formRepository.findAllByUrl(path).getOrNull(0)
@@ -207,7 +215,7 @@ class FormService(
 
                 when (field.type) {
                     FormElementType.NUMBER -> {
-                        if (!value.matches(Regex("[0-9]+"))) {
+                        if (!value.matches(Regex("[0-9]+")) && (value != "" || field.required)) {
                             log.info("User {} invalid NUMBER value {} = '{}'", user?.id, field.fieldName, value)
                             return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 11)
                         }
@@ -247,11 +255,12 @@ class FormService(
                         val newValue = mutableMapOf<String, String>()
                         val options = componentStruct.options.map { it.key }
                         componentStruct.questions.forEach { question ->
-                            newValue[question.key] = if (valueTree.containsKey(question.key) && valueTree[question.key] in options) {
-                                valueTree[question.key] ?: options.firstOrNull() ?: "n/a"
-                            } else {
-                                options.firstOrNull() ?: "n/a"
-                            }
+                            newValue[question.key] =
+                                if (valueTree.containsKey(question.key) && valueTree[question.key] in options) {
+                                    valueTree[question.key] ?: options.firstOrNull() ?: "n/a"
+                                } else {
+                                    options.firstOrNull() ?: "n/a"
+                                }
                         }
                         value = choiceGridWriter.writeValueAsString(newValue)!!
                     }
@@ -266,7 +275,8 @@ class FormService(
                         val newValue = mutableMapOf<String, Boolean>()
                         componentStruct.questions.forEach { question ->
                             componentStruct.options.forEach { option ->
-                                newValue["${question.key}_${option.key}"] = valueTree["${question.key}_${option.key}"] ?: false
+                                newValue["${question.key}_${option.key}"] =
+                                    valueTree["${question.key}_${option.key}"] ?: false
                             }
                         }
                         value = selectionGridWriter.writeValueAsString(newValue)!!

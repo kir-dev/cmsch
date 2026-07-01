@@ -3,17 +3,12 @@ package hu.bme.sch.cmsch.component.leaderboard
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["leaderboard"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.leaderboard"])
 class LeaderBoardComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -52,6 +47,9 @@ class LeaderBoardComponent(
     var leaderboardDetailsByCategoryEnabled by BooleanSettingRef(fieldName = "Toplista kategória szerint aktív",
         description = "A részletes toplista leküldésre kerül (Kategóriánként)")
 
+    var leaderBoardCategoryName by StringSettingRef("Kategóriánként",
+        fieldName = "Kategória megnevezése", description = "A kategória megnevezése a részletes toplistán: Kategóriánként, Feladatonként stb.")
+
     var leaderboardFrozen by BooleanSettingRef(true, fieldName = "Toplista befagyasztott",
         description = "A toplista értéke be van fagyasztva")
 
@@ -74,6 +72,8 @@ class LeaderBoardComponent(
     var tokenPercent by NumberSettingRef(100, serverSideOnly = true, strictConversion = false,
         fieldName = "QR Kódok szorzó (%)", description = "100 = 1x, 0 = nem számít bele")
 
+    var addUserScoresForGroupScore by BooleanSettingRef(serverSideOnly = true, fieldName = "Felhasználói pontok felhasználása pontszámításnál", description = "Ha igaz, akkor a USER Ownershippel rendelkező pontok is beleszámolódnak a Csapatos pontszámításba")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val displayGroup by SettingGroup(fieldName = "Kijelzés")
@@ -90,6 +90,12 @@ class LeaderBoardComponent(
     var showGroupBoard by BooleanSettingRef(fieldName = "Csoport toplista mutatása",
         description = "Csoport toplista látható legyen-e")
 
+    var groupBoardName by StringSettingRef("Csoportok",
+        fieldName = "Csoport toplista neve", description = "A csoport toplista neve a menüben és az oldal tetején")
+
+    var myGroupName by StringSettingRef("Saját csoport",
+        fieldName = "Saját csoport neve", description = "A saját csoport neve: Tanköröd/Szobád/Csapatod")
+
     var maxGroupEntryToShow by NumberSettingRef(-1, fieldName = "Toplista sorainak száma", strictConversion = false,
         description = "Hány csoportot mutasson, -1 = az összeset")
 
@@ -100,13 +106,13 @@ class LeaderBoardComponent(
         description = "Legyen-e kereső az oldal tetején")
 
     var showTokenCountByRarity by BooleanSettingRef(fieldName = "Begyűjtött tokenek száma ritkaság szerint",
-        description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint, módosítás után nyomj egy újraszámolást")
+        description = "Legyen-e látható a begyűjtött tokenek száma ritkaság szerint. A módosítás után újraszámolás szükséges.")
 
     var showTokenMaxCountByRarity by BooleanSettingRef(fieldName = "Összes token szám ritkaság szerint",
         description = "Legyen-e látható az összesen begyűjthető tokenek száma ritkaság szerint")
 
     var topMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Felső szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres akkor nincs ilyen.")
+        fieldName = "Felső szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
 
 }

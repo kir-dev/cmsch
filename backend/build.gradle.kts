@@ -1,13 +1,14 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.4"
+    id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.owasp.dependencycheck") version "12.1.3"
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    id("org.sonarqube") version "6.2.0.5505"
+    id("org.owasp.dependencycheck") version "12.2.2"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    id("org.sonarqube") version "7.3.0.8198"
 }
 
 group = "hu.bme.sch"
@@ -17,7 +18,7 @@ group = "hu.bme.sch"
 val ghRef: String? = System.getenv("GITHUB_REF")
 version = if (ghRef != null && ghRef.startsWith("refs/tags/v")) ghRef.substring(11) else "dev"
 
-java.sourceCompatibility = JavaVersion.VERSION_24
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 springBoot {
     buildInfo()
@@ -41,55 +42,54 @@ repositories {
     mavenCentral()
 }
 
+tasks.named<KotlinCompilationTask<*>>("compileKotlin").configure {
+    compilerOptions.optIn.add("kotlin.uuid.ExperimentalUuidApi")
+}
+
 dependencies {
-    implementation("com.google.firebase:firebase-admin:9.5.0")
-    implementation("software.amazon.awssdk:s3:2.32.24")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("tools.jackson.dataformat:jackson-dataformat-csv")
+    implementation("tools.jackson.module:jackson-module-kotlin")
+    implementation("com.github.spullara.mustache.java:compiler:0.9.14")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.47.0")
+    implementation("com.google.zxing:core:3.5.4")
+    implementation("com.google.zxing:javase:3.5.4")
+    implementation("com.itextpdf:itext-core:9.6.0")
+    implementation("com.squareup.okhttp3:okhttp:5.3.2")
+    implementation(platform("io.jsonwebtoken:jjwt-bom:0.13.0"))
+    runtimeOnly("io.jsonwebtoken:jjwt-impl")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson")
+    implementation("io.jsonwebtoken:jjwt-api")
+    implementation(platform("io.micrometer:micrometer-bom:1.16.5"))
+    runtimeOnly("io.micrometer:micrometer-core")
+    runtimeOnly("io.micrometer:micrometer-observation")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.28.0")
+    implementation("org.commonmark:commonmark:0.28.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-common")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webclient")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.squareup.okhttp3:okhttp:5.1.0")
-    implementation("com.itextpdf:itext-core:9.2.0")
-    implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
-    implementation("com.google.zxing:core:3.5.3")
-    implementation("com.google.zxing:javase:3.5.3")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-common")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation(platform("io.jsonwebtoken:jjwt-bom:0.12.7"))
-    implementation("io.jsonwebtoken:jjwt-api")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson")
-    implementation("com.fasterxml.uuid:java-uuid-generator:5.1.0")
-    implementation("org.commonmark:commonmark:0.25.1")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.25.1")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("software.amazon.awssdk:s3:2.44.12")
     runtimeOnly("com.h2database:h2")
-    implementation("org.postgresql:postgresql")
-    implementation(platform("io.micrometer:micrometer-bom:1.15.3"))
-    implementation("io.micrometer:micrometer-core")
-    implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("io.micrometer:micrometer-observation")
-    testApi("org.springframework.boot:spring-boot-starter-test")
-    testApi("org.springframework.security:spring-security-test")
+    runtimeOnly("org.postgresql:postgresql")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyCheck {
@@ -99,20 +99,32 @@ dependencyCheck {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
-        jvmTarget.set(JvmTarget.JVM_24)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3)
+        jvmTarget.set(JvmTarget.JVM_25)
     }
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>("bootBuildImage") {
-    buildpacks = listOf("docker.io/paketobuildpacks/adoptium", "urn:cnb:builder:paketo-buildpacks/java")
-    builder = "paketobuildpacks/builder-jammy-base"
+    builder = "paketobuildpacks/builder-jammy-tiny:latest"
+
     environment = mapOf(
         "BP_NATIVE_IMAGE" to "false",
-        "CDS_TRAINING_JAVA_TOOL_OPTIONS" to "-Dspring.profiles.include=prewarm",
-        "BP_JVM_CDS_ENABLED" to "true",
-        "BPL_JVM_CDS_ENABLED" to "true",
-        "BPL_JVM_THREAD_COUNT" to "25"
+        "BP_JVM_AOTCACHE_ENABLED" to "true",
+        "BP_SPRING_AOT_ENABLED" to "false",
+        "BP_JVM_VERSION" to "25",
+
+        "LC_ALL" to "en_US.UTF-8",
+        "BPE_LC_ALL" to "en_US.UTF-8",
+
+        "BPE_BPL_JVM_THREAD_COUNT" to "50",
+        "BPE_BPL_JVM_HEAD_ROOM" to "5",
+        "BPE_BPL_JVM_LOADED_CLASS_COUNT" to "38000",
+
+        "TRAINING_RUN_JAVA_TOOL_OPTIONS" to "-XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders -Dspring.profiles.active=prewarm",
+
+        "BPE_PREPEND_JAVA_TOOL_OPTIONS" to "-XX:+UseSerialGC -XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders",
+        "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
+        "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-XX:ReservedCodeCacheSize=30M -Xss200K -Xlog:cds=info -Xlog:aot=info -Xlog:class+path=info -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
     )
 }
 

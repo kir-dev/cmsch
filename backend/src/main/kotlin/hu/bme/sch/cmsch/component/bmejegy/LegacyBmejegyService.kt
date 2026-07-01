@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.bmejegy
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.form.FormService
 import hu.bme.sch.cmsch.extending.BmeJegyListener
 import hu.bme.sch.cmsch.model.GroupEntity
@@ -14,13 +14,12 @@ import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -37,7 +36,7 @@ const val LEGACY_BMEJEGY_CONFIG_PROPERTY = "hu.bme.sch.cmsch.legacy-bmejegy-url"
 
 @Service
 @ConditionalOnBean(BmejegyComponent::class)
-@ConditionalOnProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY], havingValue = "true", matchIfMissing = false)
+@ConditionalOnBooleanProperty(name = [LEGACY_BMEJEGY_CONFIG_PROPERTY])
 class LegacyBmejegyService(
     @param:Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.username:}") private val bmejegyUsername: String,
     @param:Value("\${hu.bme.sch.cmsch.component.bmejegy.bmejegyservice.password:}") private val bmejegyPassword: String,
@@ -65,7 +64,7 @@ class LegacyBmejegyService(
         return Optional.ofNullable(bmejegyRecordRepository.findAllByQrCode(qr).firstOrNull())
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun updateTickets(tickets: BmeJegyResponse) {
         val registered = bmejegyRecordRepository.findAll().associateBy { it.itemId }
@@ -101,7 +100,7 @@ class LegacyBmejegyService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun updateUserStatuses() {
         val unmatched = bmejegyRecordRepository.findAllByMatchedUserId(0)

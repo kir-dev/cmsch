@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.setting
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.model.RoleType
 import org.slf4j.LoggerFactory
 

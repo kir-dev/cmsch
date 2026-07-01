@@ -15,7 +15,7 @@ data class TokenVirtualEntity(
     @property:GenerateOverview(columnName = "Típus", order = 2)
     var type: String = "",
 
-    @property:GenerateOverview(columnName = "Pont", order = 3, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Pont", order = 3, centered = true)
     var score: Int = 0,
 
     @property:GenerateOverview(columnName = "Beolvasva", order = 4, centered = true, renderer = OverviewType.DATE)

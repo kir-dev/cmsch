@@ -32,5 +32,5 @@ class ImpressumComponentController(
     componentCategory = ApplicationComponent.CONTENT_CATEGORY,
     componentMenuPriority = 21,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

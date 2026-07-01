@@ -66,14 +66,14 @@ data class QrLevelEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Elérhető ekkortól")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Elérhető ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Elérhető eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 7, label = "Elérhető eddig")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableTo: Long = 0,
@@ -116,10 +116,18 @@ data class QrLevelEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.SWITCH, order = 13, label = "Extra szint",
-        note = "Külön látszanak a sima szintektől")
+        note = "Külön látszanak a sima szintektől\nha be van kapcsolva, akkor felülírja a treasureHuntLevelt")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var extraLevel: Boolean = false,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.SWITCH, order = 14, label = "Treasure hunt szint",
+        note = "Olyan tokeneket tartalmazó szint, ahol az addig megszerzett tokenek adják a hintet a további tokenekhez")
+    @property:GenerateOverview(visible = false)
+    @property:ImportFormat
+    var treasureHuntLevel: Boolean = false,
 
 ): ManagedEntity, Duplicatable {
 

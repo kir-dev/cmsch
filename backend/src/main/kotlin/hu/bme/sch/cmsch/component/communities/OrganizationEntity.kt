@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.communities
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.annotation.JsonSerialize
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
 import hu.bme.sch.cmsch.dto.Edit

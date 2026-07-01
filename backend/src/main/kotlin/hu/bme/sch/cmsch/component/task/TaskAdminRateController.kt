@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.task
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.INVALID_ID_ERROR
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartRequest
 
 @Controller
 @RequestMapping("/admin/control/rate-tasks")
@@ -41,7 +42,7 @@ class TaskAdminRateController(
 
     transactionManager,
     object : ManualRepository<GradedTaskGroupDto, Int>() {
-        override fun findAll(): Iterable<GradedTaskGroupDto> {
+        override fun findAll(): MutableIterable<GradedTaskGroupDto> {
             val aggregatedResults = submittedRepository.findAllAggregated()
 
             return aggregatedResults.map {
@@ -52,7 +53,7 @@ class TaskAdminRateController(
                     it.rejectedCount.toInt(),
                     it.notGradedCount.toInt()
                 )
-            }.sortedByDescending { it.notGraded }.toList()
+            }.sortedByDescending { it.notGraded }.toMutableList()
         }
     },
     submittedRepository,
@@ -172,6 +173,7 @@ class TaskAdminRateController(
             model.addAttribute("data", entity.orElseThrow())
             model.addAttribute("taskTitle", entity.orElseThrow().task?.title)
             model.addAttribute("taskDescription", entity.orElseThrow().task?.description?.let { markdownToHtml(it) })
+            model.addAttribute("taskSolution", entity.orElseThrow().task?.solution?.let { markdownToHtml(it) })
             val maxScore = entity.orElseThrow().task?.maxScore ?: 0
             model.addAttribute("comment", "Feladványhoz tartozó max pont: $maxScore")
             model.addAttribute("maxScore", maxScore)
@@ -180,12 +182,12 @@ class TaskAdminRateController(
     }
 
     @PostMapping("/grade/{id}")
-    fun grade(@PathVariable id: Int,
-             @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
-             model: Model,
-             auth: Authentication,
-             @RequestParam(defaultValue = "false") delete0: Boolean,
-             @RequestParam(defaultValue = "false") delete1: Boolean,
+    fun grade(
+        @PathVariable id: Int,
+        @ModelAttribute(binding = false) dto: SubmittedTaskEntity,
+        model: Model,
+        auth: Authentication,
+        multipartRequest: MultipartRequest,
     ): String {
         val user = auth.getUser()
         if (editPermission.validate(user).not()) {
@@ -202,7 +204,7 @@ class TaskAdminRateController(
         }
 
         val newValues = StringBuilder("grade new value: ")
-        updateEntity(descriptor, user, entity.get(), dto, newValues,  delete0, null, delete1, null)
+        updateEntity(descriptor, user, entity.get(), dto, newValues, multipartRequest)
         if (entity.get().approved && entity.get().rejected)
             entity.get().rejected = false
         saveChangeHistory(entity.get(), user.userName)

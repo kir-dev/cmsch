@@ -38,6 +38,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import kotlin.uuid.Uuid
 
 const val LOREM_IPSUM_SHORT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in justo ac arcu placerat posuere eget at purus. Donec porta lorem in semper semper. Phasellus volutpat sapien et ultricies tristique. In ornare libero vel dignissim ultrices."
 const val LOREM_IPSUM_SHORT_2 = "Pellentesque non interdum leo. Mauris egestas augue vel lorem dignissim ullamcorper. Suspendisse tempus ex dolor, in sagittis lorem fermentum ut. Morbi dignissim sollicitudin ornare."
@@ -155,7 +156,7 @@ class TestConfig(
         val formEntity = FormEntity(
             0,
             "Teszt Form",
-            "test-from",
+            "test-form",
             "Form",
             "[{\"fieldName\":\"phone\",\"label\":\"Telefonszám\",\"type\":\"PHONE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"allergy\",\"label\":\"Étel érzékenység\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Nincs, Glutén, Laktóz, Glutén és laktóz\",\"note\":\"Ha egyéb is van, kérem írja megjegyzésbe\",\"required\":true,\"permanent\":true},{\"fieldName\":\"love-trains\",\"label\":\"Szereted a mozdonyokat?\",\"type\":\"CHECKBOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"\",\"required\":true,\"permanent\":true},{\"fieldName\":\"warn1\",\"label\":\"FIGYELEM\",\"type\":\"WARNING_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Ha nem szereti a mozdonyokat, akkor nagyon kellemetlen élete lesz magának kolléga!\",\"required\":false,\"permanent\":false},{\"fieldName\":\"text1\",\"label\":\"Szabályzat\",\"type\":\"TEXT_BOX\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"A tábor szabályzata itt olvasható: https://szabalyzat.ssl.nincs.ilyen.domain.hu/asdasdasd/kutya\",\"note\":\"\",\"required\":false,\"permanent\":false},{\"fieldName\":\"agree\",\"label\":\"A szabályzatot elfogadom\",\"type\":\"MUST_AGREE\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"\",\"note\":\"Különben nem jöhet am\",\"required\":false,\"permanent\":false},{\"fieldName\":\"food\",\"label\":\"Mit enne?\",\"type\":\"SELECT\",\"formatRegex\":\".*\",\"invalidFormatMessage\":\"\",\"values\":\"Gyros tál, Brassói, Pho Leves\",\"note\":\"Első napi kaja\",\"required\":true,\"permanent\":true}]",
             RoleType.BASIC,
@@ -943,7 +944,7 @@ class TestConfig(
     private fun addUsers(): MutableList<UserEntity> {
         val users = mutableListOf<UserEntity>()
         user1 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "HITMAN",
                 email = "hitman@beme.hu",
                 major = MajorType.EE,
@@ -958,7 +959,7 @@ class TestConfig(
         users.add(user1!!)
 
         val u2 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "BATMAN",
                 email = "batman@beme.hu",
                 major = MajorType.IT,
@@ -973,7 +974,7 @@ class TestConfig(
         users.add(u2)
 
         val u3 = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "FITYMA",
                 email = "fityma@beme.hu",
                 major = MajorType.BPROF,
@@ -988,7 +989,7 @@ class TestConfig(
         val random = Random()
         for (i in 0..2000) {
             val un = UserEntity(
-                internalId = UUID.randomUUID().toString(),
+                internalId = Uuid.generateV7().toString(),
                 neptun = "NE" + i,
                 email = "${random.nextLong()}@beme.hu",
                 major = MajorType.BPROF,

@@ -33,6 +33,6 @@ interface ResponseRepository : CrudRepository<ResponseEntity, Int>,
 
     fun findTop1ByFormIdAndEntryTokenOrderByLineDesc(formId: Int, entryToken: String): List<ResponseEntity>
 
-    override fun findAll(): List<ResponseEntity>
+    override fun findAll(): MutableList<ResponseEntity>
 
 }

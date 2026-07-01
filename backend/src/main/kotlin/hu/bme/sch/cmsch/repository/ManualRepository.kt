@@ -4,7 +4,7 @@ import java.util.*
 
 abstract class ManualRepository<T, ID> : EntityPageDataSource<T, ID> {
 
-    override fun findAll(): Iterable<T> =
+    override fun findAll(): MutableIterable<T> =
         throw UnsupportedOperationException("This data source does not support: findAll()")
 
     override fun count(): Long =
@@ -13,7 +13,7 @@ abstract class ManualRepository<T, ID> : EntityPageDataSource<T, ID> {
     override fun deleteAll(): Unit =
         throw UnsupportedOperationException("This data source does not support: deleteAll()")
 
-    override fun <S : T?> saveAll(entities: Iterable<S>): Iterable<S> =
+    override fun <S : T> saveAll(entities: MutableIterable<S>): MutableIterable<S> =
         throw UnsupportedOperationException("This data source does not support: saveAll(entities)")
 
     override fun <S : T & Any> save(entity: S): S =

@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.qrfight
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschIntegrationService
 import hu.bme.sch.cmsch.addon.indulasch.IndulaschTextWidgetDto
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -15,8 +15,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.retry.annotation.Backoff
-import org.springframework.retry.annotation.Retryable
+import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -26,6 +25,14 @@ import java.util.*
 const val TIMER_OCCURRENCE = 10
 
 private const val NOBODY = "senki"
+
+data class TowerHistoryEntry(
+    val userName: String = NOBODY,
+    val userId: Int = 0,
+    val ownerGroup: String = NOBODY,
+    val ownerGroupId: Int = 0,
+    val timestamp: Long = 0
+)
 
 @Service
 @ConditionalOnBean(QrFightComponent::class)
@@ -50,8 +57,9 @@ class QrFightService(
             .sortedBy { it.order }
 
         return QrFightOverviewView(
-            levels.filter { !it.extraLevel }.map { mapLevel(it, groupId, groupName) },
-            levels.filter { it.extraLevel }.map { mapLevel(it, groupId, groupName) }
+            levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, groupId, groupName) },
+            levels.filter { it.extraLevel }.map { mapLevel(it, groupId, groupName) },
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapTreasureHunt(it, groupId, groupName) }
         )
     }
 
@@ -102,14 +110,47 @@ class QrFightService(
         )
     }
 
+    private fun mapTreasureHunt(level: QrLevelEntity, groupId: Int?, groupName: String): QrTreasureHuntLevelView {
+        val outOfDate = !clock.inRange(level.availableFrom, level.availableTo, clock.getTimeInSeconds())
+        val isOpen = groupId != null && isLevelOpenForGroup(level, groupId)
+        val isCompleted = groupId != null && isLevelCompletedForGroup(level, groupId)
+
+        val status = decideStatus(groupId, level, outOfDate, isOpen, isCompleted)
+
+        val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
+            .groupBy { it.ownerGroup?.name ?: "..." }
+            .map { it.key to it.value.count() }
+            .toMap()
+
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
+        val foundTokens = tokenPropertyRepository.orElseThrow().findAllByOwnerGroup_IdAndToken_Type(groupId ?: -1, level.category)
+            .map { it.token!!.displayDescription }
+            .sorted()
+
+        return QrTreasureHuntLevelView(
+            name = level.displayName,
+            description = when (status) {
+                LevelStatus.OPEN -> level.hintWhileOpen
+                LevelStatus.COMPLETED -> level.hintAfterCompleted
+                else -> level.hintBeforeEnabled
+            },
+            tokenCount = teams[groupName] ?: 0,
+            status = status,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
+            teams = teams,
+            foundTokens = foundTokens
+        )
+    }
+
     @Transactional(readOnly = true)
     fun getLevelsForUsers(user: CmschUser?): QrFightOverviewView {
         val levels = qrLevelRepository.findAllByVisibleTrueAndEnabledTrue()
             .sortedBy { it.order }
 
         return QrFightOverviewView(
-            levels.filter { !it.extraLevel }.map { mapLevel(it, user) },
-            levels.filter { it.extraLevel }.map { mapLevel(it, user) }
+            levels.filter { !it.extraLevel && !it.treasureHuntLevel }.map { mapLevel(it, user) },
+            levels.filter { it.extraLevel }.map { mapLevel(it, user) },
+            levels.filter { it.treasureHuntLevel && !it.extraLevel }.map { mapTreasureHunt(it, user) }
         )
     }
 
@@ -159,6 +200,39 @@ class QrFightService(
             totems = totems
         )
     }
+
+    private fun mapTreasureHunt(level: QrLevelEntity, user: CmschUser?): QrTreasureHuntLevelView {
+        val outOfDate = !clock.inRange(level.availableFrom, level.availableTo, clock.getTimeInSeconds())
+        val isOpen = user != null && isLevelOpenForUser(level, user)
+        val isCompleted = user != null && isLevelCompletedForUser(level, user)
+
+        val status = decideStatus(user, level, outOfDate, isOpen, isCompleted)
+
+        val teams = tokenPropertyRepository.orElseThrow().findAllByToken_Type(level.category)
+            .groupBy { it.ownerUser?.id ?: -1 }
+            .map { (it.value.firstOrNull()?.ownerUser?.fullName ?: "...") to it.value.count() }
+            .toMap()
+
+        val maxCollected = teams.maxOfOrNull { it.value } ?: 0
+        val foundTokens = tokenPropertyRepository.orElseThrow().findAllByOwnerUser_IdAndToken_Type(user?.id ?: -1, level.category)
+            .map { it.token!!.displayDescription }
+            .sorted()
+
+        return QrTreasureHuntLevelView(
+            name = level.displayName,
+            description = when (status) {
+                LevelStatus.OPEN -> level.hintWhileOpen
+                LevelStatus.COMPLETED -> level.hintAfterCompleted
+                else -> level.hintBeforeEnabled
+            },
+            tokenCount = teams[user?.userName] ?: 0,
+            status = status,
+            owners = teams.filterValues { it == maxCollected }.map { it.key }.joinToString(", "),
+            teams = teams,
+            foundTokens = foundTokens
+        )
+    }
+
 
     private fun decideStatus(
         entity: Any?,
@@ -238,6 +312,21 @@ class QrFightService(
             return TokenSubmittedView(getLockedStatus(towerEntity), token.title, null, null)
         }
 
+        val dailyLimit = qrFightComponent.dailyTowerReadLimit
+        if (dailyLimit != -1L){
+            val history = towerEntity.history
+                .split("\n")
+                .filter { it.isNotBlank() } // Only non-empty lines
+                .map { objectMapper.readValue(it, TowerHistoryEntry::class.java) }
+                .filter { it.timestamp > clock.getTimeInSeconds() - 24 * 3600 }
+                .filter { it.userId == user.id }
+
+            if (history.size >= dailyLimit){
+                log.info("Tower '{}' daily limit exceeded for user:{} (group:{})", towerEntity.selector, user.userName, groupName)
+                return TokenSubmittedView(QR_TOWER_DAILY_LIMIT_EXCEEDED, token.title, null, null)
+            }
+        }
+
         if (towerEntity.totem && towerEntity.ownerGroupId != 0) {
             log.info("Totem '{}' already enslaved so group:{} (user:{}) cannot capture it", token.title, groupName, user.userName)
             return TokenSubmittedView(getCapturedStatus(towerEntity), token.title, null, null)
@@ -245,7 +334,7 @@ class QrFightService(
 
         towerEntity.ownerGroupId = groupId
         towerEntity.ownerGroupName = groupName
-        towerEntity.history += "${user.userName};${user.id};${groupName};${groupId};${clock.getTimeInSeconds()};\n"
+        towerEntity.history += objectMapper.writeValueAsString(TowerHistoryEntry(userName = user.userName, userId = user.id, ownerGroup = groupName, ownerGroupId = groupId, timestamp = clock.getTimeInSeconds())) + "\n"
         qrTowerRepository.save(towerEntity)
         log.info("Tower '{}' captured by group:{} (user:{})", token.title, groupName, user.userName)
         return TokenSubmittedView(
@@ -377,6 +466,14 @@ class QrFightService(
             if (!isLevelOpenForUser(level, user)) {
                 log.info("Level '{}' is not unlocked for user '{}'", level.displayName, user.fullName)
                 return TokenSubmittedView(QR_FIGHT_LEVEL_LOCKED, token.title, null, null)
+            }
+            if (level.treasureHuntLevel && token.action.startsWith("treasure:")){
+                val treasuresRequired = token.action.removePrefix("treasure:").toInt()
+                val treasuresFound = repo.countAllByOwnerUser_IdAndToken_Type(user.id, token.type)
+                if (treasuresFound < treasuresRequired){
+                    log.info("Treasure hunt token '{}' requires {} treasures but user '{}' has only found {}", token.title, treasuresRequired, user.fullName, treasuresFound)
+                    return TokenSubmittedView(QR_TREASURE_NOT_AVAILABLE, token.title, null, null)
+                }
             }
         }
 
@@ -523,7 +620,7 @@ class QrFightService(
         return completedTokens >= level.minAmountToComplete
     }
 
-    @Retryable(value = [ SQLException::class ], maxAttempts = 5, backoff = Backoff(delay = 500L, multiplier = 1.5))
+    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun executeTowerTimer() {
         log.info("Tower time!")
@@ -542,7 +639,7 @@ class QrFightService(
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: "0"
                     tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
-                }
+                }.toMutableList()
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for USER timer executed, and updated {}/{} towers", updated.size, towers.size)
             }
@@ -556,7 +653,7 @@ class QrFightService(
                     tower.holder = state.entries.filter { it.key.isNotBlank() }.maxByOrNull { it.value }?.key ?: ""
                     tower.holderFor = (state.filter { it.key.isNotBlank() }.maxOfOrNull { it.value } ?: 0) * TIMER_OCCURRENCE
                     tower
-                }
+                }.toMutableList()
                 qrTowerRepository.saveAll(updated)
                 log.info("Tower for GROUP timer executed, and updated {}/{} towers", updated.size, towers.size)
             }

@@ -28,5 +28,5 @@ class ServiceAccountComponentController(
     "Service Accountok testreszabása",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

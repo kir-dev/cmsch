@@ -36,7 +36,7 @@ data class SoldProductEntity(
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @property:GenerateInput(order = 2, label = "Ár", enabled = false, ignore = true, note = "Az árak JMF-ben értendőek")
-    @property:GenerateOverview(columnName = "Ár", order = 2)
+    @property:GenerateOverview(renderer = OverviewType.NUMBER, columnName = "Ár", order = 2)
     @property:ImportFormat
     var price: Int = 0,
 
@@ -93,7 +93,7 @@ data class SoldProductEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Átadva ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var shippedAt: Long = 0,
 
@@ -106,7 +106,7 @@ data class SoldProductEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 8, label = "Kifizetve ekkor", enabled = false, ignore = true)
     @property:ImportFormat
     var payedAt: Long = 0,
 

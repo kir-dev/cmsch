@@ -1,7 +1,7 @@
-import { ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, Heading, HStack, Image, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react'
+import { useColorModeValue } from '@/util/core-functions.util'
+import type { Organization } from '@/util/views/organization'
+import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
-import { Organization } from '../../../util/views/organization'
 
 type CardListItemProps = {
   data: Organization
@@ -18,32 +18,26 @@ export const CardListItem = ({ data, link }: CardListItemProps) => {
   }
   return (
     <Link to={link}>
-      <Box
-        borderRadius="lg"
-        padding={4}
-        backgroundColor={useColorModeValue('gray.100', 'gray.700')}
-        marginTop={5}
-        transition="transform .2s ease-in-out"
-        _hover={{ transform: 'translateX(0.5em)' }}
+      <div
+        className={
+          'rounded-lg p-3 md:p-4 mt-3 md:mt-5 transition-all duration-200 ease-in-out hover:translate-x-2 border ' +
+          'hover:bg-secondary/80 bg-secondary text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground'
+        }
       >
-        <HStack spacing={4}>
+        <div className="flex flex-row items-center space-x-3 md:space-x-4">
           {logoSource && (
-            <Image src={logoSource} alt={data.name} minW={{ base: 12, sm: 16 }} boxSize={{ base: 12, sm: 16 }} objectFit="contain" />
+            <div className="bg-white rounded-full p-2 md:p-4 flex items-center justify-center shrink-0 border shadow-xs">
+              <img src={logoSource} alt={data.name} className="min-w-10 sm:min-w-12 md:min-w-16 h-10 sm:h-12 md:h-16 w-10 object-contain" />
+            </div>
           )}
-          <VStack align="flex-start" overflow="hidden">
-            <Heading as="h3" size="md" marginY={0} maxWidth="100%">
-              {data.name}
-            </Heading>
-            {data.shortDescription && (
-              <Text maxWidth="100%" display={['none', 'block']}>
-                {data.shortDescription}
-              </Text>
-            )}
-          </VStack>
-          <Spacer />
-          <ChevronRightIcon boxSize={{ base: 10, md: 16 }} color="gray.300" />
-        </HStack>
-      </Box>
+          <div className="flex flex-col items-start overflow-hidden flex-1 space-y-0 md:space-y-1">
+            <h3 className="text-sm md:text-xl font-bold truncate w-full">{data.name}</h3>
+            {data.shortDescription && <p className="max-w-full hidden md:block text-sm line-clamp-2">{data.shortDescription}</p>}
+          </div>
+          <div className="flex-1 shrink-0" />
+          <ChevronRight className="h-6 md:h-10 lg:h-16 w-6 md:w-10 lg:w-16 text-border shrink-0" />
+        </div>
+      </div>
     </Link>
   )
 }

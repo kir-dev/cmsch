@@ -19,7 +19,7 @@ class ConferenceService(
         val previousConferences: List<ConferenceEntity>,
         val sponsors: List<ConferenceCompanyEntity>,
         val organisers: List<ConferenceOrganizerEntity>,
-        val featuredPresentation: ConferencePresentationEntity?,
+        val featuredPresentations: List<ConferencePresentationEntity>,
         val presentations: List<ConferencePresentationEntity>,
     )
 
@@ -29,10 +29,14 @@ class ConferenceService(
         val sponsors = conferenceCompanyRepository.findAllByVisibleTrue()
         val organisers = conferenceOrganizerRepository.findAllByVisibleTrue()
 
-        val featuredPresentation = conferencePresentationRepository
-            .findTop1BySelector(conferenceComponent.featuredPresentationSelector)
-            .firstOrNull()
-            ?.let { fetchPresentation(it) }
+        val featuredPresentations = conferenceComponent.featuredPresentationSelectors.split(",")
+            .map{ it.trim() }.filter { it.isNotBlank() }
+            .mapNotNull { presentationSelector ->
+                conferencePresentationRepository
+                .findTop1BySelector(presentationSelector)
+                .firstOrNull()
+                ?.let { fetchPresentation(it) }
+            }
 
         val presentations = conferencePresentationRepository.findAllByVisibleTrue()
         presentations.forEach { fetchPresentation(it) }
@@ -41,7 +45,7 @@ class ConferenceService(
             previousConferences = previousConferences,
             sponsors = sponsors,
             organisers = organisers,
-            featuredPresentation = featuredPresentation,
+            featuredPresentations = featuredPresentations,
             presentations = presentations,
         )
     }

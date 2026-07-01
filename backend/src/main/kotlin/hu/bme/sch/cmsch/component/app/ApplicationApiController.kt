@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.app
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -64,7 +64,7 @@ class ApplicationApiController(
                 return ApplicationConfigDto(
                     role = role,
                     menu = listOf(),
-                    components = componentWriter.writeValueAsString(components)
+                    components = components
                 )
             }
         }
@@ -74,7 +74,7 @@ class ApplicationApiController(
         return ApplicationConfigDto(
             role = role,
             menu = menuService.getCachedMenuForRole(role),
-            components = componentWriter.writeValueAsString(components)
+            components = components
         )
     }
 

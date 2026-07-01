@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.dto
 
-import com.google.firebase.messaging.*
+import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CmschNotification(
     var title: String,
@@ -8,29 +8,42 @@ data class CmschNotification(
     var image: String?,
     var link: String?,
 ) {
-    private fun createNotification(): Notification {
-        val notification = Notification.builder()
-            .setTitle(title)
-            .setBody(body)
-        if (image != null) notification.setImage(image)
-        return notification.build()
-    }
-
-    fun addToMessage(builder: Message.Builder) {
-        builder.setNotification(createNotification())
-
-        if (link != null) {
-            val webpushConfig = WebpushConfig.builder().setFcmOptions(WebpushFcmOptions.withLink(link)).build()
-            builder.setWebpushConfig(webpushConfig)
-        }
-    }
-
-    fun addToMessage(builder: MulticastMessage.Builder) {
-        builder.setNotification(createNotification())
-
-        if (link != null) {
-            val webpushConfig = WebpushConfig.builder().setFcmOptions(WebpushFcmOptions.withLink(link)).build()
-            builder.setWebpushConfig(webpushConfig)
-        }
+    fun toFcmRequest(token: String): FcmRequest {
+        return FcmRequest(
+            message = FcmMessage(
+                token = token,
+                notification = FcmNotification(
+                    title = title,
+                    body = body,
+                    image = image
+                ),
+                webpush = link?.let { FcmWebpush(fcmOptions = FcmWebpushOptions(link = it)) }
+            )
+        )
     }
 }
+
+data class FcmRequest(
+    val message: FcmMessage
+)
+
+data class FcmMessage(
+    val token: String,
+    val notification: FcmNotification,
+    val webpush: FcmWebpush? = null
+)
+
+data class FcmNotification(
+    val title: String,
+    val body: String,
+    val image: String? = null
+)
+
+data class FcmWebpush(
+    @get:JsonProperty("fcm_options")
+    val fcmOptions: FcmWebpushOptions
+)
+
+data class FcmWebpushOptions(
+    val link: String
+)

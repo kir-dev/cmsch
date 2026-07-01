@@ -22,12 +22,14 @@
         <span class="file-name"></span>
         <span class="note" th:text="${input.note}" th:if="${input.note != ''}"></span>
         <script th:inline="javascript">
-            let index = /*[[${index}]]*/ 0;
-            document.getElementById(`input${index}`).addEventListener('change', function() {
-                const groupIndex = index;
-                const fileName = this.files && this.files.length > 0 ? this.files[0].name : "";
-                document.querySelector(`#_${groupIndex} > .file-name`).innerText = fileName;
-            });
+            (() => {
+                let index = /*[[${index}]]*/ 0;
+                document.getElementById(`input${index}`).addEventListener('change', function () {
+                    const groupIndex = index;
+                    const fileName = this.files && this.files.length > 0 ? this.files[0].name : "";
+                    document.querySelector(`#_${groupIndex} > .file-name`).innerText = fileName;
+                });
+            })()
         </script>
     </div>
 

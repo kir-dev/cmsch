@@ -1,9 +1,9 @@
-import { createContext, PropsWithChildren, useContext, useEffect } from 'react'
-import { LoadingView } from '../../../util/LoadingView.tsx'
-import { usePersistentStyleSetting } from '../../../util/configs/themeStyle.config.ts'
-import { l } from '../../../util/language.ts'
-import { useConfigQuery } from '../../hooks/config/useConfigQuery'
-import { ConfigDto } from './types'
+import { usePersistentTheme } from '@/api/contexts/themeConfig/ThemeConfig.tsx'
+import { useConfigQuery } from '@/api/hooks/config/useConfigQuery'
+import { LoadingView } from '@/util/LoadingView.tsx'
+import { l } from '@/util/language.ts'
+import { createContext, type PropsWithChildren, useContext, useEffect } from 'react'
+import type { ConfigDto } from './types'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const ConfigContext = createContext<ConfigDto | undefined>(undefined)
@@ -16,7 +16,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   }, [isError, error])
 
   const style = data?.components?.style
-  const { persistentStyle, setPersistentStyle } = usePersistentStyleSetting()
+  const { persistentStyle, setPersistentStyle } = usePersistentTheme()
   useEffect(() => {
     // style should always be truthy if there is value
     if (style && style != persistentStyle) {
@@ -27,7 +27,7 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
   const is500Status = Math.floor(Number(error?.response?.status) / 100) === 5
   return (
     <LoadingView
-      isLoading={isLoading}
+      isLoading={isLoading || !data}
       hasError={isError}
       errorAction={refetch}
       errorMessage={is500Status ? l('error-service-unavailable') : l('error-connection-unsuccessful')}
@@ -39,17 +39,24 @@ export const ConfigProvider = ({ children }: PropsWithChildren) => {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useConfigContext = () => {
+export const useConfigContext = (): ConfigDto | undefined => {
   const ctx = useContext(ConfigContext)
-  if (typeof ctx === 'undefined') {
-    throw new Error('useConfigContext must be used within a ConfigProvider')
-  }
+
+  const isUndefined = typeof ctx === 'undefined'
+  useEffect(() => {
+    if (isUndefined) {
+      const error = new Error('useConfigContext must be used within a ConfigProvider')
+      console.trace(error)
+      window.processAndReportError?.(error)
+    }
+  }, [isUndefined])
+
   return ctx
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useStyle = () => {
   const context = useContext(ConfigContext)?.components?.style
-  const persistent = usePersistentStyleSetting().persistentStyle
+  const persistent = usePersistentTheme().persistentStyle
   return context || persistent
 }

@@ -16,9 +16,18 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
+import java.awt.Color
+import java.awt.Image
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import javax.imageio.IIOImage
+import javax.imageio.ImageIO
+import javax.imageio.ImageWriteParam
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam
+import javax.imageio.stream.MemoryCacheImageOutputStream
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 
@@ -35,7 +44,7 @@ fun Authentication.getUserEntityFromDatabase(userService: UserService): UserEnti
 }
 
 fun Authentication?.getUserEntityFromDatabaseOrNull(userService: UserService): UserEntity? {
-    return if (this == null) null else userService.findById(this.name).getOrNull()
+    return if (this == null) null else userService.findByInternalId(this.name).getOrNull()
 }
 
 fun Map<String, String>.urlEncode(): String =
@@ -108,4 +117,55 @@ class ThymeleafUtility {
         return partitioned
     }
 
+}
+
+fun BufferedImage.resizeImage(maxWidth: Int, maxHeight: Int): BufferedImage {
+    val width = this.width
+    val height = this.height
+
+    val scalingFactor = minOf(maxWidth.toDouble() / width, maxHeight.toDouble() / height)
+
+    val newWidth = (width * scalingFactor).toInt()
+    val newHeight = (height * scalingFactor).toInt()
+
+    val resizedImage = BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB)
+
+    val graphics2D = resizedImage.createGraphics()
+    graphics2D.drawImage(this.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH), 0, 0, null)
+    graphics2D.dispose()
+
+    return resizedImage
+}
+
+fun BufferedImage.optimizeImage(extension: String): ByteArray {
+    val baos = ByteArrayOutputStream()
+    if (extension.lowercase() in listOf("jpg", "jpeg")) {
+        val writer = ImageIO.getImageWritersByFormatName("jpeg").next()
+        val param = JPEGImageWriteParam(null).apply {
+            compressionMode = ImageWriteParam.MODE_EXPLICIT
+            compressionQuality = 0.85f
+            progressiveMode = ImageWriteParam.MODE_DEFAULT
+        }
+
+        // JPEG does not support alpha/transparency, so transparent images must be converted to RGB
+        // with a white background. Otherwise, OpenJDK's ImageIO cannot write JPEG files with transparency.
+        val noAlpha = if (colorModel.hasAlpha()) {
+            val rgb = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+            val g = rgb.createGraphics()
+            g.drawImage(this, 0, 0, Color.WHITE, null)
+            g.dispose()
+            rgb
+        } else {
+            this
+        }
+
+        val output = MemoryCacheImageOutputStream(baos)
+        writer.output = output
+        writer.write(null, IIOImage(noAlpha, null, null), param)
+        output.close()
+        writer.dispose()
+    } else {
+        ImageIO.write(this, extension, baos)
+    }
+    return baos.toByteArray()
 }

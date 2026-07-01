@@ -1,30 +1,29 @@
-import { Badge } from '@chakra-ui/react'
-import { FC } from 'react'
-import { taskStatus } from '../../../util/views/task.view'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { TaskStatus } from '@/util/views/task.view'
+import type { FC } from 'react'
 
-const STATUS_TEXT_MAP = new Map<taskStatus, string>([
-  [taskStatus.ACCEPTED, 'ELFOGADVA'],
-  [taskStatus.NOT_SUBMITTED, 'BEADÁSRA VÁR'],
-  [taskStatus.REJECTED, 'ELUTASÍTVA'],
-  [taskStatus.SUBMITTED, 'ÉRTÉKELÉSRE VÁR'],
-  [taskStatus.NOT_LOGGED_IN, 'ÖN NINCS BEJELENTKEZVE']
+const STATUS_TEXT_MAP = new Map<TaskStatus, string>([
+  [TaskStatus.ACCEPTED, 'ELFOGADVA'],
+  [TaskStatus.NOT_SUBMITTED, 'BEADÁSRA VÁR'],
+  [TaskStatus.REJECTED, 'ELUTASÍTVA'],
+  [TaskStatus.SUBMITTED, 'ÉRTÉKELÉSRE VÁR'],
+  [TaskStatus.NOT_LOGGED_IN, 'ÖN NINCS BEJELENTKEZVE']
 ])
 
-const STATUS_COLOR_MAP = new Map<taskStatus, string>([
-  [taskStatus.ACCEPTED, 'green'],
-  [taskStatus.NOT_SUBMITTED, 'gray'],
-  [taskStatus.REJECTED, 'red'],
-  [taskStatus.SUBMITTED, '#DE970B'], //dark yellow
-  [taskStatus.NOT_LOGGED_IN, 'gray']
+const STATUS_CLASS_MAP = new Map<TaskStatus, string>([
+  [TaskStatus.ACCEPTED, 'bg-success text-success-foreground hover:bg-success/90'],
+  [TaskStatus.NOT_SUBMITTED, 'bg-secondary text-secondary-foreground hover:bg-secondary/90'],
+  [TaskStatus.REJECTED, 'bg-danger text-danger-foreground hover:bg-danger/90'],
+  [TaskStatus.SUBMITTED, 'bg-warning text-warning-foreground hover:bg-warning/90'],
+  [TaskStatus.NOT_LOGGED_IN, 'bg-secondary text-secondary-foreground hover:bg-secondary/90']
 ])
 
 type TaskStatusBadgeProps = {
-  status: taskStatus
-  fontSize: string
+  status: TaskStatus
+  className?: string
 }
 
-export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, fontSize }) => (
-  <Badge variant="solid" bg={STATUS_COLOR_MAP.get(status)} fontSize={fontSize}>
-    {STATUS_TEXT_MAP.get(status)}
-  </Badge>
+export const TaskStatusBadge: FC<TaskStatusBadgeProps> = ({ status, className }) => (
+  <Badge className={cn('border-none', STATUS_CLASS_MAP.get(status), className)}>{STATUS_TEXT_MAP.get(status)}</Badge>
 )

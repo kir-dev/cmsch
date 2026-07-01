@@ -4,7 +4,7 @@ import java.util.*
 
 interface EntityPageDataSource<T, ID> {
 
-    fun findAll(): Iterable<T>
+    fun findAll(): MutableIterable<T>
 
     fun findById(id: ID): Optional<T>
 
@@ -14,7 +14,7 @@ interface EntityPageDataSource<T, ID> {
 
     fun <S : T & Any> save(entity: S): S
 
-    fun <S : T?> saveAll(entities: Iterable<S>): Iterable<S>
+    fun <S : T> saveAll(entities: MutableIterable<S>): MutableIterable<S>
 
     fun deleteAll()
 

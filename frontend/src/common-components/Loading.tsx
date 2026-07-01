@@ -1,5 +1,5 @@
-import { Center, Spinner, useColorModeValue } from '@chakra-ui/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { Loader2 } from 'lucide-react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 type LoadingProps = {
   timeout?: number
@@ -14,18 +14,18 @@ type LoadingProps = {
  */
 export const Loading = ({ timeout = 0, children }: LoadingProps) => {
   const [show, setShow] = useState<boolean>(false)
-  const color = useColorModeValue('brand.500', 'brand.600')
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setShow(true)
     }, timeout)
+    return () => clearTimeout(timer)
   }, [timeout])
   if (!show) return null
   return children ? (
     <>{children}</>
   ) : (
-    <Center>
-      <Spinner color={color} size="xl" thickness="0.3rem" my={10} />
-    </Center>
+    <div className="flex items-center justify-center py-10">
+      <Loader2 className="h-12 w-12 animate-spin text-primary" strokeWidth={3} />
+    </div>
   )
 }

@@ -34,8 +34,8 @@ class FooterComponent(
     var minimalisticFooter by BooleanSettingRef(fieldName = "Minimalisztikus lábléc",
         description = "Ha be van kapcsolva, akkor nem foglal olyan sok helyet a footer")
 
-    var hostLogo by StringSettingRef(defaultValue = "https://warp.sch.bme.hu/img/blobs/redirect/",
-        type = SettingType.URL, fieldName = "Esemény szervezőjének a logója", description = "A kép URL-je")
+    var hostLogo by StringSettingRef(defaultValue = "",
+        type = SettingType.IMAGE_URL, fieldName = "Esemény szervezőjének a logója", description = "A kép URL-je")
 
     var hostAlt by StringSettingRef(defaultValue = "Szervező kör", fieldName = "Esemény szervezőjének alt szövege",
         description = "Ha nem tölt be a kép ez jelenik meg")

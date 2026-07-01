@@ -109,7 +109,7 @@ data class StaticPageEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(order = 11, label = "OG:Image")
+    @property:GenerateInput(order = 11, label = "OG:Image", type = InputType.IMAGE_URL)
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     override var ogImage: String = "",

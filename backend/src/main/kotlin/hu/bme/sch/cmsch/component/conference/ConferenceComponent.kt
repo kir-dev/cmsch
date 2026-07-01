@@ -4,17 +4,12 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["conference"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.conference"])
 class ConferenceComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -77,7 +72,7 @@ class ConferenceComponent(
     var giveawayDescription by StringSettingRef("Nyereményjáték leírása ide jön", type = SettingType.LONG_TEXT,
         fieldName = "giveaway.description mező")
 
-    var giveawayPictureUrl by StringSettingRef("https://", type = SettingType.URL,
+    var giveawayPictureUrl by StringSettingRef("", type = SettingType.IMAGE_URL,
         fieldName = "giveaway.pictureUrl mező")
 
     var giveawayRules by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "giveaway.rules mező")
@@ -111,6 +106,6 @@ class ConferenceComponent(
     var featuredPresentationDescription by StringSettingRef("Promóciós Videó leírása ide jön",
         type = SettingType.LONG_TEXT, fieldName = "featuredPresentation.description mező")
 
-    var featuredPresentationSelector by StringSettingRef("presentation-1", fieldName = "Kiemelt előadás selectorja")
+    var featuredPresentationSelectors by StringSettingRef("", fieldName = "Kiemelt előadások selectorjai, vesszővel elválasztva")
 
 }

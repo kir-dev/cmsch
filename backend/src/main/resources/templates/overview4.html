@@ -182,14 +182,15 @@
 
 </script>
 <script th:if="${searchSettings != null && not searchSettings.fuzzy}" th:inline="javascript">
-    function normalSearch(data, searchTerm) {
-        let result = false;
-        const fields = /*[[${searchSettings.rows}]]*/ [];
-        for (let field in fields) {
-            result = result || (data[fields[field]] && data[fields[field]].toLowerCase().includes(searchTerm.toLowerCase()));
-        }
-        return result;
+function normalSearch(data, searchTerm) {
+    let result = false;
+    const fields = /*[[${searchSettings.rows}]]*/ [];
+    for (let field in fields) {
+        const value = String(data[fields[field]]);
+        result = result || (value && value.toLowerCase().includes(searchTerm.toLowerCase()));
     }
+    return result;
+}
 
     document.getElementById("table-search-input").addEventListener("input", function(e) {
         const searchTerm = e.target.value;

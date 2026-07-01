@@ -64,7 +64,7 @@ data class NewsEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.FILE, order = 4, label = "Kép a hír mellé", fileType = "image")
+    @property:GenerateInput(type = InputType.IMAGE_URL, order = 4, label = "Kép a hír mellé")
     @property:GenerateOverview(visible = false)
     var imageUrl: String = "",
 
@@ -109,7 +109,7 @@ data class NewsEntity(
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 10, label = "OG:Image")
+    @property:GenerateInput(order = 10, label = "OG:Image", type = InputType.IMAGE_URL)
     @property:GenerateOverview(visible = false)
     override var ogImage: String = "",
 

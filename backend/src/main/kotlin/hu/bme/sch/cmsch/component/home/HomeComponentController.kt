@@ -32,5 +32,5 @@ class HomeComponentController(
     componentMenuIcon = "home",
     menuService = menuService,
     auditLogService = auditLogService,
-    storageService = storageService
+    storageService = storageService,
 )

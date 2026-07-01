@@ -22,7 +22,7 @@
             <h1 class="narrow" th:text="|${title} létrehozása|" th:if="${!entityMode && !editMode}">View create</h1>
             <h1 class="narrow" th:text="|${title} típus|" th:if="${entityMode}">View type</h1>
 
-            <div class="card wide-false" th:if="${taskTitle != null || taskDescription != null}">
+            <div class="card wide-false" th:if="${taskTitle != null || taskDescription != null || taskSolution != null}">
                 <object th:if="${taskTitle != null}" th:remove="tag">
                     <label class="card-label">Feladat</label>
                     <p th:text="${taskTitle}" class="highlight"></p>
@@ -30,6 +30,11 @@
 
                 <object th:if="${taskDescription != null}" th:remove="tag">
                     <p th:utext="${taskDescription}"></p>
+                </object>
+
+                <object th:if="${taskSolution != null}" th:remove="tag">
+                    <label class="card-label">Mintamegoldás</label>
+                    <p th:utext="${taskSolution}"></p>
                 </object>
             </div>
 

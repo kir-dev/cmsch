@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.script.sandbox
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import tools.jackson.dataformat.csv.CsvMapper
+import tools.jackson.dataformat.csv.CsvSchema
 
 class ScriptingCsvUtil {
 

@@ -1,4 +1,4 @@
-import { Divider } from '@chakra-ui/react'
+import { useTime } from '@/hooks/useDate.ts'
 import { calculatePosition } from './utils'
 
 interface CurrentDateBarProps {
@@ -7,20 +7,8 @@ interface CurrentDateBarProps {
 }
 
 export function CurrentDateBar({ maxTimestamp, minTimestamp }: CurrentDateBarProps) {
-  const now = Date.now()
+  const now = useTime(10000)
   if (now < minTimestamp || now > maxTimestamp) return null
   const position = calculatePosition(minTimestamp, maxTimestamp, now)
-  return (
-    <Divider
-      opacity={1}
-      zIndex={10}
-      position="absolute"
-      top={position + '%'}
-      left={0}
-      right={0}
-      borderColor="red.500"
-      borderWidth={2}
-      borderRadius="full"
-    />
-  )
+  return <div className="z-10 absolute left-0 right-0 border-t-2 border-danger rounded-full" style={{ top: position + '%' }} />
 }

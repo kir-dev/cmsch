@@ -15,7 +15,6 @@ object InputType {
     const val COLOR = "color"
     const val BLOCK_TEXT_ANSWER = "textarea-answer"
     const val BLOCK_TEXT_MARKDOWN = "markdown"
-    const val FILE = "file"
     const val SWITCH = "checkbox"
     const val HIDDEN = "hidden"
     const val BLOCK_SELECT = "select"
@@ -24,6 +23,7 @@ object InputType {
     const val ENTITY_SELECT = "entity-select"
     const val LIST_ENTITIES = "list-entities"
     const val IMAGE_PREVIEW = "image-preview"
+    const val IMAGE_URL = "image-url"
     const val FILE_PREVIEW = "file-preview"
     const val FORM_EDITOR = "form-editor"
     const val BOOLEAN_LIST = "boolean-list"
@@ -62,8 +62,6 @@ annotation class GenerateInput(
     val enabled: Boolean = true,
     val ignore: Boolean = false,
     val interpreter: InputInterpreter = InputInterpreter.INHERIT,
-    val fileId: String = "0",
-    val fileType: String = "image",
     val source: Array<String> = [],
     val entitySource: String = "Nothing",
     val minimumRole: RoleType = RoleType.STAFF,

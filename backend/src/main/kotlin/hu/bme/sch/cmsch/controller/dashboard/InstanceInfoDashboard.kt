@@ -14,9 +14,9 @@ import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.statistics.UserActivityFilter
 import org.apache.catalina.util.ServerInfo
-import org.springframework.boot.autoconfigure.web.ServerProperties
-import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties
 import org.springframework.boot.info.BuildProperties
+import org.springframework.boot.servlet.autoconfigure.MultipartProperties
+import org.springframework.boot.web.server.autoconfigure.ServerProperties
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -87,10 +87,10 @@ class InstanceInfoDashboard(
             listOf("Time zone id",                  startupPropertyConfig.zoneId),
             listOf("Storage implementation",        startupPropertyConfig.storageImplementation.toString()),
             listOf("Filesystem storage path",       startupPropertyConfig.filesystemStoragePath),
-            listOf("S3 endpoint",                   startupPropertyConfig.s3Endpoint.toString()),
-            listOf("S3 public endpoint",            startupPropertyConfig.s3PublicEndpoint.toString()),
-            listOf("S3 bucket",                     startupPropertyConfig.s3Bucket.toString()),
-            listOf("S3 region",                     startupPropertyConfig.s3Region.toString()),
+            listOf("S3 endpoint",                   startupPropertyConfig.s3Endpoint),
+            listOf("S3 public endpoint",            startupPropertyConfig.s3PublicEndpoint),
+            listOf("S3 bucket",                     startupPropertyConfig.s3Bucket),
+            listOf("S3 region",                     startupPropertyConfig.s3Region),
             listOf("Mailgun token length",          startupPropertyConfig.mailgunToken.length.toString()),
             listOf("Session validity seconds",      startupPropertyConfig.sessionValiditySeconds.toString()),
             listOf("Increased session time (ms)",   startupPropertyConfig.increasedSessionTime.toString()),
@@ -100,11 +100,7 @@ class InstanceInfoDashboard(
             listOf("Token ownership mode",          startupPropertyConfig.tokenOwnershipMode.name),
             listOf("Challenge ownership mode",      startupPropertyConfig.challengeOwnershipMode.name),
             listOf("Race ownership mode",           startupPropertyConfig.raceOwnershipMode.name),
-            listOf("Max threads",                   serverProperties?.tomcat?.threads?.max?.toString() ?: "n/a"),
-            listOf("Min spare threads",             serverProperties?.tomcat?.threads?.minSpare?.toString() ?: "n/a"),
-            listOf("Accept count",                  serverProperties?.tomcat?.acceptCount?.toString() ?: "n/a"),
-            listOf("Max connections",               serverProperties?.tomcat?.maxConnections?.toString() ?: "n/a"),
-            listOf("Max swallow size ( ͡° ͜ʖ ͡°)",  serverProperties?.tomcat?.maxSwallowSize?.toString() ?: "n/a"),
+            listOf("Max request header size",       serverProperties?.maxHttpRequestHeaderSize?.toString() ?: "n/a"),
             listOf("Max file size",                 multipartProperties?.maxFileSize?.toString() ?: "n/a"),
             listOf("Max request size",              multipartProperties?.maxRequestSize?.toString() ?: "n/a"),
             listOf("Datasource url",                env.getProperty("spring.datasource.url", "n/a")),
@@ -121,30 +117,40 @@ class InstanceInfoDashboard(
         "",
         listOf("Property", "Value"),
         listOf(
+            listOf("accessKeys",        componentLoadConfig.accessKeys.toString()),
             listOf("admission",         componentLoadConfig.admission.toString()),
-            listOf("app",               componentLoadConfig.app.toString()),
             listOf("bmejegy",           componentLoadConfig.bmejegy.toString()),
             listOf("challenge",         componentLoadConfig.challenge.toString()),
+            listOf("communities",       componentLoadConfig.communities.toString()),
+            listOf("conference",        componentLoadConfig.conference.toString()),
             listOf("countdown",         componentLoadConfig.countdown.toString()),
             listOf("debt",              componentLoadConfig.debt.toString()),
+            listOf("email",             componentLoadConfig.email.toString()),
+            listOf("errorlog",          componentLoadConfig.errorlog.toString()),
             listOf("event",             componentLoadConfig.event.toString()),
-            listOf("staticPage",        componentLoadConfig.staticPage.toString()),
+            listOf("form",              componentLoadConfig.form.toString()),
+            listOf("gallery",           componentLoadConfig.gallery.toString()),
             listOf("groupselection",    componentLoadConfig.groupselection.toString()),
             listOf("home",              componentLoadConfig.home.toString()),
             listOf("impressum",         componentLoadConfig.impressum.toString()),
             listOf("leaderboard",       componentLoadConfig.leaderboard.toString()),
             listOf("location",          componentLoadConfig.location.toString()),
             listOf("login",             componentLoadConfig.login.toString()),
+            listOf("messaging",         componentLoadConfig.messaging.toString()),
             listOf("news",              componentLoadConfig.news.toString()),
             listOf("profile",           componentLoadConfig.profile.toString()),
+            listOf("proto",             componentLoadConfig.proto.toString()),
+            listOf("pushnotification",  componentLoadConfig.pushnotification.toString()),
             listOf("qrFight",           componentLoadConfig.qrFight.toString()),
             listOf("race",              componentLoadConfig.race.toString()),
             listOf("riddle",            componentLoadConfig.riddle.toString()),
-            listOf("form",              componentLoadConfig.form.toString()),
+            listOf("script",            componentLoadConfig.script.toString()),
+            listOf("serviceAccount",    componentLoadConfig.serviceAccount.toString()),
+            listOf("sheets",            componentLoadConfig.sheets.toString()),
+            listOf("staticPage",        componentLoadConfig.staticPage.toString()),
             listOf("task",              componentLoadConfig.task.toString()),
             listOf("team",              componentLoadConfig.team.toString()),
             listOf("token",             componentLoadConfig.token.toString()),
-            listOf("communities",       componentLoadConfig.communities.toString()),
         ),
         false
     )

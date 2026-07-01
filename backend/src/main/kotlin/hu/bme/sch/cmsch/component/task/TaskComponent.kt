@@ -3,17 +3,12 @@ package hu.bme.sch.cmsch.component.task
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["task"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.task"])
 class TaskComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -36,54 +31,53 @@ class TaskComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(setOf(),
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val langGroup by SettingGroup(fieldName = "Nyelvi beállítások")
 
     var profileRequiredTitle by StringSettingRef("Kötelezően kitöltendő",
-        fieldName = "Kötelező feladatok fejléc szövege", description = "Feladatok (PROFILE_REQUIRED) fejléc szövege")
+        fieldName = "Kötelező feladatok fejléc szövege", description = "A kötelező (PROFILE_REQUIRED) feladatok fejléce")
 
     var profileRequiredMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Kötelező feladatok alatti szöveg",
-        description = "Kötelező feladatok (PROFILE_REQUIRED) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs.")
+        description = "A kötelező (PROFILE_REQUIRED) feladatok fejléce alatt megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var regularTitle by StringSettingRef("Feladatok", fieldName = "Feladatok fejléc szövege",
-        description = "Feladatok (REGULAR) fejléc szövege")
+        description = "A normál (REGULAR) feladatok fejléce")
 
     var regularMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Feladatok alatti szöveg",
-        description = "Feladatok (REGULAR) fejléce alatt megjelenő szöveg. Ha üres, akkor nincs.")
+        description = "A normál (REGULAR) feladatok fejléce alatt megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val exportGroup by SettingGroup(fieldName = "Beadások exportálása")
 
     var exportEnabled by BooleanSettingRef(serverSideOnly = true, fieldName = "Endpoint elérhető",
-        description = "Ha be van kapcsolva akkor, a /export-tasks endpoint elérhetővé válik")
+        description = "Bekapcsolt állapotban az /export-tasks végpont elérhetővé válik")
 
     var leadOrganizerQuote by StringSettingRef("\"Gratulálunk a csapatoknak!\"\n\n- A főrendezők",
         type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Főrendezők üzenete",
-        description = "Ha üres akkor nincs ilyen")
+        description = "A főrendezők üzenete az exportált dokumentumban. Ha üres, nem jelenik meg.")
 
-    var logoUrl by StringSettingRef("https://", type = SettingType.URL,
-        fieldName = "Logó URL-je", description = "Az esemény logójának az URL-je")
+    var logoUrl by StringSettingRef("", type = SettingType.IMAGE_URL,
+        fieldName = "Logó URL-je", description = "Az esemény logójának URL-je")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val logicGroup by SettingGroup(fieldName = "Működés")
 
     var resubmissionEnabled by BooleanSettingRef(fieldName = "Újraküldés lehetséges",
-        description = "A lejárati idő végéig újraküldhetőek a beadások, ha már javítva volt, akkor nullázódik a pont.")
+        description = "A határidő végéig a feladatok újraküldhetőek. Ha már értékelve volt, a pontszám nullázódik.")
 
     var scoreVisible by BooleanSettingRef(true, serverSideOnly = true, fieldName = "Pontok látszódnak közben",
-        description = "A beadási határidő vége előtt is látszik a pont az értékelt feladatokra")
+        description = "A beadási határidő vége előtt is láthatóak az értékelt feladatok pontszámai")
 
     var scoreVisibleAtAll by BooleanSettingRef(true, serverSideOnly = true, fieldName = "Pontok látszódnak egyáltalán",
-        description = "Bármikor látszódjon-e a megszerzett pont (ha ki van " +
-                "kapcsolva az nem látszik egyáltalán a feladatnál, csak az összesítésben)")
+        description = "Bármikor látható legyen-e a megszerzett pontszám (kikapcsolva csak az összesítésben jelenik meg)")
 
     var enableViewAudit by BooleanSettingRef(serverSideOnly = true, fieldName = "Feladatok megnyitásának logolása",
-        description = "Mentésre kerüljön-e ha valaki megnyit egy feladatot")
+        description = "Bekapcsolt állapotban a rendszer menti, ha egy felhasználó megnyit egy feladatot")
 
 }

@@ -7,7 +7,8 @@ enum class RiddleSubmissionStatus {
     CORRECT,
     WRONG,
     CANNOT_SKIP,
-    SUBMITTER_BANNED
+    SUBMITTER_BANNED,
+    NOT_SOLVABLE
 }
 
 data class RiddleSubmissionView(
@@ -16,6 +17,6 @@ data class RiddleSubmissionView(
     var status: RiddleSubmissionStatus = RiddleSubmissionStatus.WRONG,
 
     @field:JsonView(FullDetails::class)
-    var nextId: Int? = null
+    var nextRiddles: List<RiddleView> = listOf(),
 
 )

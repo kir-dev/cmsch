@@ -10,8 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.util.*
-import kotlin.math.absoluteValue
+import kotlin.uuid.Uuid
 
 @Controller
 @RequestMapping("/admin/control/upload-file")
@@ -91,7 +90,7 @@ class FileUploadController(
         else
             name.replace(" ", "_")
                 .replace(Regex("[^A-Za-z0-9_]+"), "")
-                .uppercase() + "_${Random().nextLong().absoluteValue.toString(36).uppercase()}"
+                .uppercase() + "_${Uuid.generateV7()}"
 
         val extension = originalFilename.substringAfterLast(".")
         return "${newName.urlEncode()}.$extension"

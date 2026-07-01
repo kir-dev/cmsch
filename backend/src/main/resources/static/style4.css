@@ -427,6 +427,10 @@ table span.favorite {
     font-weight: normal;
 }
 
+.card.details-docs > p {
+    color: var(--lighter-text-color);
+}
+
 .card.md-card p {
     color: var(--text-color);
     font-weight: 400;
@@ -1432,6 +1436,10 @@ form .file-name {
     color: var(--primary-color);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
+}
+
+form .image-preview {
+    max-width: 120px;
 }
 
 form p,

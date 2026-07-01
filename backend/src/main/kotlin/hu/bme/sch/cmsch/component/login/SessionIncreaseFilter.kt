@@ -24,7 +24,7 @@ class SessionIncreaseFilter(
         val request = servletRequest as HttpServletRequest
         if (request.servletPath.startsWith("/admin/")) {
             val session = request.getSession(true)
-            val user = SecurityContextHolder.getContext()?.authentication?.getUserOrNull()
+            val user = SecurityContextHolder.getContext().authentication?.getUserOrNull()
             if (user?.let { ControlPermissions.PERMISSION_INCREASED_SESSION_DURATION.validate(it) } == true) {
                 log.debug(
                     "Increasing session time for user {} is {}",

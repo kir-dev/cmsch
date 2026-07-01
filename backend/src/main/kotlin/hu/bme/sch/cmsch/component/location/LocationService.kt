@@ -37,7 +37,7 @@ class LocationService(
                 if (userEntity.role.value >= RoleType.STAFF.value) {
                     tokenToLocationMapping[locationDto.token] =
                         LocationEntity(
-                            id = 0,
+                            id = userEntity.id,
                             userId = userEntity.id,
                             userName = userEntity.fullName,
                             alias = userEntity.alias,
@@ -98,9 +98,9 @@ class LocationService(
         }
     }
 
-    fun findAllLocation(): List<LocationEntity> {
+    fun findAllLocation(): MutableList<LocationEntity> {
         return tokenToLocationMapping.values.toList()
-                .sortedBy { it.groupName }
+                .sortedBy { it.groupName }.toMutableList()
     }
 
     fun clean() {
@@ -113,16 +113,31 @@ class LocationService(
                 .forEach { token ->
                     tokenToLocationMapping[token]?.let {
                         val user = userRepository.findByCmschId(startupPropertyConfig.profileQrPrefix + token)
-                        it.userId = user.get().id
-                        it.userName = user.get().fullName
-                        it.alias = user.get().alias
-                        it.groupName = user.get().groupName
+                        if (user.isPresent) {
+                            val u = user.get()
+                            it.id = u.id
+                            it.userId = u.id
+                            it.userName = u.fullName
+                            it.alias = u.alias
+                            it.groupName = u.groupName
+                        }
                     }
                 }
     }
 
     fun findLocationsOfGroup(groupId: Int): List<LocationEntity> {
-        return tokenToLocationMapping.values.filter { it.id == groupId }
+        val locations = tokenToLocationMapping.values.toList()
+        if (locations.isEmpty()) return emptyList()
+
+        val userIds = locations.map { it.userId }
+        val userIdsInGroup = transactionManager.transaction(readOnly = true) {
+            userRepository.findAllById(userIds)
+                .filter { it.group?.id == groupId }
+                .map { it.id }
+                .toSet()
+        }
+
+        return locations.filter { it.userId in userIdsInGroup }
     }
 
     fun findLocationsOfGroupName(group: String): List<MapMarker> {
@@ -191,8 +206,8 @@ class LocationService(
 
     override fun deleteAll() = clean()
 
-    override fun <S : LocationEntity?> saveAll(entities: Iterable<S>): Iterable<S> {
-        return entities.filterNotNull().map { save(it) }
+    override fun <S : LocationEntity> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
+        return entities.map { save(it) }.toMutableList()
     }
 
     override fun <S : LocationEntity> save(entity: S): S {

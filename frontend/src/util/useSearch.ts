@@ -1,7 +1,7 @@
-import { createRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) => boolean) {
-  const inputRef = createRef<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
   const [search, setSearch] = useState('')
   const [filteredData, setFilteredData] = useState(data)
   const handleInput = () => {
@@ -10,18 +10,20 @@ export function useSearch<T>(data: T[], searchFn: (data: T, searchWord: string) 
 
   useEffect(() => {
     if (!data || !search) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilteredData(data)
     } else {
-      setFilteredData((d) => d.filter((item) => searchFn(item, search)))
+      setFilteredData(data.filter((item) => searchFn(item, search)))
     }
   }, [searchFn, search, data])
 
   useEffect(() => {
     if (data) {
       if (inputRef.current) inputRef.current.value = ''
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearch('')
     }
-  }, [data, inputRef])
+  }, [data])
 
   return { inputRef, filteredData, handleInput, setSearch, search }
 }

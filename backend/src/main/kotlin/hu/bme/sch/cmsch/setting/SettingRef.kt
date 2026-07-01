@@ -10,6 +10,7 @@ enum class SettingType {
     COMPONENT_NAME,
     DATE_TIME,
     IMAGE,
+    IMAGE_URL,
     JSON,
     LONG_TEXT,
     LONG_TEXT_MARKDOWN,

@@ -1,12 +1,11 @@
-import { ColorModeScript } from '@chakra-ui/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import { BrowserRouter } from 'react-router'
 import { AuthProvider } from './api/contexts/auth/AuthContext'
+import './index.css'
 
 import { createRoot } from 'react-dom/client'
-import { HelmetProvider } from 'react-helmet-async'
 import { App } from './App'
 import { ConfigProvider } from './api/contexts/config/ConfigContext'
 import { ServiceProvider } from './api/contexts/service/ServiceContext'
@@ -22,26 +21,23 @@ const root = createRoot(document.getElementById('root')!)
 
 root.render(
   <React.StrictMode>
-    <ColorModeScript />
     <ThemeConfig>
       <AppBackground>
         <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <BrowserRouter>
-              <ServiceProvider>
-                <ErrorBoundary>
-                  <ConfigProvider>
-                    <AuthProvider>
-                      <PushNotificationHandler>
-                        <App />
-                        <ReactQueryDevtools />
-                      </PushNotificationHandler>
-                    </AuthProvider>
-                  </ConfigProvider>
-                </ErrorBoundary>
-              </ServiceProvider>
-            </BrowserRouter>
-          </HelmetProvider>
+          <BrowserRouter>
+            <ServiceProvider>
+              <ErrorBoundary>
+                <ConfigProvider>
+                  <AuthProvider>
+                    <PushNotificationHandler>
+                      <App />
+                      <ReactQueryDevtools />
+                    </PushNotificationHandler>
+                  </AuthProvider>
+                </ConfigProvider>
+              </ErrorBoundary>
+            </ServiceProvider>
+          </BrowserRouter>
         </QueryClientProvider>
       </AppBackground>
     </ThemeConfig>

@@ -1,9 +1,8 @@
-import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router'
 
-import { useEventQuery } from '../../api/hooks/event/useEventQuery'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
+import { useEventQuery } from '@/api/hooks/event/useEventQuery'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
 import CurrentEvent from './components/CurrentEvent'
 
 const EventPage = () => {
@@ -13,8 +12,7 @@ const EventPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} />
 
   return (
-    <CmschPage position="relative">
-      <Helmet title={data.title} />
+    <CmschPage title={data?.title}>
       <CurrentEvent event={data} />
     </CmschPage>
   )

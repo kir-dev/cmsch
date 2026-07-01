@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewType
 import hu.bme.sch.cmsch.controller.admin.ControlAction
@@ -25,7 +25,7 @@ data class FormVotesDto(
     @property:GenerateOverview(columnName = "Űrlap neve", order = 1, useForSearch = true)
     var name: String = "",
 
-    @property:GenerateOverview(columnName = "Kitöltések", order = 2, useForSearch = true)
+    @property:GenerateOverview(columnName = "Kitöltések", order = 2, useForSearch = true, renderer = OverviewType.NUMBER)
     var submissions: Long = 0,
 
 ) : IdentifiableEntity

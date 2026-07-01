@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.race
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
@@ -37,11 +37,11 @@ class RaceLeaderBoardController(
     transactionManager,
     object : ManualRepository<RaceEntryDto, Int>() {
 
-        override fun findAll(): Iterable<RaceEntryDto> {
+        override fun findAll(): MutableList<RaceEntryDto> {
             return when (startupPropertyConfig.raceOwnershipMode) {
                 OwnershipType.USER -> raceService.getBoardForUsers(DEFAULT_CATEGORY, true)
                 OwnershipType.GROUP -> raceService.getBoardForGroups(DEFAULT_CATEGORY)
-            }
+            }.toMutableList()
         }
 
         override fun count() = findAll().count().toLong()

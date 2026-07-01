@@ -1,33 +1,28 @@
-import { Box, Flex, Icon, Stack, Text, useColorModeValue } from '@chakra-ui/react'
-import { FaChevronRight } from 'react-icons/fa'
-import { Menu } from '../../../api/contexts/config/types'
+import type { Menu } from '@/api/contexts/config/types'
+import { NavigationMenuLink } from '@/components/ui/navigation-menu'
+import { ChevronRight } from 'lucide-react'
 import LinkComponent from '../LinkComponent'
 
-type Props = {
-  menu: Menu
+export const ChildNavItem = ({ menu }: { menu: Menu }) => {
+  return (
+    <NavigationMenuLink asChild>
+      <LinkComponent url={menu.url || '#'} external={menu.external}>
+        <div className="group block p-2 rounded-md transition-colors hover:bg-primary">
+          <div className="flex flex-row items-center">
+            <div>
+              <span className="font-medium transition-colors group-hover:text-primary-foreground">{menu.name}</span>
+            </div>
+            <div
+              className={
+                'flex flex-1 justify-end items-center transition-all opacity-0 ' +
+                '-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'
+              }
+            >
+              <ChevronRight className="h-5 w-5 text-primary-foreground" />
+            </div>
+          </div>
+        </div>
+      </LinkComponent>
+    </NavigationMenuLink>
+  )
 }
-
-export const ChildNavItem = ({ menu }: Props) => (
-  <LinkComponent url={menu.url || '#'} external={menu.external}>
-    <Box role="group" display="block" p={2} rounded="md">
-      <Stack direction="row" align="center">
-        <Box>
-          <Text transition="all .3s ease" _groupHover={{ color: useColorModeValue('brand.500', 'brand.400') }} fontWeight={500}>
-            {menu.name}
-          </Text>
-        </Box>
-        <Flex
-          transition="all .3s ease"
-          transform="translateX(-10px)"
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify="flex-end"
-          align="center"
-          flex={1}
-        >
-          <Icon color={useColorModeValue('brand.500', 'brand.400')} w={5} h={5} as={FaChevronRight} />
-        </Flex>
-      </Stack>
-    </Box>
-  </LinkComponent>
-)

@@ -3,17 +3,12 @@ package hu.bme.sch.cmsch.component.location
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["location"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.location"])
 class LocationComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -34,17 +29,17 @@ class LocationComponent(
 
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
     val appearanceGroup by SettingGroup(fieldName = "Megjelenés")
 
     var topMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var bottomMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal alján megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal alján megjelenő szöveg", description = "Az oldal alján megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

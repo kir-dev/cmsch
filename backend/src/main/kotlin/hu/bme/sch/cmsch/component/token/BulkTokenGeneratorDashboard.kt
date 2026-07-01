@@ -155,7 +155,7 @@ class BulkTokenGeneratorDashboard(
                     availableFrom = timeService.getTimeInSeconds(),
                     availableUntil = timeService.getTimeInSeconds() + (dateUntil * 24 * 60 * 60),
                 )
-            })
+            }.toMutableList())
             return@transaction result.count()
         }
 

@@ -75,7 +75,9 @@ enum class MajorType {
     Index(name = "idx_userentity_cmschid", columnList = "cmschId"),
     Index(name = "idx_userentity_neptun", columnList = "neptun"),
     Index(name = "idx_userentity_groupname", columnList = "groupName"),
-    Index(name = "idx_userentity_email", columnList = "email"),
+    Index(name = "idx_userentity_email", columnList = "email", unique = true),
+    Index(name = "idx_userentity_confirmationtoken", columnList = "confirmationToken"),
+    Index(name = "idx_userentity_passwordresettoken", columnList = "passwordResetToken"),
     Index(name = "idx_userentity_group", columnList = "group_id")
 ])
 data class UserEntity(
@@ -85,6 +87,7 @@ data class UserEntity(
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(renderer = OverviewType.ID, columnName = "ID", order = -1)
+    @property:ImportFormat
     override var id: Int = 0,
 
     @field:JsonView(value = [ Edit::class ])
@@ -229,6 +232,29 @@ data class UserEntity(
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var isServiceAccount: Boolean = false,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var password: String? = null,
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    @property:GenerateInput(type = InputType.SWITCH, order = 21, label = "Email megerősítve")
+    @property:ImportFormat
+    var emailConfirmed: Boolean = false,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var confirmationToken: String? = null,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var passwordResetToken: String? = null,
+
+    @field:JsonIgnore
+    @Column(nullable = true)
+    var passwordResetTokenExpiration: Long? = null,
 
 ): ManagedEntity, CmschUser, Duplicatable {
 

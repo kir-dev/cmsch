@@ -4,17 +4,12 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["qrFight"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.qrFight"])
 class QrFightComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -37,16 +32,19 @@ class QrFightComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var enabled by BooleanSettingRef(fieldName = "QR Fight engedélyezve",
-        description = "Ha be van kapcsolva, akkor mennek a QR fightos endpointok")
+        description = "Bekapcsolt állapotban a QR Fight funkciók elérhetőek")
 
     var topMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Oldal tetején megjelenő szöveg", description = "Ha üres akkor nincs ilyen")
+        fieldName = "Oldal tetején megjelenő szöveg", description = "Az oldal tetején megjelenő szöveg. Ha üres, nem jelenik meg.")
 
     var apiTokens by StringSettingRef("tower:token", serverSideOnly = true, fieldName = "API tokenek",
         description = "Formátum: towerSelector:token, ...")
+
+    var dailyTowerReadLimit by NumberSettingRef(serverSideOnly = true, fieldName = "Napi torony beolvasás limit",
+        description = "Egy adott tornyot egy játékos naponta ennyiszer olvashat be. Ha -1, akkor bármennyiszer beolvasható bármelyik torony.")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

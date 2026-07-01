@@ -103,7 +103,7 @@ class ScriptingContext(
 @Suppress("UNCHECKED_CAST")
 class ModifyingScriptingDbContext(private val supportedRepos: List<CrudRepository<*, *>>, private val readOnly: Boolean) {
 
-    fun <T, ID, R : CrudRepository<T, ID>> repository(selectedRepo: KClass<out R>): R {
+    fun <T : Any, ID : Any, R : CrudRepository<T, ID>> repository(selectedRepo: KClass<out R>): R {
         if (readOnly)
             error("modifyingDb cannot be used in a read-only context")
 
@@ -134,7 +134,7 @@ class ReadOnlyScriptingDbContext(private val supportedRepos: List<CrudRepository
 class ReadOnlyRepositoryProxy<T : Duplicatable, ID : Any>(private val proxy: CrudRepository<T, ID>) {
 
     fun findAll(): List<T> {
-        return proxy.findAll().mapNotNull { if (it is T) { it.duplicate() as T } else null }.toList()
+        return proxy.findAll().mapNotNull { it.duplicate() as T }.toList()
     }
 
     fun findById(id: ID): T? {

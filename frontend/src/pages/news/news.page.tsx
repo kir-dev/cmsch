@@ -1,8 +1,7 @@
-import { Helmet } from 'react-helmet-async'
+import { useNewsQuery } from '@/api/hooks/news/useNewsQuery'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
 import { useParams } from 'react-router'
-import { useNewsQuery } from '../../api/hooks/news/useNewsQuery'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
 import News from './components/News'
 
 const NewsPage = () => {
@@ -12,8 +11,7 @@ const NewsPage = () => {
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title="Hír" />
 
   return (
-    <CmschPage>
-      <Helmet title={data.title} />
+    <CmschPage title={data.title}>
       <News news={data} />
     </CmschPage>
   )

@@ -28,7 +28,7 @@ data class RaceRecordEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 2, label = "Kategória", type = InputType.ENTITY_SELECT,
+    @property:GenerateInput(order = 1, label = "Kategória", type = InputType.ENTITY_SELECT,
         entitySource = "RaceCategoryEntity", note = "Az üres az alapértelmezett kategória")
     @property:GenerateOverview(columnName = "Kategória", order = 1)
     @property:ImportFormat
@@ -42,7 +42,7 @@ data class RaceRecordEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
     @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 2, label = "Felhasználó", entitySource = "UserEntity",
-        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `id| Teljes Név [a/g] email` ahol az: a = authsch, g = google",
+        note = "Csak akkor kell kijelölni ha felhasználók kapnak pontot. Formátum: `Teljes Név | id | [a/g] email` ahol az: a = authsch, g = google",
         interpreter = InputInterpreter.SEARCH)
     @property:GenerateOverview(columnName = "Felhasználó", order = 2, centered = true)
     @property:ImportFormat
@@ -65,16 +65,34 @@ data class RaceRecordEntity(
     @field:JsonView(value = [ Edit::class ])
     @property:GenerateInput(type = InputType.FLOAT3, order = 4, label = "Mért idő", defaultValue = "0.0",
         note = "Másodpercben kell megadni, és ponttal (.) van elválasztva, nem vesszővel! 3 tizedes pontig lehet megadni pontosságot.")
-    @property:GenerateOverview(columnName = "Idő", order = 4, centered = true)
+    @property:GenerateOverview(renderer = OverviewType.TIME, columnName = "Idő", order = 4, centered = true)
     @property:ImportFormat
     var time: Float = 0.0f,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Időbélyeg", enabled = false, visible = false)
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Időbélyeg", enabled = false, visible = false)
     @property:GenerateOverview(columnName = "Időbélyeg", order = 5, centered = true, renderer = OverviewType.DATE)
     @property:ImportFormat
     var timestamp: Long = 0,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(order = 6, label = "Címke", note = "Név melletti címke, pl: Gólya, Lány etc.")
+    @property:GenerateOverview(columnName = "Címke", order = 6)
+    @property:ImportFormat
+    var label: String = "",
+
+    @Column(nullable = true, columnDefinition = "TEXT")
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @property:GenerateInput(
+        order = 7,
+        type = InputType.COLOR,
+        label = "Szín",
+        note = "A címke színe hex kódban megadva. Ha üresen hagyod, akkor az oldal színét fogja használni.",
+    )
+    @property:ImportFormat
+    var labelColor: String? = "",
 
 ) : ManagedEntity, Duplicatable {
 

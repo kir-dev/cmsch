@@ -5,17 +5,12 @@ import hu.bme.sch.cmsch.component.login.authsch.Scope
 import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["login"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.login"])
 class LoginComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -46,7 +41,7 @@ class LoginComponent(
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!")
 
     var authschScopesRaw by StringSettingRef(
-        listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT).joinToString(","),
+        listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT, Scope.MAIL).joinToString(","),
         serverSideOnly = true, fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: " + Scope.entries.joinToString(", ") { it.name })
 
@@ -92,23 +87,66 @@ class LoginComponent(
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan")
 
     var keycloakEnabled by BooleanSettingRef(false, fieldName = "Keycloak opció látszik",
-        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az Keycloak")
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik a Keycloak")
 
     var keycloakAuthName by StringSettingRef("Belső",
         fieldName = "Keycloak gomb felirata", description = "Ezen a néven jelenik meg a bejelentkezési mód.")
 
-    var keycloakAdminAddresses by StringSettingRef(serverSideOnly = true, fieldName = "ADMIN jogú emailcímek",
-        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél. Az emailcímek vesszővel felsorolva.")
+    var keycloakAdminAddresses by StringSettingRef(serverSideOnly = true, fieldName = "ADMIN jogú email-címek",
+        description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél. Az email-címek vesszővel felsorolva.")
 
     var keycloakSuperuserRole by StringSettingRef("superuser",
-        serverSideOnly = true, fieldName = "SUPERUSER keycloak rule neve",
+        serverSideOnly = true, fieldName = "SUPERUSER Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak SYSADMIN joga lesz belépésnél.")
 
-    var keycloakAdminRole by StringSettingRef("admin", serverSideOnly = true, fieldName = "ADMIN keycloak rule neve",
+    var keycloakAdminRole by StringSettingRef("admin", serverSideOnly = true, fieldName = "ADMIN Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél.")
 
-    var keycloakStaffRole by StringSettingRef("staff", serverSideOnly = true, fieldName = "STAFF keycloak rule neve",
+    var keycloakStaffRole by StringSettingRef("staff", serverSideOnly = true, fieldName = "STAFF Keycloak role neve",
         description = "Csak Keycloak esetén! Ezeknek a felhasználóknak STAFF joga lesz belépésnél.")
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val passwordGroup by SettingGroup(fieldName = "Emailes belépés",
+        description = "Emailes belépés és regisztráció kezelése")
+
+    var passwordEnabled by BooleanSettingRef(false, fieldName = "Emailes belépés látszik",
+        description = "Ha ez be van kapcsolva, akkor a bejelentkezésnél látszik az emailes belépés")
+
+    var emailConfirmationEnabled by BooleanSettingRef(true, fieldName = "Email megerősítés szükséges",
+        description = "Ha ez be van kapcsolva, akkor regisztráció után emailt kell megerősíteni. " +
+                "FONTOS: AZ E-MAIL KOMPONENST BE KELL ÁLLÍTANI HOZZÁ")
+
+    var emailConfirmationTemplate by StringSettingRef("", serverSideOnly = true, fieldName = "Megerősítő email sablon",
+        description = "Az EmailComponentben lévő sablon selectorja, a paraméterek 'name' és 'link'. " +
+                "Ha üres, akkor egy alapértelmezett sablon kerül használatra.")
+
+    var forgotPasswordEnabled by BooleanSettingRef(true, fieldName = "Elfelejtett jelszó",
+        description = "Ha ez be van kapcsolva, akkor lehet jelszó-visszaállítást kérni. " +
+                "FONTOS: AZ E-MAIL KOMPONENST BE KELL ÁLLÍTANI HOZZÁ")
+
+    var passwordResetTemplate by StringSettingRef("", serverSideOnly = true,
+        fieldName = "Jelszó visszaállító email sablon",
+        description = "Az EmailComponentben lévő sablon selectorja, a paraméterek 'name' és 'link'. " +
+                "Ha üres, akkor egy alapértelmezett sablon kerül használatra.")
+
+    var captchaEnabled by BooleanSettingRef(false, fieldName = "Captcha bekapcsolva",
+        description = "Regisztrációnál captcha ellenőrzés")
+
+    var captchaSiteKey by StringSettingRef("", fieldName = "Captcha Site Key",
+        description = "A Google reCAPTCHA v2 site key-e")
+
+    var captchaSecretKey by StringSettingRef("", serverSideOnly = true, fieldName = "Captcha Secret Key",
+        description = "A Google reCAPTCHA v2 secret key-e")
+
+    var loginRateLimit by NumberSettingRef(5, fieldName = "Login rate limit (kérés/perc)",
+        description = "Hány bejelentkezési kísérlet engedélyezett percenként IP címenként")
+
+    var registerRateLimit by NumberSettingRef(5, fieldName = "Regisztráció rate limit (kérés/perc)",
+        description = "Hány regisztrációs kísérlet engedélyezett percenként IP címenként")
+
+    var forgotPasswordRateLimit by NumberSettingRef(5, fieldName = "Elfelejtett jelszó rate limit (kérés/perc)",
+        description = "Hány jelszó-visszaállítási kérés engedélyezett percenként IP címenként")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
@@ -145,7 +183,7 @@ class LoginComponent(
     var topMessage by StringSettingRef("### Válassz belépési módot!", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Felső szöveg", description = "Ha üres akkor nincs ilyen")
 
-    var bottomMessage by StringSettingRef("Mind a két belépési móddal külön felhasználód keletkezik",
-        type = SettingType.LONG_TEXT_MARKDOWN, fieldName = "Alsó szöveg", description = "Ha üres akkor nincs ilyen")
+    var bottomMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "A belépési felület alján lévő szöveg", description = "Ha üres akkor nincs ilyen")
 
 }

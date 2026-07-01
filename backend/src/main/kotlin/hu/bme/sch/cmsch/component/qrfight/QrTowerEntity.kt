@@ -60,14 +60,14 @@ data class QrTowerEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 5, label = "Foglalható ekkortól")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Foglalható ekkortól")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableFrom: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.DATE, order = 6, label = "Foglalható eddig")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Foglalható eddig")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var availableTo: Long = 0,

@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.component.script
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.script.sandbox.*
 import hu.bme.sch.cmsch.model.Duplicatable
@@ -9,6 +9,7 @@ import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.transaction
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.core.ResolvableType
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
@@ -21,6 +22,7 @@ import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.time.measureTimedValue
 
 @Service
+@ConditionalOnBean(ScriptComponent::class)
 class ScriptService(
     private val repositories: List<CrudRepository<*, *>>,
     private val components: List<ComponentBase>,
@@ -29,7 +31,7 @@ class ScriptService(
     private val transactionManager: PlatformTransactionManager
 ) {
 
-    private final val log = LoggerFactory.getLogger(javaClass)
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private final val objectMapper = jacksonObjectMapper()
     private final val artifactWriter = objectMapper.writerFor(object : TypeReference<List<ScriptArtifact>>() {})

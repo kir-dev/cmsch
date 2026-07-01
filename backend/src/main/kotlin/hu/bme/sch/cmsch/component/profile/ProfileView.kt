@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.profile
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
+import hu.bme.sch.cmsch.component.race.RaceStatsView
 import hu.bme.sch.cmsch.component.token.TokenDto
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.GuildType
@@ -78,6 +79,10 @@ data class ProfileView(
 
     @field:JsonView(FullDetails::class)
     val completedTaskCount: Int? = null,
+
+    // Race stats
+    @field:JsonView(FullDetails::class)
+    val raceStats: RaceStatsView? = null,
 
     @field:JsonView(FullDetails::class)
     val profileIsComplete: Boolean? = null,

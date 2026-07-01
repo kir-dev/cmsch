@@ -1,27 +1,17 @@
-import { Box, chakra, useColorModeValue } from '@chakra-ui/react'
-import { Menu } from '../../../api/contexts/config/types'
+import type { Menu } from '@/api/contexts/config/types'
+import { NavigationMenuItem, NavigationMenuLink } from '@/components/ui/navigation-menu'
 import LinkComponent from '../LinkComponent'
 
-type Props = {
-  menu: Menu
-}
-
-export const NavItemNoChildren = ({ menu }: Props) => {
+export const NavItemNoChildren = ({ menu }: { menu: Menu }) => {
   return (
-    <Box key={menu.name} p={2}>
-      <LinkComponent url={menu.url || '#'} external={menu.external}>
-        <chakra.span
-          _hover={{
-            textDecoration: 'none',
-            color: useColorModeValue('brand.500', 'brand.400')
-          }}
-          whiteSpace="nowrap"
-          fontSize="md"
-          fontWeight={500}
-        >
-          {menu.name}
-        </chakra.span>
-      </LinkComponent>
-    </Box>
+    <NavigationMenuItem>
+      <NavigationMenuLink asChild>
+        <LinkComponent url={menu.url || '#'} external={menu.external}>
+          <span className="whitespace-nowrap text-md font-medium transition-colors cursor-pointer hover:text-primary px-2 py-2">
+            {menu.name}
+          </span>
+        </LinkComponent>
+      </NavigationMenuLink>
+    </NavigationMenuItem>
   )
 }

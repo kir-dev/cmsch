@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.admin.*
 import hu.bme.sch.cmsch.component.EntityConfig
-import hu.bme.sch.cmsch.component.conference.ConferenceOrganizerEntity
-import hu.bme.sch.cmsch.component.gallery.GalleryEntity
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.dto.Preview
@@ -93,7 +91,7 @@ data class GroupEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(order = 7, label = "Csoport borítóképe")
+    @property:GenerateInput(order = 7, label = "Csoport borítóképe", type = InputType.IMAGE_URL)
     @property:GenerateOverview(visible = false)
     var coverImageUrl: String = "",
 

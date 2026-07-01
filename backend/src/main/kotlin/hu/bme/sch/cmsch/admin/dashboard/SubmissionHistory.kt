@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.admin.dashboard
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 
 val historyMapper = ObjectMapper()
 val historyReader = historyMapper.readerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})

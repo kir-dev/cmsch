@@ -1,12 +1,10 @@
-import { Box, ButtonGroup, Heading } from '@chakra-ui/react'
+import { MessageTypes, useServiceContext } from '@/api/contexts/service/ServiceContext'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import Markdown from '@/common-components/Markdown'
+import { l } from '@/util/language'
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { Navigate } from 'react-router'
-import { MessageTypes, useServiceContext } from '../../api/contexts/service/ServiceContext'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import Markdown from '../../common-components/Markdown'
-import { l } from '../../util/language'
 import { UnauthorizedPage } from './unauthorized.page'
 
 type Props = {
@@ -20,6 +18,7 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   useEffect(() => {
     // Cloning the error is needed to clear the error globally
     // The message from prop can override the message
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setClonedMessage(messageProp || message)
     setClonedMessageType(type || MessageTypes.GENERAL)
     // Clear the error from the context since the user has already been notified, and prepare for navigation
@@ -31,19 +30,16 @@ export const ErrorPage = ({ message: messageProp }: Props) => {
   // Display authentication page for the corresponding error type
   if (clonedMessageType === MessageTypes.AUTHENTICATION) return <UnauthorizedPage />
   return (
-    <CmschPage>
-      <Helmet title={l('error-page-helmet')} />
-      <Heading as="h1" variant="main-title" textAlign="center">
-        {l('error-page-title')}
-      </Heading>
-      <Box textAlign="center" color="gray.500" marginTop={10}>
+    <CmschPage title={l('error-page-helmet')}>
+      <h1 className="text-3xl font-bold font-heading text-center">{l('error-page-title')}</h1>
+      <div className="text-center text-gray-500 mt-10">
         <Markdown text={clonedMessage} />
-      </Box>
-      <ButtonGroup justifyContent="center" marginTop={10}>
-        <LinkButton href="/" colorScheme="brand">
+      </div>
+      <div className="flex justify-center mt-10">
+        <LinkButton href="/" className="bg-primary text-primary-foreground">
           Főoldal
         </LinkButton>
-      </ButtonGroup>
+      </div>
     </CmschPage>
   )
 }

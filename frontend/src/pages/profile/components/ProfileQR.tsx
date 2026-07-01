@@ -1,54 +1,44 @@
-import {
-  Box,
-  Button,
-  Center,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react'
-import { FaQrcode } from 'react-icons/fa'
+import type { Profile } from '@/api/contexts/config/types'
+import { WalletButton } from '@/common-components/WalletButton'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import type { ProfileView } from '@/util/views/profile.view'
+import { QrCode } from 'lucide-react'
+import { useState } from 'react'
 import QRCode from 'react-qr-code'
-import { Profile } from '../../../api/contexts/config/types'
-import { WalletButton } from '../../../common-components/WalletButton'
-import { ProfileView } from '../../../util/views/profile.view'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
     <>
-      <Center flexDirection="column">
-        <Text fontSize="3xl" fontWeight={500}>
-          {component.qrTitle}
-        </Text>
-        <Button mt={5} leftIcon={<FaQrcode />} onClick={onOpen}>
+      <div className="flex flex-col items-center">
+        <span className="text-3xl font-medium">{component.qrTitle}</span>
+        <Button className="mt-5" onClick={() => setIsOpen(true)}>
+          <QrCode className="mr-2" />
           QR kód felmutatása
         </Button>
-        <Text fontSize="sm" color="brand.300" my={5}>
-          vagy
-        </Text>
-        <WalletButton type="apple" name={profile.fullName} userId={profile.cmschId} />
-        <WalletButton type="google" name={profile.fullName} userId={profile.cmschId} />
-      </Center>
+        <span className="my-5 text-sm text-primary">vagy</span>
+        {profile.fullName && profile.cmschId && <WalletButton type="apple" name={profile.fullName} userId={profile.cmschId} />}
+        {profile.fullName && profile.cmschId && <WalletButton type="google" name={profile.fullName} userId={profile.cmschId} />}
+      </div>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{profile.fullName}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Center flexDirection="column">
-              <Box w="fit-content" maxW="100%" p={2} mb={5} borderRadius={3} backgroundColor="white">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{profile.fullName}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center py-4">
+            {profile.cmschId ? (
+              <div className="mb-5 w-fit max-w-full rounded-[3px] p-2" style={{ backgroundColor: '#ffffff' }}>
                 <QRCode value={profile.cmschId} />
-              </Box>
-            </Center>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+              </div>
+            ) : (
+              <p>Hiba: Cmsch azonosító nem található</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

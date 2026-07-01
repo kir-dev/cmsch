@@ -23,7 +23,7 @@ This makes reviewing the pull request, searching through the history and reverti
 Copy the `.env.example` file to `.env` and fill it with the required data.
 
 ```bash
-  yarn run build
+  npm run build
 ```
 
 ### Build the backend OCI image
@@ -116,7 +116,7 @@ logging.level.web=DEBUG
 ```
 
 Your pekId can be found in the console log of the Spring app when signing in with AuthSCH.
-The`cmsch.website-default-url`property's IP address needs
+The `cmsch.website-default-url` property's IP address needs
 to be either `localhost` or the IP of your current device running your Spring app on your network.
 
 Once created, edit the `CMSchApplication` Run Configuration's Spring Boot Active Profiles to use (see image down below)
@@ -132,11 +132,11 @@ You can leave the defaults for local development.
 Open a terminal in the `frontend` folder and pull the packages
 
 ```bash
-yarn
+npm install
 ```
 
 then start the frontend development server
 
 ```bash
-yarn start
+npm start
 ```

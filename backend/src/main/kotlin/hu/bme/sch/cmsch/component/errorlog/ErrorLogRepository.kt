@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.errorlog
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.EntityPageDataSource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
@@ -13,7 +14,7 @@ import java.util.*
 interface ErrorLogRepository : CrudRepository<ErrorLogEntity, Int>, EntityPageDataSource<ErrorLogEntity, Int> {
 
     @Query("select e from ErrorLogEntity e order by e.lastReportedAt desc")
-    override fun findAll(): List<ErrorLogEntity>
+    override fun findAll(): MutableIterable<ErrorLogEntity>
 
     fun findByMessageAndStackAndUserAgentAndHrefAndRole(
         message: String,
@@ -22,5 +23,9 @@ interface ErrorLogRepository : CrudRepository<ErrorLogEntity, Int>, EntityPageDa
         href: String,
         role: RoleType
     ): Optional<ErrorLogEntity>
+
+    @Modifying
+    @Query("UPDATE ErrorLogEntity e SET e.count = e.count + 1, e.lastReportedAt = :timestamp WHERE e.id = :id")
+    fun incrementCount(id: Int, timestamp: Long)
 
 }

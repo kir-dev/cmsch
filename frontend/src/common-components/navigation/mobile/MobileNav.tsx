@@ -1,20 +1,23 @@
-import { Stack } from '@chakra-ui/react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
 import { NavItemNoChildren } from './NavItemNoChildren'
 import { NavItemWithChildren } from './NavItemWithChildren'
 
-export const MobileNav: React.FC = () => {
+interface MobileNavProps {
+  onNavigate?: () => void
+}
+
+export const MobileNav: React.FC<MobileNavProps> = ({ onNavigate }) => {
   const config = useConfigContext()
 
   return (
-    <Stack p={4} display={{ md: 'none' }}>
+    <div className="flex flex-col p-4 space-y-2 items-center">
       {config?.menu.map((menu) =>
         menu.children && menu.children.length > 0 ? (
-          <NavItemWithChildren key={menu.name} menu={menu} />
+          <NavItemWithChildren key={menu.name} menu={menu} onNavigate={onNavigate} />
         ) : (
-          <NavItemNoChildren key={menu.name} menu={menu} />
+          <NavItemNoChildren key={menu.name} menu={menu} onNavigate={onNavigate} />
         )
       )}
-    </Stack>
+    </div>
   )
 }

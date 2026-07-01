@@ -1,7 +1,7 @@
-import { Box, chakra, HStack, Icon, Popover, PopoverContent, PopoverTrigger, Stack, useColorModeValue } from '@chakra-ui/react'
-import { FaChevronDown } from 'react-icons/fa'
-import { Menu } from '../../../api/contexts/config/types'
-import LinkComponent from '../LinkComponent'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import type { Menu } from '@/api/contexts/config/types'
+import { NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
+import { useColorModeValue } from '@/util/core-functions.util.ts'
 import { ChildNavItem } from './ChildNavItem'
 
 type Props = {
@@ -9,35 +9,21 @@ type Props = {
 }
 
 export const NavItemWithChildren = ({ menu }: Props) => {
-  const bg = useColorModeValue('darkContainerColor.600', 'darkContainerColor.600')
+  const components = useConfigContext()?.components
+  const backdropFilter = useColorModeValue(components?.style?.lightNavbarFilter, components?.style?.darkNavbarFilter)
+  const background = useColorModeValue(components?.style?.lightNavbarColor, components?.style?.darkNavbarColor)
+  const textColor = useColorModeValue(components?.style?.lightTextColor, components?.style?.darkTextColor)
+
   return (
-    <Box key={menu.name} p={2}>
-      <Popover trigger="hover" placement="bottom-start">
-        <PopoverTrigger>
-          <Box>
-            <LinkComponent url={menu.url || '#'} external={menu.external}>
-              <HStack
-                _hover={{
-                  textDecoration: 'none',
-                  color: useColorModeValue('brand.500', 'brand.400')
-                }}
-              >
-                <chakra.span fontSize="md" fontWeight={500}>
-                  {menu.name}
-                </chakra.span>
-                <Icon as={FaChevronDown} w={4} h={4} m={0} />
-              </HStack>
-            </LinkComponent>
-          </Box>
-        </PopoverTrigger>
-        <PopoverContent border={0} boxShadow="xl" bg={bg} p={4} rounded="xl" maxW="2xs">
-          <Stack>
-            {menu.children.map((child) => (
-              <ChildNavItem key={child.name} menu={child} />
-            ))}
-          </Stack>
-        </PopoverContent>
-      </Popover>
-    </Box>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger className="text-md font-medium bg-transparent">{menu.name}</NavigationMenuTrigger>
+      <NavigationMenuContent style={{ backdropFilter, backgroundColor: background, color: textColor }}>
+        <div className="flex flex-col space-y-1 p-4 min-w-48">
+          {menu.children.map((child) => (
+            <ChildNavItem key={child.name} menu={child} />
+          ))}
+        </div>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
   )
 }

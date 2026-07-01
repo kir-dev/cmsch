@@ -1,27 +1,17 @@
-import { Flex, Heading, Icon, Text, VStack } from '@chakra-ui/react'
+import { useTime } from '@/hooks/useDate.ts'
 import { intervalToDuration } from 'date-fns'
-import { useCallback, useEffect, useState } from 'react'
-import { BsDashLg } from 'react-icons/bs'
+import { Minus } from 'lucide-react'
 
 interface ClockProps {
-  countTo: Date
+  countTo: number
 }
 
 const Clock = ({ countTo }: ClockProps) => {
-  const target = countTo.getTime() > Date.now() ? countTo : new Date()
-  const [duration, setDuration] = useState(intervalToDuration({ start: new Date(), end: target }))
-
-  const update = useCallback(() => {
-    if (countTo.getTime() > Date.now()) setDuration(intervalToDuration({ start: new Date(), end: countTo }))
-  }, [countTo])
-
-  useEffect(() => {
-    const interval = setInterval(update, 1000)
-    return () => clearInterval(interval)
-  }, [update])
+  const now = useTime(1000)
+  const duration = intervalToDuration({ start: now, end: Math.max(countTo, now) })
 
   return (
-    <Flex flexDirection={['column', 'row']} alignItems="center" justifyContent="center">
+    <div className="flex flex-col md:flex-row items-center justify-center">
       {(duration.years || 0) > 0 && (
         <>
           <ClockSegment value={duration.years?.toString()} label={'év'} />
@@ -41,7 +31,7 @@ const Clock = ({ countTo }: ClockProps) => {
       <ClockSegment value={duration.minutes?.toString()} label={'perc'} />
       <Dash />
       <ClockSegment value={duration.seconds?.toString()} label={'másodperc'} />
-    </Flex>
+    </div>
   )
 }
 
@@ -53,15 +43,13 @@ interface ClockSegmentProps {
 const ClockSegment = ({ value, label }: ClockSegmentProps) => {
   const valueText = (value || '00').padStart(2, '0')
   return (
-    <VStack w="20%" mx={10} my={5}>
-      <Heading fontSize={60} verticalAlign="center" lineHeight={10}>
-        {valueText}
-      </Heading>
-      <Text>{label}</Text>
-    </VStack>
+    <div className="flex flex-col items-center w-full md:w-1/5 mx-10 my-5">
+      <h2 className="text-6xl font-bold leading-10">{valueText}</h2>
+      <p>{label}</p>
+    </div>
   )
 }
 
-const Dash = () => <Icon size={30} as={BsDashLg} />
+const Dash = () => <Minus className="hidden md:block h-8 w-8" />
 
 export default Clock

@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.net.URL
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.CompoundDependenciesResolver

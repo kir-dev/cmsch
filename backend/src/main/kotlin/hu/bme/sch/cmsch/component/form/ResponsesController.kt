@@ -1,10 +1,11 @@
 package hu.bme.sch.cmsch.component.form
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.dataformat.csv.CsvMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
+import hu.bme.sch.cmsch.controller.admin.calculateSearchSettings
 import hu.bme.sch.cmsch.extending.FormSubmissionListener
 import hu.bme.sch.cmsch.repository.ManualRepository
 import hu.bme.sch.cmsch.service.*
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.Date
 
 @Controller
 @RequestMapping("/admin/control/signup-responses")
@@ -46,7 +48,7 @@ class ResponsesController(
 
     transactionManager,
     object : ManualRepository<FormVirtualEntity, Int>() {
-        override fun findAll(): Iterable<FormVirtualEntity> {
+        override fun findAll(): MutableIterable<FormVirtualEntity> {
             return formService.getAllResponses()
                 .groupBy { it.formId }
                 .map { it.value }
@@ -64,7 +66,7 @@ class ResponsesController(
                                 responses.count { it.detailsValidated },
                             )
                         }.orElse(null)
-                }
+                }.toMutableList()
         }
 
     },
@@ -110,7 +112,8 @@ class ResponsesController(
             true,
             "Exportálás CSV fájlba"
         )
-    )
+    ),
+    innerSearchSettings = calculateSearchSettings<ResponseEntity>(false),
 ) {
 
     private val exportPermission = StaffPermissions.PERMISSION_EDIT_FORM_RESULTS
@@ -128,14 +131,22 @@ class ResponsesController(
         }
 
         val objReader = objectMapper.readerFor(object : TypeReference<Map<String, Any>>() {})
-        val entries = formService.getResponsesById(id)
-            .map { objReader.readValue<Map<String, Any>>(it.submission) }
+        val responses = formService.getResponsesById(id)
+        val submissions = responses.map { objReader.readValue<Map<String, Any>>(it.submission) }
             .map { it.values }
             .toList()
+        val submissionData = responses.map { listOf(
+            it.submitterGroupId?:"", it.submitterGroupName, it.submitterUserId?:"", it.submitterUserName,
+            Date(it.creationDate).toString(), it.accepted, it.rejected
+        ) }
 
-        val headers = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
+        val entries = submissionData.zip(submissions) { a, b -> a + b }
+
+        val header = objReader.readValue<Map<String, Any>>(formService.getResponsesById(id).firstOrNull()?.submission ?: "{}")
             .keys
             .joinToString(",")
+        val headers = "submitterGroupId,submitterGroupName,submitterUserId,submitterUserName,creationDate,accepted,rejected,$header"
+
         val result = CsvMapper().writeValueAsString(entries)
         response.setHeader("Content-Disposition", "attachment; filename=\"form-${id}-responses.csv\"")
         return headers + "\n" + result
@@ -149,7 +160,9 @@ class ResponsesController(
             return "403"
         }
 
-        val entries = formService.getResponsesById(id).joinToString(",") { it.submission }
+        val entries = formService.getResponsesById(id)
+            .map { "{submitterGroupId:${it.submitterGroupId},submitterGroupName:${it.submitterGroupName},submitterUserId:${it.submitterUserId},submitterUserName:${it.submitterUserName},creationDate:${it.creationDate},submission:${it.submission}}" }
+            .joinToString(",") { it }
 
         return "[${entries}]"
     }

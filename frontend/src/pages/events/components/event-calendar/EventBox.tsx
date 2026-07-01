@@ -1,71 +1,52 @@
-import {
-  Box,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  Text,
-  useColorModeValue
-} from '@chakra-ui/react'
-import { RefObject } from 'react'
-import { useConfigContext } from '../../../../api/contexts/config/ConfigContext'
-import { LinkButton } from '../../../../common-components/LinkButton'
-import { formatHu, stringifyTimeRange } from '../../../../util/core-functions.util'
-import { AbsolutePaths } from '../../../../util/paths'
-import { EventListView } from '../../../../util/views/event.view'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { LinkButton } from '@/common-components/LinkButton'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { formatHu, stringifyTimeRange } from '@/util/core-functions.util'
+import { AbsolutePaths } from '@/util/paths'
+import type { EventListView } from '@/util/views/event.view'
+import type { RefObject } from 'react'
 
-export type EventBoxItem = EventListView & { top: number; bottom: number; conflictingEventsBefore?: number }
+export type EventBoxItem = EventListView & { top: number; bottom: number; width: number; left: number }
 
 interface EventBoxProps {
-  boxRef?: RefObject<HTMLDivElement>
+  boxRef?: RefObject<HTMLDivElement | null>
   event: EventBoxItem
 }
 
 export function EventBox({ event, boxRef }: EventBoxProps) {
   const component = useConfigContext()?.components?.event
-  const eventBg = useColorModeValue('brand.500', 'brand.300')
-  const eventTextColor = useColorModeValue('white', 'black')
+  const isShort = 100 - event.top - event.bottom < 5
   return (
     <Popover>
-      <PopoverTrigger>
-        <Box
-          ml={(event.conflictingEventsBefore ?? 0) * 2}
+      <PopoverTrigger asChild>
+        <div
           ref={boxRef}
-          overflow="hidden"
-          key={event.url}
-          position="absolute"
-          left={0}
-          right={0}
-          top={event.top + '%'}
-          bottom={event.bottom + '%'}
-          bg={eventBg}
-          borderWidth={1}
-          borderColor="brand.600"
-          borderRadius="md"
-          p={1}
-          color={eventTextColor}
+          className={
+            'overflow-hidden absolute rounded-md p-1 border cursor-pointer ' +
+            'text-primary-foreground dark:text-primary-foreground border-primary bg-primary'
+          }
+          style={{
+            left: event.left + '%',
+            width: event.width + '%',
+            top: event.top + '%',
+            bottom: event.bottom + '%',
+
+            paddingTop: isShort ? 0 : 4
+          }}
         >
-          <Text fontSize="sm" fontWeight="bold" isTruncated>
-            {event.title}
-          </Text>
-          <Text opacity={0.5}>
+          <p className="text-sm font-bold break-all leading-[1.1]">{event.title}</p>
+          <p className="opacity-50 whitespace-nowrap overflow-hidden">
             {formatHu(event.timestampStart, 'HH:mm')} - {formatHu(event.timestampEnd, 'HH:mm')}
-          </Text>
-        </Box>
+          </p>
+        </div>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader isTruncated>{event.title}</PopoverHeader>
-        <PopoverBody>{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</PopoverBody>
-        {component.enableDetailedView && (
-          <PopoverFooter>
+      <PopoverContent className="w-64 p-4">
+        <h3 className="font-bold truncate">{event.title}</h3>
+        <p className="mt-2 text-sm text-muted-foreground">{stringifyTimeRange(event.timestampStart, event.timestampEnd)}</p>
+        {component?.enableDetailedView && (
+          <div className="mt-4 flex justify-end">
             <LinkButton href={`${AbsolutePaths.EVENTS}/${event.url}`}>Részletek</LinkButton>
-          </PopoverFooter>
+          </div>
         )}
       </PopoverContent>
     </Popover>

@@ -3,17 +3,12 @@ package hu.bme.sch.cmsch.component.news
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["news"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.news"])
 class NewsComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -36,9 +31,9 @@ class NewsComponent(
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var showDetails by BooleanSettingRef(fieldName = "Részletes nézet",
-        description = "Ha be van kapcsolva akkor a elérhetőek a cikkek külön lapon is")
+        description = "Bekapcsolt állapotban a hírek részletes tartalma is megtekinthető külön oldalon")
 
 }

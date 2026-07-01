@@ -1,31 +1,29 @@
-import { ButtonGroup } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
-import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { LinkButton } from '@/common-components/LinkButton'
+import { AbsolutePaths } from '@/util/paths'
+import { type ScanResponseView, ScanStatus } from '@/util/views/token.view'
+import { ArrowLeft, QrCode } from 'lucide-react'
 import { useSearchParams } from 'react-router'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { LinkButton } from '../../common-components/LinkButton'
-import { AbsolutePaths } from '../../util/paths'
-import { ScanResponseView, ScanStatus } from '../../util/views/token.view'
 import { QRScanResultComponent } from './components/QRScanResultComponent'
 
 const TokenScanResult = () => {
   const [searchParams] = useSearchParams()
+
   const server_response: ScanResponseView = {
     title: searchParams.get('title') || undefined,
     status: (searchParams.get('status') || ScanStatus.WRONG) as ScanStatus
   }
   return (
-    <CmschPage>
-      <Helmet title="QR eredmény" />
+    <CmschPage title="QR eredmény">
       <QRScanResultComponent response={server_response} />
-      <ButtonGroup spacing="6" alignSelf="center">
-        <LinkButton leftIcon={<FaArrowLeft />} href={AbsolutePaths.TOKEN}>
-          Vissza
+      <div className="flex flex-row space-x-6 justify-center mt-6">
+        <LinkButton variant="outline" className="flex items-center gap-2" href={AbsolutePaths.TOKEN}>
+          <ArrowLeft className="h-4 w-4" /> Vissza
         </LinkButton>
-        <LinkButton colorScheme="brand" leftIcon={<FaQrcode />} href={`${AbsolutePaths.TOKEN}/scan`}>
-          Új QR-kód scannelése
+        <LinkButton className="flex items-center gap-2" href={`${AbsolutePaths.TOKEN}/scan`}>
+          <QrCode className="h-4 w-4" /> Új QR-kód scannelése
         </LinkButton>
-      </ButtonGroup>
+      </div>
     </CmschPage>
   )
 }

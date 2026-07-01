@@ -1,8 +1,8 @@
-import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react'
-import { API_BASE_URL } from '../../../util/configs/environment.config'
-import { AuthState, UserAuthInfoView } from '../../../util/views/authInfo.view.ts'
-import { useAuthInfo } from '../../hooks/auth/useAuthInfo.ts'
-import { useTokenRefresh } from '../../hooks/useTokenRefresh.ts'
+import { useAuthInfo } from '@/api/hooks/auth/useAuthInfo.ts'
+import { useTokenRefresh } from '@/api/hooks/useTokenRefresh.ts'
+import { API_BASE_URL } from '@/util/configs/environment.config'
+import { AuthState, type UserAuthInfoView } from '@/util/views/authInfo.view.ts'
+import { createContext, type PropsWithChildren, useCallback, useEffect, useState } from 'react'
 
 export type AuthContextType = {
   isLoggedIn: boolean

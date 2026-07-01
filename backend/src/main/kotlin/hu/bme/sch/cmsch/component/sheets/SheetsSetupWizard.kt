@@ -1,8 +1,8 @@
 package hu.bme.sch.cmsch.component.sheets
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectReader
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectReader
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.admin.dashboard.*
 import hu.bme.sch.cmsch.component.form.FormElement
 import hu.bme.sch.cmsch.component.form.FormElementType
@@ -23,6 +23,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
+import kotlin.uuid.Uuid
 
 const val SHEETS_WIZARD = "sheets-setup-wizard"
 
@@ -98,7 +99,7 @@ class SheetsSetupWizard(
     }
 
     fun getComponentsForForms(user: CmschUser, requestParams: Map<String, String>, formId: Int): List<DashboardComponent> {
-        val token = requestParams.getOrDefault("token", UUID.randomUUID().toString())
+        val token = requestParams.getOrDefault("token", Uuid.generateV7().toString())
         val name = requestParams.getOrDefault("name", "névtelen integráció")
         return listOf(
             permissionCard,

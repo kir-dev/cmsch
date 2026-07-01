@@ -1,12 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
 import com.fasterxml.jackson.annotation.JsonView
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.MappingIterator
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvParser
-import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.component.script.sandbox.ScriptArtifact
 import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.service.AdminMenuService
@@ -19,7 +13,15 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.ResponseBody
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.MappingIterator
+import tools.jackson.dataformat.csv.CsvMapper
+import tools.jackson.dataformat.csv.CsvReadFeature
+import tools.jackson.dataformat.csv.CsvSchema
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -37,7 +39,8 @@ class ScriptsLogsDashboard(
     private final val showPermission = StaffPermissions.PERMISSION_SHOW_SCRIPTS
     private final val editPermission = StaffPermissions.PERMISSION_EDIT_SCRIPTS
     private final val view = "script-logs"
-    private final val artifactReader = jacksonObjectMapper().readerFor(object : TypeReference<List<ScriptArtifact>>() {})
+    private final val artifactReader =
+        jacksonObjectMapper().readerFor(object : TypeReference<List<ScriptArtifact>>() {})
 
     @GetMapping("/admin/control/script-logs/{scriptResultId}")
     fun viewScript(model: Model, @PathVariable scriptResultId: Int, auth: Authentication): String {
@@ -110,7 +113,8 @@ class ScriptsLogsDashboard(
         model.addAttribute("scriptResultId", scriptResultId)
 
         if (scriptResultEntity != null) {
-            val artifact = artifactReader.readValue<List<ScriptArtifact>>(scriptResultEntity.artifacts).getOrNull(artifactId)
+            val artifact =
+                artifactReader.readValue<List<ScriptArtifact>>(scriptResultEntity.artifacts).getOrNull(artifactId)
             model.addAttribute("name", artifact?.artifactName)
 
             if (artifact?.type?.lowercase()?.trim() == "text/csv") {
@@ -131,8 +135,9 @@ class ScriptsLogsDashboard(
     }
 
     final fun loadCsvAsList(csv: String): List<List<String>> {
-        val mapper = CsvMapper()
-        mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY)
+        val mapper = CsvMapper.builder()
+            .enable(CsvReadFeature.WRAP_AS_ARRAY)
+            .build()
         val schema = CsvSchema.emptySchema()
 
         val rows: MappingIterator<Array<String>> = mapper.readerFor(Array<String>::class.java)

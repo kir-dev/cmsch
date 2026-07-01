@@ -1,9 +1,9 @@
-import { RoleTypeString } from '../../../util/views/profile.view'
+import { RoleTypeString } from '@/util/views/profile.view.ts'
 
 export interface ConfigDto {
   role: RoleTypeString
   menu: Menu[]
-  components: Components
+  components?: Components
 }
 
 export interface Menu {
@@ -14,39 +14,39 @@ export interface Menu {
 }
 
 export interface Components {
-  app: App
-  style: Style
-  userHandling: UserHandling
-  countdown: Countdown
-  debt: Debt
-  event: Event
-  extraPage: ExtraPage
-  groupselection: GroupSelection
-  home: Home
-  gallery: Gallery
-  impressum: Impressum
-  leaderboard: Leaderboard
-  location: Location
-  login: Login
-  news: News
-  profile: Profile
-  race: Race
-  riddle: Riddle
-  form: Signup
-  task: Task
-  team: Team
-  token: Token
-  pushnotification: PushNotification
-  qrFight: QrFight
-  communities: Communities
-  footer: Footer
-  tournament: Tournament
+  app?: App
+  style?: Style
+  userHandling?: UserHandling
+  countdown?: Countdown
+  debt?: Debt
+  event?: Event
+  extraPage?: ExtraPage
+  groupselection?: GroupSelection
+  home?: Home
+  gallery?: Gallery
+  impressum?: Impressum
+  leaderboard?: Leaderboard
+  location?: Location
+  login?: Login
+  news?: News
+  profile?: Profile
+  race?: Race
+  riddle?: Riddle
+  form?: Signup
+  task?: Task
+  team?: Team
+  token?: Token
+  pushnotification?: PushNotification
+  qrFight?: QrFight
+  communities?: Communities
+  footer?: Footer
+  tournament?: Tournament
 }
 
 export interface App {
   defaultComponent: string
   siteName: string
-  warningLevel: string
+  warningLevel: 'warning' | 'info' | 'success' | 'error' | 'loading' | undefined
   warningMessage: string
 }
 
@@ -82,6 +82,7 @@ export interface Countdown {
   topMessage: string
   timeToCountTo: number
   keepOnAfterCountdownOver: boolean
+  showRemainingTime: boolean
   imageUrl: string
   blurredImage: boolean
 }
@@ -92,7 +93,7 @@ export interface GroupSelection {
 
 export interface Event {
   title: string
-  seekToCurrentCurrent: boolean
+  seekToCurrent: boolean
   separateDays: boolean
   topMessage: string
   enableDetailedView: boolean
@@ -114,6 +115,8 @@ export interface Home {
 
 export interface Gallery {
   title: string
+  topMessage: string
+  bottomMessage: string
 }
 
 export interface News {
@@ -164,11 +167,14 @@ export interface Leaderboard {
   leaderboardEnabled: string
   leaderboardDetailsEnabled: boolean
   leaderboardDetailsByCategoryEnabled: boolean
+  leaderBoardCategoryName: string
   leaderboardFrozen: string
   maxGroupEntryToShow: number
   maxUserEntryToShow: number
   minScoreToShow: number
   showGroupBoard: boolean
+  groupBoardName: string
+  myGroupName: string
   showScores: boolean
   showGroupOfUser: boolean
   showUserBoard: boolean
@@ -187,6 +193,7 @@ export interface Profile {
   showRiddles: boolean
   riddleCounterName: string
   showTokens: boolean
+  showRaceStats: boolean
   tokenCounterName: string
   showFullName: boolean
   showGuild: boolean
@@ -218,9 +225,21 @@ export interface Style {
   lightContainerFilter: string
   lightTextColor: string
   lightBrandingColor: string
+  lightPrimaryForeground: string
   lightBackgroundUrl: string
   lightMobileBackgroundUrl: string
   lightLogoUrl: string
+  lightBorderColor: string
+  lightNeutralColor: string
+  lightNeutralForeground: string
+  lightSuccessColor: string
+  lightSuccessForeground: string
+  lightWarningColor: string
+  lightWarningForeground: string
+  lightDangerColor: string
+  lightDangerForeground: string
+  lightInfoColor: string
+  lightInfoForeground: string
   darkModeEnabled: boolean
   deviceTheme: boolean
   forceDarkMode: boolean
@@ -228,13 +247,24 @@ export interface Style {
   darkContainerColor: string
   darkContainerFilter: string
   darkTextColor: string
+  darkBrandingColor: string
+  darkPrimaryForeground: string
   darkBackgroundUrl: string
   darkMobileBackgroundUrl: string
   darkLogoUrl: string
+  darkBorderColor: string
+  darkNeutralColor: string
+  darkNeutralForeground: string
+  darkSuccessColor: string
+  darkSuccessForeground: string
+  darkWarningColor: string
+  darkWarningForeground: string
+  darkDangerColor: string
+  darkDangerForeground: string
+  darkInfoColor: string
+  darkInfoForeground: string
   mainFontName: string
-  mainFontWeight: number
   displayFontName: string
-  displayFontWeight: number
   lightNavbarFilter: string
   darkNavbarFilter: string
   lightNavbarColor: string
@@ -277,12 +307,19 @@ export type UserHandling = object
 export type ExtraPage = object
 
 export interface Location {
+  title: string
   topMessage: string
   bottomMessage: string
 }
 
 export interface Login {
   authschPromoted: boolean
+  passwordEnabled: boolean
+  emailConfirmationEnabled: boolean
+  forgotPasswordEnabled: boolean
+  captchaEnabled: boolean
+  captchaSiteKey: string
+  loginRateLimit: number
   topMessage: string
   bottomMessage: string
   googleSsoEnabled: boolean
@@ -317,6 +354,7 @@ export interface Team {
   teamCreationTopMessage: string
   title: string
   togglePermissionEnabled: boolean
+  searchEnabled: boolean
 }
 
 export interface PushNotification {
@@ -349,8 +387,11 @@ export interface Signup {
 export interface Communities {
   title: string
   description: string
+  searchEnabled: boolean
   titleResort: string
   descriptionResort: string
+  searchEnabledResort: boolean
+  tinderEnabled: boolean
 }
 
 export interface Tournament {

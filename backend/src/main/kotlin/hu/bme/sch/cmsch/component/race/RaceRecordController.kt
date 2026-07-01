@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.race
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
 import hu.bme.sch.cmsch.controller.admin.OneDeepEntityPage
@@ -127,7 +127,7 @@ class RaceRecordController(
 
     private fun processUserSubmission(entity: RaceRecordEntity): Boolean {
         if (entity.userName.isNotBlank() && entity.userName != "-") {
-            val id = entity.userName.split("|")[0].trim().toIntOrNull() ?: 0
+            val id = entity.userName.split("|")[1].trim().toIntOrNull() ?: 0
             val user = transactionManager.transaction(readOnly = true) { users.findById(id) }
 
             if (user.isPresent) {
@@ -156,7 +156,7 @@ class RaceRecordController(
 
 
 private fun mapUsername(it: UserEntity) =
-    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
 
 private fun mapUsername(it: UserSelectorView) =
-    "${it.id}| ${it.fullNameWithAlias} [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"

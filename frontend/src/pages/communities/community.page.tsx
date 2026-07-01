@@ -1,21 +1,19 @@
-import { Image } from '@chakra-ui/react'
-import { Helmet } from 'react-helmet-async'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import { useCommunity } from '@/api/hooks/community/useCommunity'
+import { CustomBreadcrumb } from '@/common-components/CustomBreadcrumb'
+import { CmschPage } from '@/common-components/layout/CmschPage'
+import { PageStatus } from '@/common-components/PageStatus'
 import { useParams } from 'react-router'
-import { useConfigContext } from '../../api/contexts/config/ConfigContext'
-import { useCommunity } from '../../api/hooks/community/useCommunity'
-import { CustomBreadcrumb } from '../../common-components/CustomBreadcrumb'
-import { CmschPage } from '../../common-components/layout/CmschPage'
-import { PageStatus } from '../../common-components/PageStatus'
 import { DataSheet } from './components/DataSheet'
 import { Frame } from './components/Frame'
 
 export default function CommunityPage() {
-  const config = useConfigContext()?.components.communities
+  const communities = useConfigContext()?.components?.communities
   const params = useParams()
   const { data, isLoading, isError } = useCommunity(params.id || 'UNKNOWN')
   const breadcrumbItems = [
     {
-      title: config?.title,
+      title: communities?.title,
       to: '/community'
     },
     {
@@ -23,19 +21,17 @@ export default function CommunityPage() {
     }
   ]
 
-  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={config?.title} />
+  if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={communities?.title} />
 
   return (
-    <CmschPage>
-      <Helmet title={data.name} />
-      <CustomBreadcrumb items={breadcrumbItems} mt={5} />
+    <CmschPage title={data.name}>
+      <CustomBreadcrumb items={breadcrumbItems} className="mt-5" />
       <DataSheet organization={data} />
-
       {data.videoIds?.map((id) => (
         <Frame key={id} id={id} />
       ))}
       {data.imageIds?.map((url) => (
-        <Image key={url} marginTop={10} src={url} width="100%" height="auto" alt="Körkép" borderRadius="lg" />
+        <img key={url} className="mt-10 w-full h-auto rounded-lg" src={url} alt="Körkép" />
       ))}
     </CmschPage>
   )

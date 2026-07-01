@@ -4,17 +4,12 @@ import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(
-    prefix = "hu.bme.sch.cmsch.component.load",
-    name = ["admission"],
-    havingValue = "true",
-    matchIfMissing = false
-)
+@ConditionalOnBooleanProperty(value = ["hu.bme.sch.cmsch.component.load.admission"])
 class AdmissionComponent(
     componentSettingService: ComponentSettingService,
     env: Environment
@@ -31,7 +26,7 @@ class AdmissionComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
-        fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal"
+        fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal"
     )
 
 
@@ -39,11 +34,11 @@ class AdmissionComponent(
 
     val controlGroup by SettingGroup(fieldName = "Beléptetés működése")
 
-    var onlyAcceptApprovedForms by BooleanSettingRef(fieldName = "Csak az elfogadott formok számítanak",
-        description = "Ha be van kapcsolva, akkor csak az elfogadott és nem elutasított formok számítanak. Csak akkor működik, ha a forms komponens be van kapcsolva.")
+    var onlyAcceptApprovedForms by BooleanSettingRef(fieldName = "Csak az elfogadott űrlapok számítanak",
+        description = "Bekapcsolt állapotban csak az elfogadott és nem elutasított űrlapok (formok) számítanak. Csak akkor működik, ha az űrlapok (forms) komponens aktív.")
 
     var saveEntryLog by BooleanSettingRef(defaultValue = true, fieldName = "Beléptetések mentése",
-        description = "Ha be van kapcsolva, akkor minden beengedés logolva van")
+        description = "Bekapcsolt állapotban a rendszer minden beléptetést naplóz")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
@@ -70,16 +65,16 @@ class AdmissionComponent(
     val userAccessGroup by SettingGroup(fieldName = "Felhasználók hozzáférése",
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni")
 
-    var vipUsers by StringSettingRef(fieldName = "USER hozzáférésű felhasználók",
+    var vipUsers by StringSettingRef(fieldName = "VIP hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva")
 
-    var performerUsers by StringSettingRef(fieldName = "USER hozzáférésű felhasználók",
+    var performerUsers by StringSettingRef(fieldName = "PERFORMER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva")
 
-    var organizerUsers by StringSettingRef(fieldName = "USER hozzáférésű felhasználók",
+    var organizerUsers by StringSettingRef(fieldName = "ORGANIZER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva")
 
-    var leadOrganizerUsers by StringSettingRef(fieldName = "USER hozzáférésű felhasználók",
+    var leadOrganizerUsers by StringSettingRef(fieldName = "LEAD_ORGANIZER hozzáférésű felhasználók",
         description = "A felhasználók CMSCH-ID-jei felsorolva és vesszővel (,) elválasztva")
 
     var userUsers by StringSettingRef(fieldName = "USER hozzáférésű felhasználók",
@@ -91,10 +86,10 @@ class AdmissionComponent(
         description = "Ha nincs tiltólistán, akkor a legmagasabb beállított hozzáférést fogja megkapni")
 
     var grantUserTo by EnumSettingRef(RoleType.SUPERUSER, fieldName = "USER hozzáférés",
-        description = "A kiválasztott rangtól és felette mindenki USER hozzáférést kap")
+        description = "A kiválasztott szerepkörtől és felette mindenki USER hozzáférést kap")
 
     var grantOrganizerTo by EnumSettingRef(RoleType.SUPERUSER, fieldName = "ORGANIZER hozzáférés",
-        description = "A kiválasztott rangtól és felette mindenki ORGANIZER hozzáférést kap")
+        description = "A kiválasztott szerepkörtől és felette mindenki ORGANIZER hozzáférést kap")
 
     /// -------------------------------------------------------------------------------------------------------------------
 

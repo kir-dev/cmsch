@@ -24,19 +24,20 @@ export interface RiddleCategory {
   title: string
   completed: number
   total: number
-  nextRiddle?: number
+  nextRiddles: Riddle[]
 }
 
-export enum RiddleSubmissionStatus {
-  CORRECT = 'CORRECT',
-  WRONG = 'WRONG',
-  CANNOT_SKIP = 'CANNOT_SKIP',
-  SUBMITTER_BANNED = 'SUBMITTER_BANNED'
+export const RiddleSubmissionStatus = {
+  CORRECT: 'CORRECT',
+  WRONG: 'WRONG',
+  CANNOT_SKIP: 'CANNOT_SKIP',
+  SUBMITTER_BANNED: 'SUBMITTER_BANNED'
 }
+export type RiddleSubmissionStatus = (typeof RiddleSubmissionStatus)[keyof typeof RiddleSubmissionStatus]
 
 export interface RiddleSubmissionResult {
   status: RiddleSubmissionStatus
-  nextId?: number
+  nextRiddles: Riddle[]
 }
 
 export interface Hint {

@@ -1,7 +1,7 @@
 package hu.bme.sch.cmsch.controller.admin
 
-import com.fasterxml.jackson.databind.MappingIterator
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import tools.jackson.databind.MappingIterator
+import tools.jackson.dataformat.csv.CsvMapper
 import hu.bme.sch.cmsch.admin.IconStatus
 import hu.bme.sch.cmsch.admin.dashboard.*
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
@@ -256,7 +256,7 @@ class TszImportDashboard(
                     group.staff3 = if (mappings.value.size > 2) mappings.value[2] else ""
                     group.staff4 = if (mappings.value.size > 3) mappings.value[3] else ""
                     return@map group
-                }
+                }.toMutableList()
                 groupRepository.saveAll(affectedGroups)
                 affectedSize = affectedGroups.size
             }

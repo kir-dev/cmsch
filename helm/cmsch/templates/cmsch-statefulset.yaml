@@ -1,4 +1,4 @@
-{{ if not .Values.s3.useS3 }}
+{{ if not .Values.s3.enabled }}
 kind: StatefulSet
 apiVersion: apps/v1
 metadata:

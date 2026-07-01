@@ -14,7 +14,7 @@ private const val DISABLED = "ok"
 @RestController
 @ConditionalOnBean(RiddleComponent::class)
 @RequestMapping("/remote-api/riddle")
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
+@CrossOrigin(originPatterns = ["*"], allowedHeaders = ["*"])
 class RiddleMicroserviceController(
     private val riddleComponent: RiddleComponent,
     private val riddleCacheManager: RiddleCacheManager,

@@ -1,4 +1,4 @@
-{{ if and (not .Values.s3.useS3) .Values.driveBackup.filesystem.enabled }}
+{{ if and (not .Values.s3.enabled) .Values.driveBackup.filesystem.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
