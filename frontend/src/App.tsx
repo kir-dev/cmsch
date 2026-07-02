@@ -1,3 +1,6 @@
+import { TitleProvider } from '@/util/TitleProvider.tsx'
+import { l } from '@/util/language.ts'
+import { Paths } from '@/util/paths.ts'
 import { Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { useConfigContext } from './api/contexts/config/ConfigContext.tsx'
@@ -51,11 +54,8 @@ import TeamListPage from './pages/teams/teamList.page.tsx'
 import TokenListPage from './pages/token/tokenList.page.tsx'
 import TokenScanPage from './pages/token/tokenScan.page.tsx'
 import TokenScanResultPage from './pages/token/tokenScanResult.page.tsx'
-import { l } from './util/language'
-import { Paths } from './util/paths.ts'
-import { TitleProvider } from './util/TitleProvider.tsx'
-import TournamentPage from "./pages/tournament/tournament.page.tsx";
-import TournamentListPage from "./pages/tournament/tournamentList.page.tsx";
+import TournamentPage from './pages/tournament/tournament.page.tsx'
+import TournamentListPage from './pages/tournament/tournamentList.page.tsx'
 
 export function App() {
   const appName = useConfigContext()?.components?.app?.siteName || 'CMSch'

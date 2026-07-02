@@ -1,22 +1,26 @@
 import React from 'react'
-import { TournamentStageView, MatchView } from '../../../util/views/tournament.view.ts'
-import { Heading } from '@chakra-ui/react'
-import { groupBy, keys } from 'lodash'
+import type { MatchTree } from '../util/matchTree'
 import KnockoutBracket from './KnockoutBracket.tsx'
-import { MatchTree } from '../util/matchTree.ts'
+
+type TournamentStageView = import('../../../util/views/tournament.view').TournamentStageView
+type MatchView = import('../../../util/views/tournament.view').MatchView
 
 interface TournamentBracketProps {
   stage: TournamentStageView
 }
 
 const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: TournamentBracketProps) => {
-  let levels = groupBy(stage.matches, (match: MatchView) => match.level)
-  let levelCount = keys(levels).length
+  const levels = stage.matches.reduce<Record<number, MatchView[]>>((acc, match) => {
+    ;(acc[match.level] ??= []).push(match)
+    return acc
+  }, {})
+  const levelNumbers = Object.keys(levels).map(Number)
+  const maxLevel = Math.max(...levelNumbers)
 
   const buildTree = (level: number, rootNum: number): MatchTree => {
-    let root = levels[level][rootNum]
-    let upperTree = level > 1 && levels[level - 1].length > 2 * rootNum ? buildTree(level - 1, 2 * rootNum) : null
-    let lowerTree = level > 1 && levels[level - 1].length > 2 * rootNum + 1 ? buildTree(level - 1, 2 * rootNum + 1) : null
+    const root = levels[level][rootNum]!
+    const upperTree = level > 1 && (levels[level - 1]?.length ?? 0) > 2 * rootNum ? buildTree(level - 1, 2 * rootNum) : null
+    const lowerTree = level > 1 && (levels[level - 1]?.length ?? 0) > 2 * rootNum + 1 ? buildTree(level - 1, 2 * rootNum + 1) : null
     return {
       root: root,
       lowerTree: lowerTree,
@@ -24,19 +28,17 @@ const TournamentBracket: React.FC<TournamentBracketProps> = ({ stage }: Tourname
     }
   }
 
-  let trees: MatchTree[] = []
-  if (levelCount < 1) {
+  const trees: MatchTree[] = []
+  if (levelNumbers.length < 1) {
     return null
   }
-  for (let i = 0; i < levels[levelCount].length; i++) {
-    trees.push(buildTree(levelCount, i))
+  for (let i = 0; i < (levels[maxLevel]?.length ?? 0); i++) {
+    trees.push(buildTree(maxLevel, i))
   }
 
   return (
     <>
-      <Heading as="h2" size="lg" mb={5}>
-        {stage.name}
-      </Heading>
+      <h2 style={{ marginBottom: '1.25rem', fontSize: '1.125rem', fontWeight: 700 }}>{stage.name}</h2>
       {trees.map((tree) => (
         <KnockoutBracket tree={tree} key={tree.root.id} />
       ))}

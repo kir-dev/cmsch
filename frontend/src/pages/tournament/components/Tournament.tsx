@@ -1,13 +1,12 @@
-import { TournamentDetailsView, TournamentResponseMessages, TournamentResponses } from '../../../util/views/tournament.view.ts'
-import { Box, Button, Flex, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react'
-import KnockoutStage from './KnockoutStage.tsx'
+import { useConfigContext } from '@/api/contexts/config/ConfigContext.tsx'
+import { useTournamentJoinMutation } from '@/api/hooks/tournament/actions/useTournamentJoinMutation.ts'
+import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.tsx'
+import { CmschPage } from '@/common-components/layout/CmschPage.tsx'
+import { useToast } from '@/hooks/use-toast.ts'
+import type { TournamentDetailsView } from '@/util/views/tournament.view.ts'
+import { TournamentResponseMessages, TournamentResponses } from '@/util/views/tournament.view.ts'
 import { useState } from 'react'
-import { useConfigContext } from '../../../api/contexts/config/ConfigContext.tsx'
-import { ComponentUnavailable } from '../../../common-components/ComponentUnavailable.tsx'
-import { Helmet } from 'react-helmet-async'
-import { CmschPage } from '../../../common-components/layout/CmschPage.tsx'
-import { useTournamentJoinMutation } from '../../../api/hooks/tournament/actions/useTournamentJoinMutation.ts'
-import { FaSignInAlt } from 'react-icons/fa'
+import KnockoutStage from './KnockoutStage.tsx'
 
 interface TournamentProps {
   tournament: TournamentDetailsView
@@ -15,17 +14,17 @@ interface TournamentProps {
 }
 
 const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
-  const toast = useToast()
-  const { components } = useConfigContext()
-  const tournamentComponent = components.tournament
+  const config = useConfigContext()
+  const tournamentComponent = config?.components?.tournament
   const joinMutation = useTournamentJoinMutation()
+  const { toast } = useToast()
 
   const actionResponseCallback = (response: TournamentResponses) => {
     if (response == TournamentResponses.OK) {
-      toast({ status: 'success', title: TournamentResponseMessages[response] })
+      toast({ variant: 'default', title: TournamentResponseMessages[response] })
       refetch()
     } else {
-      toast({ status: 'error', title: TournamentResponseMessages[response] })
+      toast({ variant: 'destructive', title: TournamentResponseMessages[response] })
     }
   }
 
@@ -39,7 +38,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
           }
         },
         onError: () => {
-          toast({ status: 'error', title: 'Hiba történt a versenyre való jelentkezés során.' })
+          toast({ variant: 'destructive', title: 'Hiba történt a versenyre való jelentkezés során.' })
         }
       })
     }
@@ -54,49 +53,65 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
   if (!tournamentComponent) return <ComponentUnavailable />
 
   return (
-    <CmschPage>
-      <Helmet title={tournament.tournament.title} />
-      <Flex direction="column" gap={4} p={4} maxWidth="100%" mx="auto">
-        <Heading>{tournament.tournament.title}</Heading>
-        <Text>{tournament.tournament.description}</Text>
-        <Text>{tournament.tournament.location}</Text>
-        <Flex>
+    <CmschPage title={tournament.tournament.title}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16, maxWidth: '100%', margin: '0 auto' }}>
+        <h1 style={{ margin: 0 }}>{tournament.tournament.title}</h1>
+        <p style={{ margin: 0 }}>{tournament.tournament.description}</p>
+        <p style={{ margin: 0 }}>{tournament.tournament.location}</p>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {tournament.tournament.joinEnabled && (
-            <Button leftIcon={<FaSignInAlt />} colorScheme="brand" onClick={joinTournament} isDisabled={tournament.tournament.isJoined}>
+            <button
+              type="button"
+              onClick={joinTournament}
+              disabled={tournament.tournament.isJoined}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            >
               Jelentkezés a versenyre
-            </Button>
+            </button>
           )}
           {tournament.tournament.isJoined && (
-            <Button colorScheme="brand" isDisabled={true}>
+            <button type="button" disabled>
               Jelentkezve
-            </Button>
+            </button>
           )}
-        </Flex>
-        <Tabs isLazy isFitted colorScheme="brand" variant="enclosed" index={tabIndex} onChange={onTabSelected}>
-          <TabList>
-            <Tab>Résztvevők</Tab>
-            {tournament.stages.map((stage) => (
-              <Tab key={stage.id}>{stage.name}</Tab>
+        </div>
+        <div>
+          <div role="tablist" aria-label="Tournament tabs" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+            <button type="button" role="tab" aria-selected={tabIndex === 0} onClick={() => onTabSelected(0)}>
+              Résztvevők
+            </button>
+            {tournament.stages.map((stage, index) => (
+              <button
+                key={stage.id}
+                type="button"
+                role="tab"
+                aria-selected={tabIndex === index + 1}
+                onClick={() => onTabSelected(index + 1)}
+              >
+                {stage.name}
+              </button>
             ))}
-          </TabList>
-          <TabPanels>
-            <TabPanel px={100}>
+          </div>
+
+          {tabIndex === 0 && (
+            <div style={{ paddingInline: 100 }}>
               {tournament.tournament.participants.map((participant) => (
-                <Box key={participant.teamId}>
-                  <Heading as="h3" size="md" marginY={0.5} maxWidth="100%">
-                    {participant.teamName}
-                  </Heading>
-                </Box>
+                <div key={participant.teamId}>
+                  <h3 style={{ marginTop: 4, marginBottom: 4, maxWidth: '100%' }}>{participant.teamName}</h3>
+                </div>
               ))}
-            </TabPanel>
-            {tournament.stages.map((stage) => (
-              <TabPanel px={0} overflowX="auto" scrollBehavior="smooth" key={stage.id}>
-                <KnockoutStage key={stage.id} stage={stage} />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
-      </Flex>
+            </div>
+          )}
+
+          {tournament.stages.map((stage, index) =>
+            tabIndex === index + 1 ? (
+              <div key={stage.id} style={{ overflowX: 'auto', scrollBehavior: 'smooth' }}>
+                <KnockoutStage stage={stage} />
+              </div>
+            ) : null
+          )}
+        </div>
+      </div>
     </CmschPage>
   )
 }

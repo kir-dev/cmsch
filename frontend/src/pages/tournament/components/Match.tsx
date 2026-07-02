@@ -1,6 +1,5 @@
-import { MatchView, ParticipantView } from '../../../util/views/tournament.view.ts'
-import { Box, Flex, Text } from '@chakra-ui/react'
-import { stringifyTimeStamp } from '../../../util/core-functions.util.ts'
+import { stringifyTimeStamp } from '@/util/core-functions.util.ts'
+import type { MatchView, ParticipantView } from '@/util/views/tournament.view.ts'
 
 interface MatchProps {
   match: MatchView
@@ -24,50 +23,56 @@ const Match = ({ match }: MatchProps) => {
   }
 
   if (match.status === 'BYE') {
-    return <Box borderWidth="0" bg="white" width="64" p={2} borderRadius="lg"></Box>
+    return <div style={{ width: '16rem', padding: '0.5rem', backgroundColor: 'white' }} />
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={2} width="64" bg="white">
-      <Text fontSize="sm" color="gray.500">
-        Game {match.gameId}
-      </Text>
-      <Flex justifyContent="space-between" alignItems="center" mb={1}>
-        <Text fontSize="sm" fontWeight="medium">
-          {getParticipantName(match.homeSeed, match.home)}
-        </Text>
-        <Text
-          fontSize="sm"
-          color={getScoreColor(match, match.homeScore, match.awayScore)}
-          fontWeight={match.status === 'COMPLETED' ? 'bold' : 'normal'}
+    <div
+      style={{
+        width: '16rem',
+        padding: '0.5rem',
+        backgroundColor: 'white',
+        border: '1px solid #e2e8f0',
+        borderRadius: '0.5rem'
+      }}
+    >
+      <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Game {match.gameId}</div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+        <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>{getParticipantName(match.homeSeed, match.home)}</div>
+        <div
+          style={{
+            fontSize: '0.875rem',
+            color: getScoreColor(match, match.homeScore, match.awayScore),
+            fontWeight: match.status === 'COMPLETED' ? 700 : 400
+          }}
         >
           {match.homeScore ?? '-'}
-        </Text>
-      </Flex>
-      <Flex justifyContent="space-between" alignItems="center">
-        <Text fontSize="sm" fontWeight="medium">
-          {getParticipantName(match.awaySeed, match.away)}
-        </Text>
-        <Text
-          fontSize="sm"
-          color={getScoreColor(match, match.awayScore, match.homeScore)}
-          fontWeight={match.status === 'COMPLETED' ? 'bold' : 'normal'}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>{getParticipantName(match.awaySeed, match.away)}</div>
+        <div
+          style={{
+            fontSize: '0.875rem',
+            color: getScoreColor(match, match.awayScore, match.homeScore),
+            fontWeight: match.status === 'COMPLETED' ? 700 : 400
+          }}
         >
           {match.awayScore ?? '-'}
-        </Text>
-      </Flex>
-      <Flex justifyContent="space-between" mt={1}>
-        <Text fontSize="xs" color="gray.500">
-          {match.status}
-        </Text>
-        <Text fontSize="xs" color="gray.500">
-          {formatKickOffTime(match.kickoffTime)}
-        </Text>
-      </Flex>
-      <Text fontSize="xs" color="gray.500" mt={1}>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
+        <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{match.status}</div>
+        <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{formatKickOffTime(match.kickoffTime)}</div>
+      </div>
+
+      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem' }}>
         {match.location != '' ? match.location : 'Location TBD'}
-      </Text>
-    </Box>
+      </div>
+    </div>
   )
 }
 

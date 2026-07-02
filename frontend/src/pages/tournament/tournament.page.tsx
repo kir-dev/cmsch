@@ -1,9 +1,8 @@
-import {useTournamentQuery} from "../../api/hooks/tournament/queries/useTournamentQuery.ts";
-import {useParams} from "react-router";
-import {toInteger} from "lodash";
-import {PageStatus} from "../../common-components/PageStatus.tsx";
-import Tournament from "./components/Tournament.tsx";
-
+import { useTournamentQuery } from '@/api/hooks/tournament/queries/useTournamentQuery.ts'
+import { PageStatus } from '@/common-components/PageStatus.tsx'
+import { toInteger } from 'lodash'
+import { useParams } from 'react-router'
+import Tournament from './components/Tournament.tsx'
 
 const TournamentPage = () => {
   const { id } = useParams()

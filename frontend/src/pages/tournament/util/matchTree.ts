@@ -1,4 +1,4 @@
-import { MatchView } from '../../../util/views/tournament.view.ts'
+import type { MatchView } from '@/util/views/tournament.view.ts'
 
 export type MatchTree = {
   root: MatchView
