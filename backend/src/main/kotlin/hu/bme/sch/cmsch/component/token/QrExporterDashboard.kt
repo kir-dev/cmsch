@@ -72,10 +72,9 @@ class QrExporterDashboard(
     companion object {
         private val logger = LoggerFactory.getLogger(QrExporterDashboard::class.java)
         private val renderFont: Font? = try {
-            val fontStream = QrExporterDashboard::class.java.getResourceAsStream("/OpenSans-Regular.ttf")
-            if (fontStream != null) {
+            QrExporterDashboard::class.java.getResourceAsStream("/OpenSans-Regular.ttf")?.use { fontStream ->
                 Font.createFont(Font.TRUETYPE_FONT, fontStream)
-            } else {
+            } ?: run {
                 logger.warn("OpenSans-Regular.ttf not found in resources")
                 null
             }
