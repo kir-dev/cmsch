@@ -22,15 +22,16 @@ export type ParticipantView = {
   teamName: string
 }
 
-export enum TournamentResponses {
-  OK = 'OK',
-  JOINING_DISABLED = 'JOINING_DISABLED',
-  ALREADY_JOINED = 'ALREADY_JOINED',
-  TOURNAMENT_NOT_FOUND = 'TOURNAMENT_NOT_FOUND',
-  NOT_JOINABLE = 'NOT_JOINABLE',
-  INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
-  ERROR = 'ERROR'
+export const TournamentResponses = {
+  OK: 'OK',
+  JOINING_DISABLED: 'JOINING_DISABLED',
+  ALREADY_JOINED: 'ALREADY_JOINED',
+  TOURNAMENT_NOT_FOUND: 'TOURNAMENT_NOT_FOUND',
+  NOT_JOINABLE: 'NOT_JOINABLE',
+  INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+  ERROR: 'ERROR'
 }
+export type TournamentResponses = (typeof TournamentResponses)[keyof typeof TournamentResponses]
 
 export const TournamentResponseMessages: Record<TournamentResponses, string> = {
   [TournamentResponses.OK]: 'Sikeresen csatlakoztál a versenyhez.',
@@ -42,22 +43,24 @@ export const TournamentResponseMessages: Record<TournamentResponses, string> = {
   [TournamentResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
 }
 
-export enum StageStatus {
-  CREATED = 'CREATED',
-  DRAFT = 'DRAFT',
-  SET = 'SET',
-  ONGOING = 'ONGOING',
-  FINISHED = 'FINISHED',
-  CANCELLED = 'CANCELLED'
+export const StageStatus = {
+  CREATED: 'CREATED',
+  DRAFT: 'DRAFT',
+  SET: 'SET',
+  ONGOING: 'ONGOING',
+  FINISHED: 'FINISHED',
+  CANCELLED: 'CANCELLED'
 }
+export type StageStatus = (typeof StageStatus)[keyof typeof StageStatus]
 
-export enum MatchStatus {
-  NOT_STARTED = 'NOT_STARTED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-  BYE = 'BYE'
+export const MatchStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+  BYE: 'BYE'
 }
+export type MatchStatus = (typeof MatchStatus)[keyof typeof MatchStatus]
 
 export type MatchView = {
   id: number
