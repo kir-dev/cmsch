@@ -37,6 +37,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.imageio.ImageIO
 import kotlin.math.max
+import org.slf4j.LoggerFactory
 
 private const val VIEW = "token-qr-export"
 
@@ -68,6 +69,21 @@ class QrExporterDashboard(
     adminMenuIcon = "qr_code",
     adminMenuPriority = 3
 ) {
+    companion object {
+        private val logger = LoggerFactory.getLogger(QrExporterDashboard::class.java)
+        private val renderFont: Font? = try {
+            QrExporterDashboard::class.java.getResourceAsStream("/OpenSans-Regular.ttf")?.use { fontStream ->
+                Font.createFont(Font.TRUETYPE_FONT, fontStream)
+            } ?: run {
+                logger.warn("OpenSans-Regular.ttf not found in resources")
+                null
+            }
+        } catch (e: Exception) {
+            logger.warn("Failed to load OpenSans-Regular.ttf font", e)
+            null
+        }
+    }
+
     private val permissionCard = DashboardPermissionCard(
         id = 1,
         permission = showPermission.permissionString,
@@ -213,7 +229,7 @@ class QrExporterDashboard(
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-            val baseFont = Font("SansSerif", Font.PLAIN, 26)
+            val baseFont = renderFont?.deriveFont(26f) ?: Font(Font.SANS_SERIF, Font.PLAIN, 26)
 
             g.font = baseFont
             val fmTop = g.fontMetrics
