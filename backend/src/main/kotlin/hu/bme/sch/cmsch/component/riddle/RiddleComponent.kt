@@ -38,6 +38,9 @@ class RiddleComponent(
     var visibleRiddlesPerCategory by NumberSettingRef(1, type = SettingType.NUMBER, fieldName = "Egyidőben mutatott riddle-ök száma",
         description = "Kategóriánként ennyi riddle jelenik meg egyszerre, amelyek közül a felhasználó választhat")
 
+    var collectAttemptsByUser by BooleanSettingRef(false, fieldName = "Userek szerinti csoportosítás",
+        description = "Bekapcsolt állapotban akkor is gyűjti felhasználók szerint csoportosítva a riddle megoldásokat, ha csapatonként lehet a riddleöket megoldani", serverSideOnly = true)
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val shadowBanModerationGroup by SettingGroup(fieldName = "Riddle beadások moderálása - Shadow Ban",
@@ -91,6 +94,9 @@ class RiddleComponent(
 
     val skipGroup by SettingGroup(fieldName = "Átugrás funkció",
         description = "Bizonyos számú megoldó után a riddle átugorhatóvá válik")
+
+    var hintEnabled by BooleanSettingRef(true, fieldName = "Hint engedélyezve",
+        description = "A hint kérés gomb elérhető a felhasználók számára")
 
     var skipEnabled by BooleanSettingRef(true, fieldName = "Átugrás engedélyezve",
         description = "A riddle átugrása gomb elérhető a felhasználók számára")

@@ -60,6 +60,8 @@ class RiddleApiController(
         if (!riddleComponent.minRole.isAvailableForRole(user.role))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
+        log.info("User '{}' is using a hint for riddle id:{}", user.userName, riddleId)
+
         return when (startupPropertyConfig.riddleOwnershipMode) {
             OwnershipType.USER -> riddleService.unlockHintForUser(user, riddleId)
                 ?.let { ResponseEntity.ok(RiddleHintView(it)) }
