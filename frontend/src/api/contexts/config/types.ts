@@ -134,6 +134,7 @@ export interface Race {
 
 export interface Riddle {
   title: string
+  hintEnabled: boolean
   skipEnabled: boolean
   skipAfterGroupsSolved: number
 }

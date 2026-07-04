@@ -164,7 +164,7 @@ const RiddlePage = () => {
                 <AlertTitle>Hint</AlertTitle>
                 <AlertDescription>{hintQuery.data?.hint || data.hint}</AlertDescription>
               </Alert>
-            ) : (
+            ) : riddleConfig.hintEnabled ? (
               <ConfirmDialogButton
                 buttonVariant="outline"
                 buttonText="Hintet kérek"
@@ -175,7 +175,7 @@ const RiddlePage = () => {
                   await hintQuery.refetch()
                 }}
               />
-            )}
+            ) : null}
             {riddleConfig.skipEnabled && (
               <>
                 <Alert>
