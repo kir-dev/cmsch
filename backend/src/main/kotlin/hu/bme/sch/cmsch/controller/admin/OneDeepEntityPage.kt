@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartRequest
 import java.lang.reflect.Method
 import java.util.*
 import java.util.function.Supplier
+import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
@@ -375,6 +376,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             model.addAttribute("data", entity.orElseThrow())
         }
@@ -440,6 +443,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             model.addAttribute("data", entity.orElseThrow())
         }
@@ -481,6 +486,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             val actualEntity = entity.orElseThrow()
             model.addAttribute("item", actualEntity.toString())
@@ -507,7 +514,11 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         }
 
         transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
-            val entity = dataSource.findById(id).orElseThrow()
+            val entity = dataSource.findById(id).getOrElse{
+                model.addAttribute("error", INVALID_ID_ERROR)
+                model.addAttribute("user", user)
+                return "admin404"
+            }
             if (!editPermissionCheck(user, entity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(
