@@ -538,7 +538,7 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             onEntityDeleted(entity)
             return@transaction "redirect:/admin/control/$view"
         }
-        return result
+        return "redirect:/admin/control/$view"
     }
 
     @GetMapping("/purge")
