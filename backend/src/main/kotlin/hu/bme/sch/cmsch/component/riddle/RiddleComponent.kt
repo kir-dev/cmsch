@@ -69,6 +69,9 @@ class RiddleComponent(
 
     val scoringGroup by SettingGroup(fieldName = "Pontozás")
 
+    var hintEnabled by BooleanSettingRef(true, fieldName = "Hint engedélyezve",
+        description = "A hint kérés gomb elérhető a felhasználók számára")
+
     var hintScorePercent by NumberSettingRef(100,
         serverSideOnly = true, fieldName = "Hint pont érték (%)", strictConversion = false,
         description = "A hinttel megoldott riddle-ért járó pontszám a teljes pontszám százalékában")
@@ -94,9 +97,6 @@ class RiddleComponent(
 
     val skipGroup by SettingGroup(fieldName = "Átugrás funkció",
         description = "Bizonyos számú megoldó után a riddle átugorhatóvá válik")
-
-    var hintEnabled by BooleanSettingRef(true, fieldName = "Hint engedélyezve",
-        description = "A hint kérés gomb elérhető a felhasználók számára")
 
     var skipEnabled by BooleanSettingRef(true, fieldName = "Átugrás engedélyezve",
         description = "A riddle átugrása gomb elérhető a felhasználók számára")

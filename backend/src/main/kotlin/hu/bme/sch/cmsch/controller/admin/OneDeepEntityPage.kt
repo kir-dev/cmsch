@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartRequest
 import java.lang.reflect.Method
 import java.util.*
 import java.util.function.Supplier
-import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
@@ -513,11 +512,12 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "admin403"
         }
 
-        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
-            val entity = dataSource.findById(id).getOrElse{
+        val result = transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
+            val entity = dataSource.findById(id).getOrNull()
+            if (entity == null) {
                 model.addAttribute("error", INVALID_ID_ERROR)
                 model.addAttribute("user", user)
-                return "admin404"
+                return@transaction "admin404"
             }
             if (!editPermissionCheck(user, entity, null)) {
                 model.addAttribute("user", user)
@@ -527,17 +527,18 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     "POST /$view/delete/$id",
                     "editPermissionCheck() validation"
                 )
-                return "admin403"
+                return@transaction "admin403"
             }
 
             if (!deleteEnabled)
-                return "redirect:/admin/control/$view"
+                return@transaction "redirect:/admin/control/$view"
 
             auditLog.delete(user, component.component, "delete ${entity.id} $entity")
             dataSource.delete(entity)
             onEntityDeleted(entity)
+            return@transaction "redirect:/admin/control/$view"
         }
-        return "redirect:/admin/control/$view"
+        return result
     }
 
     @GetMapping("/purge")
