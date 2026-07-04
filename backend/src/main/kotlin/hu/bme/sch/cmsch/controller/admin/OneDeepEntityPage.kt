@@ -333,6 +333,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             val actualEntity = onPreEdit(entity.orElseThrow())
             model.addAttribute("data", actualEntity)
