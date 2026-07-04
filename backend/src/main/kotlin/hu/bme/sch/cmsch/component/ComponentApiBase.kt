@@ -6,6 +6,7 @@ import hu.bme.sch.cmsch.service.*
 import hu.bme.sch.cmsch.setting.MutableSetting
 import hu.bme.sch.cmsch.setting.SettingType
 import hu.bme.sch.cmsch.util.getUser
+import hu.bme.sch.cmsch.util.markdownToHtml
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
@@ -78,7 +79,10 @@ abstract class ComponentApiBase(
         }
 
         model.addAttribute("title", docsTitle)
-        model.addAttribute("markdownContent", documentationMarkdown)
+        model.addAttribute(
+            "markdownContent",
+            markdownToHtml((documentationMarkdown ?: "").trimIndent())
+        )
 
         return "docs"
     }

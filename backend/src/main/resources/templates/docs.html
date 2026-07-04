@@ -22,8 +22,7 @@
                       onclick="toggleStarred(this.getAttribute('data-star')); return false">star</span>
             </h1>
 
-            <div class="card details-docs"
-                 th:utext="${@thymeleafUtility.convertMarkdownToHtmlAndTrimIdent(markdownContent)}"></div>
+            <div class="card details-docs" th:utext="${markdownContent}"></div>
         </div>
     </div>
 </div>
