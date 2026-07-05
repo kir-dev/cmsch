@@ -48,3 +48,35 @@ jobs:
 
       - name: Logout from Docker Registry
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
+
+  build-and-push-frontend-release:
+    name: Build and Push Frontend Release Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          cache-binary: false
+
+      - name: Login to Docker Registry
+        run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password-stdin ${{ secrets.DOCKER_REGISTRY_URL }}
+
+      - name: Build Frontend Docker Image
+        run: docker build -t ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend:release frontend/
+
+      - name: Tag image with version
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: docker image tag ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend:release ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend:"$GITHUB_REF_NAME"
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Push Frontend Docker Image
+        run: docker image push --all-tags ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend
+
+      - name: Logout from Docker Registry
+        run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}

@@ -37,3 +37,25 @@ jobs:
 
       - name: Logout from Docker Registry
         run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
+
+  build-and-push-frontend-rc:
+    name: Build and Push Frontend RC Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Registry
+        run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password-stdin ${{ secrets.DOCKER_REGISTRY_URL }}
+
+      - name: Build Frontend Docker Image
+        run: docker build -t ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend:rc frontend/
+
+      - name: Push Frontend Docker Image
+        run: docker push ${{ secrets.DOCKER_REGISTRY_URL }}/cmsch-frontend:rc
+
+      - name: Logout from Docker Registry
+        run: docker logout ${{ secrets.DOCKER_REGISTRY_URL }}
