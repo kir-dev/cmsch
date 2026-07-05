@@ -23,6 +23,10 @@ FROM docker.io/nginx:alpine
 # Copy the built application files to the Nginx web server directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
+RUN sed -i '/^user /d' /etc/nginx/nginx.conf && \
+    touch /run/nginx.pid && \
+    chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx /run
+
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

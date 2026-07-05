@@ -26,6 +26,24 @@ Copy the `.env.example` file to `.env` and fill it with the required data.
   npm run build
 ```
 
+#### Run the frontend with Docker
+
+Copy `.env.example` to `.env`, fill in the values, then pass it to Docker via `--env-file`:
+
+```bash
+docker build -t cmsch-frontend frontend/
+docker run --env-file frontend/.env -p 3000:80 cmsch-frontend
+```
+
+Alternatively, pass variables directly:
+
+```bash
+docker run -p 3000:80 \
+  -e VITE_API_BASE_URL=http://localhost:8080 \
+  -e VITE_CLIENT_BASE_URL=http://localhost:3000 \
+  cmsch-frontend
+```
+
 ### Build the backend OCI image
 
 ```bash
