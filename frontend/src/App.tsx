@@ -24,6 +24,7 @@ import GalleryPage from './pages/gallery/gallery.page.tsx'
 import HomePage from './pages/home/home.page'
 import ImpressumPage from './pages/impressum/impressum.page.tsx'
 import IndexPage from './pages/index/index.page'
+import KirPayLeaderboardPage from './pages/kirpay-leaderboard/kirpay-leaderboard.page.tsx'
 import LeaderboardPage from './pages/leaderboard/leaderboard.page.tsx'
 import LoginPage from './pages/login/login.page'
 import ResetPasswordPage from './pages/login/resetPassword.page.tsx'
@@ -103,6 +104,7 @@ export function App() {
                   <Route index element={<ImpressumPage />} />
                 </Route>
                 <Route path={Paths.LEADER_BOARD + '/*'} element={<LeaderboardPage />} />
+                <Route path={Paths.KIRPAY_LEADERBOARD} element={<KirPayLeaderboardPage />} />
                 <Route path={Paths.MAP}>
                   <Route index element={<MapPage />} />
                 </Route>

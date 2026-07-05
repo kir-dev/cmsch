@@ -5,13 +5,14 @@ FROM docker.io/node:24-alpine AS build
 WORKDIR /app
 
 # Copy package.json and package.lock (or package-lock.json) to the working directory
-COPY package.json package.lock ./
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy the rest of the application code to the working directory
 COPY . .
+COPY .env.docker .env
 
 # Build the application
 RUN npm run build
@@ -23,9 +24,11 @@ FROM docker.io/nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expose the desired port (default is 80 for Nginx)
 EXPOSE 80
 
-# Set the command to start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Set the entrypoint to inject runtime env vars then start Nginx
+ENTRYPOINT ["/entrypoint.sh"]

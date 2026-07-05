@@ -1,5 +1,4 @@
 import { QueryKeys } from '@/api/hooks/queryKeys.ts'
-import { NEW_RIDDLE_ENDPOINTS } from '@/util/configs/environment.config'
 import { joinPath } from '@/util/core-functions.util'
 import { ApiPaths } from '@/util/paths'
 import type { RiddleCategoryHistory } from '@/util/views/riddle.view'
@@ -10,7 +9,7 @@ export const useRiddleHistoryQuery = () => {
   return useQuery<RiddleCategoryHistory[], Error>({
     queryKey: [QueryKeys.RIDDLE_HISTORY],
     queryFn: async () => {
-      const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'history') : joinPath(ApiPaths.RIDDLE_HISTORY)
+      const url = joinPath(ApiPaths.RIDDLE, 'history')
       const response = await axios.get<object>(url)
 
       return Object.entries(response.data).map(([key, value]) => ({ categoryName: key, submissions: value }))

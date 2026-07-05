@@ -39,6 +39,7 @@ data:
   LOAD_GROUPSELECTION: {{ .Values.load.groupselection | quote }}
   LOAD_HOME: {{ .Values.load.home | quote }}
   LOAD_IMPRESSUM: {{ .Values.load.impressum | quote }}
+  LOAD_KIRPAY: {{ .Values.load.kirpay | quote }}
   LOAD_LEADERBOARD: {{ .Values.load.leaderboard | quote }}
   LOAD_LOCATION: {{ .Values.load.location | quote }}
   LOAD_LOGIN: {{ .Values.load.login | quote }}

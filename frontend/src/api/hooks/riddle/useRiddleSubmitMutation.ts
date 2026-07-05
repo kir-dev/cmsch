@@ -1,5 +1,4 @@
 import { QueryKeys } from '@/api/hooks/queryKeys.ts'
-import { NEW_RIDDLE_ENDPOINTS } from '@/util/configs/environment.config'
 import { joinPath } from '@/util/core-functions.util'
 import { ApiPaths } from '@/util/paths'
 import type { RiddleSubmissionResult } from '@/util/views/riddle.view'
@@ -15,7 +14,7 @@ export const useRiddleSubmitMutation = (onTooManyRequests: () => void) => {
   return useMutation<RiddleSubmissionResult, Error, RiddleSubmissionParams>({
     mutationKey: [QueryKeys.RIDDLE_SUBMIT],
     mutationFn: async ({ id, solution }: RiddleSubmissionParams) => {
-      const url = NEW_RIDDLE_ENDPOINTS ? joinPath(ApiPaths.RIDDLE, 'solve', id) : joinPath(ApiPaths.RIDDLE, id)
+      const url = joinPath(ApiPaths.RIDDLE, 'solve', id)
       try {
         const res = await axios.post(
           url,
