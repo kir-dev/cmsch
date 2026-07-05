@@ -2,7 +2,7 @@
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-frontend
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
   {{- with .Values.ingress.annotations }}
@@ -12,29 +12,9 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
   tls:
     - hosts:
-        - {{ .Values.apiHost }}
         - {{ .Values.frontendHost }}
-      secretName: {{ .Release.Name }}-cert
+      secretName: {{ .Release.Name }}-frontend-cert
   rules:
-    - host: {{ .Values.apiHost }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}
-                port:
-                  number: 80
-          {{ if .Values.blockActuatorEndpoints }}
-          - path: /actuator/
-            pathType: Prefix
-            backend:
-              service:
-                name: default-backend
-                port:
-                  number: 80
-          {{ end }}
     - host: {{ .Values.frontendHost }}
       http:
         paths:
