@@ -62,6 +62,6 @@ A feladványokat kategóriákba rendezve kezelheted:
 
 ## Használati tippek
 
-- A **Shadow Ban** funkcióval anélkül zárhatsz ki gyanúsan gyors megoldókat, hogy tudnának róla (a válaszaikat a felület elfogadja, de nem kapnak érte pontot).
+- A **Shadow Ban** funkcióval anélkül zárhatsz ki gyanúsan gyors megoldókat, hogy tudnának róla (a válaszaikat a felület elfogadja, de automatikusan rossz válaszként kezeli).
 """
 )

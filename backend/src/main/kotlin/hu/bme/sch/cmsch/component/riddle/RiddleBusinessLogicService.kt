@@ -128,12 +128,14 @@ class RiddleBusinessLogicService(
     @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     override fun unlockHintForUser(user: CmschUser, riddleId: Int): String? {
+        if (!riddleComponent.hintEnabled) return null
         val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
             ?: return null
 
         val submission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
         if (submission != null) {
+            if (submission.completed) return null
             submission.hintUsed = true
             riddleCacheManager.updateMapping(submission)
         } else {
@@ -155,6 +157,7 @@ class RiddleBusinessLogicService(
     override fun unlockHintForGroup(user: CmschUser, groupId: Int?, groupName: String, riddleId: Int): String? {
         if (groupId == null)
             return null
+        if (!riddleComponent.hintEnabled) return null
 
         val riddle = riddleCacheManager.getRiddleById(riddleId) ?: return null
         riddleCacheManager.findCategoryByCategoryIdAndVisibleTrueAndMinRoleAtMost(riddle.categoryId, user.role)
@@ -162,6 +165,7 @@ class RiddleBusinessLogicService(
 
         val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
         if (submission != null) {
+            if (submission.completed) return null
             submission.hintUsed = true
             riddleCacheManager.updateMapping(submission)
         } else {
@@ -291,12 +295,28 @@ class RiddleBusinessLogicService(
             return RiddleSubmissionView(status = RiddleSubmissionStatus.NOT_SOLVABLE)
 
         val submission = riddleCacheManager.findMappingByOwnerGroupIdAndRiddleId(groupId, riddleId)
+        val userSubmission = riddleCacheManager.findMappingByOwnerUserIdAndRiddleId(user.id, riddleId)
         if (submission != null) {
             if (!skip && checkSolutionIsWrong(solution, riddle)) {
                 if (riddleComponent.saveFailedAttempts) {
                     submission.attemptCount += 1
                     submission.completedAt = clock.getTimeInSeconds()
                     riddleCacheManager.updateMapping(submission, lazyPersist = true)
+                    if (riddleComponent.collectAttemptsByUser){
+                        if (userSubmission != null){
+                            userSubmission.attemptCount += 1
+                            userSubmission.completedAt = submission.completedAt
+                            riddleCacheManager.updateMapping(userSubmission, lazyPersist = true)
+                        } else {
+                            riddleCacheManager.createNewMapping(
+                                RiddleMappingEntity(
+                                    0, riddle.id, user.id, 0,
+                                    hintUsed = false, completed = false, skipped = false,
+                                    completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                                )
+                            )
+                        }
+                    }
                 }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
@@ -310,6 +330,23 @@ class RiddleBusinessLogicService(
                 if (!skip && riddle.firstSolver.isBlank()) {
                     riddle.firstSolver = groupName
                     riddleCacheManager.updateRiddle(riddle)
+                }
+                if (riddleComponent.collectAttemptsByUser) {
+                    if (userSubmission != null){
+                        userSubmission.completed = true
+                        userSubmission.skipped = skip
+                        userSubmission.attemptCount += 1
+                        userSubmission.completedAt = submission.completedAt
+                        riddleCacheManager.updateMapping(userSubmission, lazyPersist = true)
+                    } else {
+                        riddleCacheManager.createNewMapping(
+                            RiddleMappingEntity(
+                                0, riddle.id, user.id, 0,
+                                hintUsed = false, completed = true, skipped = skip,
+                                completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                            )
+                        )
+                    }
                 }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesGroup(groupId, riddle))
@@ -327,6 +364,21 @@ class RiddleBusinessLogicService(
                             completedAt = clock.getTimeInSeconds(), attemptCount = 1
                         )
                     )
+                    if (riddleComponent.collectAttemptsByUser){
+                        if (userSubmission != null){
+                            userSubmission.attemptCount += 1
+                            userSubmission.completedAt = clock.getTimeInSeconds()
+                            riddleCacheManager.updateMapping(userSubmission, lazyPersist = true)
+                        } else {
+                            riddleCacheManager.createNewMapping(
+                                RiddleMappingEntity(
+                                    0, riddle.id, user.id, 0,
+                                    hintUsed = false, completed = false, skipped = false,
+                                    completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                                )
+                            )
+                        }
+                    }
                 }
                 return RiddleSubmissionView(status = RiddleSubmissionStatus.WRONG)
             }
@@ -340,6 +392,23 @@ class RiddleBusinessLogicService(
             if (!skip && riddle.firstSolver.isBlank()) {
                 riddle.firstSolver = groupName
                 riddleCacheManager.updateRiddle(riddle)
+            }
+            if (riddleComponent.collectAttemptsByUser) {
+                if (userSubmission != null){
+                    userSubmission.completed = true
+                    userSubmission.skipped = skip
+                    userSubmission.attemptCount += 1
+                    userSubmission.completedAt = clock.getTimeInSeconds()
+                    riddleCacheManager.updateMapping(userSubmission, lazyPersist = true)
+                } else {
+                    riddleCacheManager.createNewMapping(
+                        RiddleMappingEntity(
+                            0, riddle.id, user.id, 0,
+                            hintUsed = false, completed = true, skipped = skip,
+                            completedAt = clock.getTimeInSeconds(), attemptCount = 1
+                        )
+                    )
+                }
             }
             return RiddleSubmissionView(status = RiddleSubmissionStatus.CORRECT, getNextRiddlesGroup(groupId, riddle))
         }
@@ -379,7 +448,7 @@ class RiddleBusinessLogicService(
 
         val solutionList = transformedRiddleSolution.split(";")
 
-        return !(transformedSubmittedSolution in solutionList)
+        return transformedSubmittedSolution !in solutionList
     }
 
     private fun replaceAccent(transformedSubmittedSolution: String) = transformedSubmittedSolution

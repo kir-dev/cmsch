@@ -333,6 +333,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             val actualEntity = onPreEdit(entity.orElseThrow())
             model.addAttribute("data", actualEntity)
@@ -373,6 +375,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             model.addAttribute("data", entity.orElseThrow())
         }
@@ -438,6 +442,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             model.addAttribute("data", entity.orElseThrow())
         }
@@ -479,6 +485,8 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
         val entity = transactionManager.transaction(readOnly = true) { dataSource.findById(id) }
         if (entity.isEmpty) {
             model.addAttribute("error", INVALID_ID_ERROR)
+            model.addAttribute("user", user)
+            return "admin404"
         } else {
             val actualEntity = entity.orElseThrow()
             model.addAttribute("item", actualEntity.toString())
@@ -504,8 +512,13 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
             return "admin403"
         }
 
-        transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
-            val entity = dataSource.findById(id).orElseThrow()
+        val result = transactionManager.transaction(readOnly = false, isolation = TransactionDefinition.ISOLATION_REPEATABLE_READ) {
+            val entity = dataSource.findById(id).getOrNull()
+            if (entity == null) {
+                model.addAttribute("error", INVALID_ID_ERROR)
+                model.addAttribute("user", user)
+                return@transaction "admin404"
+            }
             if (!editPermissionCheck(user, entity, null)) {
                 model.addAttribute("user", user)
                 auditLog.admin403(
@@ -514,15 +527,16 @@ open class OneDeepEntityPage<T : IdentifiableEntity>(
                     "POST /$view/delete/$id",
                     "editPermissionCheck() validation"
                 )
-                return "admin403"
+                return@transaction "admin403"
             }
 
             if (!deleteEnabled)
-                return "redirect:/admin/control/$view"
+                return@transaction "redirect:/admin/control/$view"
 
             auditLog.delete(user, component.component, "delete ${entity.id} $entity")
             dataSource.delete(entity)
             onEntityDeleted(entity)
+            return@transaction "redirect:/admin/control/$view"
         }
         return "redirect:/admin/control/$view"
     }

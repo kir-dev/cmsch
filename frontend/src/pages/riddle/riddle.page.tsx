@@ -158,13 +158,14 @@ const RiddlePage = () => {
             <Button disabled={!allowSubmission} type="submit" className="w-full">
               {!allowSubmission ? 'Küldés...' : 'Beadom'}
             </Button>
-            {hintQuery.isSuccess || data.hint ? (
+            {(hintQuery.isSuccess || data.hint) && (
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertTitle>Hint</AlertTitle>
                 <AlertDescription>{hintQuery.data?.hint || data.hint}</AlertDescription>
               </Alert>
-            ) : (
+            )}
+            {!(hintQuery.isSuccess || data.hint) && riddleConfig.hintEnabled && (
               <ConfirmDialogButton
                 buttonVariant="outline"
                 buttonText="Hintet kérek"
