@@ -16,7 +16,7 @@ class KirPayComponent(
     componentSettingService,
     "kirpay",
     "/kirpay-leaderboard",
-    "Kir-Pay Toplista",
+    "Kir-Pay",
     ControlPermissions.PERMISSION_CONTROL_LEADERBOARD,
     listOf(),
     env

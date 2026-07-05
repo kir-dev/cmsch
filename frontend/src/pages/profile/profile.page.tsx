@@ -85,7 +85,7 @@ const ProfilePage = () => {
           {component.showAlias && <p className="text-xl">Becenév: {profile.alias || 'nincs'}</p>}
           {component.showNeptun && <p className="text-xl">Neptun: {profile.neptun || 'nincs'}</p>}
           {component.showEmail && <p className="text-xl">E-mail: {profile.email || 'nincs'}</p>}
-          {component.showKirPayBalance && profile.kirPayBalance !== undefined && (
+          {component.showKirPayBalance && (profile.kirPayBalance === 0 || !!profile.kirPayBalance) && (
             <p className="text-xl">
               Kir-Pay egyenleg: {profile.kirPayBalance} {config.kirpay?.kirPayCurrency}
             </p>

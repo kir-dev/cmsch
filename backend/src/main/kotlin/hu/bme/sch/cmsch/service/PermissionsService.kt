@@ -18,6 +18,7 @@ import hu.bme.sch.cmsch.component.gallery.GalleryComponent
 import hu.bme.sch.cmsch.component.home.HomeComponent
 import hu.bme.sch.cmsch.component.impressum.ImpressumComponent
 import hu.bme.sch.cmsch.component.key.AccessKeyComponent
+import hu.bme.sch.cmsch.component.kirpay.KirPayComponent
 import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardComponent
 import hu.bme.sch.cmsch.component.location.LocationComponent
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -266,6 +267,13 @@ object ControlPermissions : PermissionGroup {
         "Űrlapok komponens testreszabása",
         readOnly = false,
         component = FormComponent::class
+    )
+
+    val PERMISSION_CONTROL_KIRPAY = PermissionValidator(
+        "KIRPAY_CONTROL",
+        "Kir-Pay komponens testreszabása",
+        readOnly = false,
+        component = KirPayComponent::class
     )
 
     val PERMISSION_CONTROL_CHALLENGE = PermissionValidator(
