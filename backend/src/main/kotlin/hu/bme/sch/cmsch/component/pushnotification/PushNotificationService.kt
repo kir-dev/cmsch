@@ -9,7 +9,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.core.retry.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
@@ -23,7 +22,6 @@ class PushNotificationService(
     private val projectId: String,
     private val fcmWebClient: WebClient,
     private val messagingTokenRepository: MessagingTokenRepository,
-    private val retryTemplate: RetryTemplate
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -81,7 +79,7 @@ class PushNotificationService(
                                 .awaitBodilessEntity()
                             true
                         }.getOrElse { e ->
-                            log.warn("Failed to send notification to token {}: {}", token, e.message)
+                            log.error("Failed to send notification to token {}", token, e)
                             false
                         }
                     }

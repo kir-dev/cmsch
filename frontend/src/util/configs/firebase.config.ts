@@ -12,10 +12,10 @@ import {
 
 function getFirebaseConfig() {
   return {
-    apiKey: FIREBASE_API_KEY,
-    appId: FIREBASE_APP_ID,
-    projectId: FIREBASE_PROJECT_ID,
-    messagingSenderId: FIREBASE_SENDER_ID
+    apiKey: FIREBASE_API_KEY || '',
+    appId: FIREBASE_APP_ID || '',
+    projectId: FIREBASE_PROJECT_ID || '',
+    messagingSenderId: FIREBASE_SENDER_ID || ''
   }
 }
 
@@ -75,7 +75,7 @@ async function unregisterServiceWorker(): Promise<void> {
 
 async function registerServiceWorker(): Promise<ServiceWorkerRegistration | undefined> {
   if ('serviceWorker' in navigator) {
-    const serviceWorker = await navigator.serviceWorker.register(getServiceWorkerUrl())
+    const serviceWorker = await navigator.serviceWorker.register(getServiceWorkerUrl(), { type: 'module' })
     await navigator.serviceWorker.ready
 
     return serviceWorker
@@ -83,6 +83,7 @@ async function registerServiceWorker(): Promise<ServiceWorkerRegistration | unde
 }
 
 function getServiceWorkerUrl() {
-  const firebaseConfig = new URLSearchParams(Object.entries(getFirebaseConfig()))
-  return new URL(`/firebase-messaging-sw.js?${firebaseConfig}`, window.origin).toString()
+  const params = Object.entries(getFirebaseConfig())
+  const firebaseConfig = new URLSearchParams(params)
+  return new URL(`/firebase-messaging-service-worker.js?${firebaseConfig}`, window.origin).toString()
 }
