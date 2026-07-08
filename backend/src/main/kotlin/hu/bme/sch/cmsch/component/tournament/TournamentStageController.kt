@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -17,6 +17,7 @@ import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartRequest
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -43,7 +44,7 @@ class TournamentStageController(
     "A kiesési szakaszok kezelése.",
     transactionManager,
     object : ManualRepository<StageGroupDto, Int>() {
-        override fun findAll(): Iterable<StageGroupDto> {
+        override fun findAll(): MutableIterable<StageGroupDto> {
             val stages = stageRepository.findAllAggregated().associateBy { it.tournamentId }
             val tournaments = tournamentRepository.findAll()
             return tournaments.map {
@@ -54,7 +55,7 @@ class TournamentStageController(
                     it.participantCount,
                     stages[it.id]?.stageCount?.toInt() ?: 0
                 )
-            }.sortedByDescending { it.stageCount }
+            }.sortedByDescending { it.stageCount }.toMutableList()
         }
     },
     stageRepository,
@@ -201,18 +202,18 @@ class TournamentStageController(
 
     @Override
     @PostMapping("/create", headers =  ["Referer"])
-    fun create(@ModelAttribute(binding = false) dto: TournamentStageEntity,
-               @RequestParam(required = false) file0: MultipartFile?,
-               @RequestParam(required = false) file1: MultipartFile?,
-               model: Model,
-               auth: Authentication,
-               @RequestHeader("Referer") referer: String,
+    fun create(
+        @ModelAttribute(binding = false) dto: TournamentStageEntity,
+        model: Model,
+        auth: Authentication,
+        multipartRequest: MultipartRequest,
+        @RequestHeader("Referer") referer: String,
     ): String {
         val toCreate = referer.substringAfterLast("/create-").split("/")
         val stageType = toCreate.getOrNull(0)
             ?.let { when (it) {
                 "knockout" -> StageType.KNOCKOUT
-                "group" -> StageType.GROUP_STAGE
+                "group" -> StageType.GROUP
                 else -> return "redirect:/admin/control/$view"
             }} ?: return "redirect:/admin/control/$view"
         val tournamentId = toCreate.getOrNull(1)?.toIntOrNull()
@@ -237,7 +238,7 @@ class TournamentStageController(
         dto.tournamentId = tournamentId
         dto.type = stageType
         val newValues = StringBuilder("entity new value: ")
-        updateEntity(descriptor, user, dto, dto, newValues, false, file0, false, file1)
+        updateEntity(descriptor, user, dto, dto, newValues, multipartRequest)
         dto.id = 0
         if (onEntityPreSave(dto, auth)) {
             auditLog.create(user, component.component, newValues.toString())

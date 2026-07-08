@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.service.TimeService
@@ -196,7 +196,7 @@ class TournamentStageService(
 
 
     fun calculateTeamsFromSeeds(stage: TournamentStageEntity) {
-        val actualMatches = matchRepository.findAllByStageId(stage.id)
+        val actualMatches = matchRepository.findAllByStageId(stage.id).toMutableList()
         val seeds = getSeeds(stage)
         for (match in actualMatches) {
             val homeTeam = seeds[match.homeSeed]

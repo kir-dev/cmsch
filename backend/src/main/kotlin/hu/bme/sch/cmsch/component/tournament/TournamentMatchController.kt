@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
 import hu.bme.sch.cmsch.repository.ManualRepository
@@ -41,8 +41,8 @@ class TournamentMatchController(
     "A mérkőzések kezelése.",
     transactionManager,
     object : ManualRepository<MatchGroupDto, Int>() {
-        override fun findAll(): Iterable<MatchGroupDto> {
-            return tournamentService.getAggregatedMatchesByTournamentId()
+        override fun findAll(): MutableIterable<MatchGroupDto> {
+            return tournamentService.getAggregatedMatchesByTournamentId().toMutableList()
         }
     },
     matchRepository,

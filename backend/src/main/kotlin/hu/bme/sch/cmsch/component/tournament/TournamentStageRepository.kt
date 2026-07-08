@@ -17,7 +17,7 @@ data class StageCountDto(
 interface TournamentStageRepository : CrudRepository<TournamentStageEntity, Int>,
     EntityPageDataSource<TournamentStageEntity, Int> {
 
-    override fun findAll(): List<TournamentStageEntity>
+    override fun findAll(): MutableList<TournamentStageEntity>
     override fun findById(id: Int): Optional<TournamentStageEntity>
     fun findAllByTournamentId(tournamentId: Int): List<TournamentStageEntity>
 

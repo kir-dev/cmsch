@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.app.ExtraMenuEntity
 import hu.bme.sch.cmsch.component.app.ExtraMenuRepository
 import hu.bme.sch.cmsch.component.debt.ProductEntity

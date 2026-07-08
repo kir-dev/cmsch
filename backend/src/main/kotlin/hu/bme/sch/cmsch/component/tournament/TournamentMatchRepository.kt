@@ -17,7 +17,7 @@ data class MatchCountDto(
 interface TournamentMatchRepository : CrudRepository<TournamentMatchEntity, Int>,
     EntityPageDataSource<TournamentMatchEntity, Int> {
 
-    override fun findAll(): List<TournamentMatchEntity>
+    override fun findAll(): MutableIterable<TournamentMatchEntity>
     override fun findById(id: Int): Optional<TournamentMatchEntity>
     fun findAllByStageId(stageId: Int): List<TournamentMatchEntity>
 

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository
 interface TournamentRepository : CrudRepository<TournamentEntity, Int>,
     EntityPageDataSource<TournamentEntity, Int> {
 
-    override fun findAll(): List<TournamentEntity>
+    override fun findAll(): MutableList<TournamentEntity>
 
 }
