@@ -89,13 +89,7 @@ const SupportThreadPage = () => {
       <div className="flex flex-col gap-3 mb-6">
         {messages.length === 0 && <p className="text-muted-foreground text-sm">Még nincsenek üzenetek.</p>}
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={cn(
-              'rounded-lg border p-4',
-              msg.fromAdmin ? 'bg-primary/5 border-primary/20' : 'bg-card'
-            )}
-          >
+          <div key={msg.id} className={cn('rounded-lg border p-4', msg.fromAdmin ? 'bg-primary/5 border-primary/20' : 'bg-card')}>
             <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
               <span className="font-medium text-sm">
                 {msg.authorName}
@@ -117,19 +111,13 @@ const SupportThreadPage = () => {
             placeholder="Írj választ..."
             className="w-full"
           />
-          <Button
-            onClick={handleReply}
-            disabled={addMessageMutation.isPending || !replyText.trim()}
-            className="self-start"
-          >
+          <Button onClick={handleReply} disabled={addMessageMutation.isPending || !replyText.trim()} className="self-start">
             {addMessageMutation.isPending ? 'Küldés...' : 'Válasz küldése'}
           </Button>
         </div>
       )}
 
-      {thread.status === SupportThreadStatus.DONE && (
-        <p className="text-muted-foreground text-sm mt-2">Ez az üzenetváltás le van zárva.</p>
-      )}
+      {thread.status === SupportThreadStatus.DONE && <p className="text-muted-foreground text-sm mt-2">Ez az üzenetváltás le van zárva.</p>}
     </CmschPage>
   )
 }

@@ -16,11 +16,7 @@ export const useAddSupportMessageMutation = () => {
   return useMutation<SupportMessageView, Error, AddMessageRequest>({
     mutationFn: async ({ uuid, content, secret, authorName }) => {
       const params = secret ? { secret } : {}
-      const res = await axios.post<SupportMessageView>(
-        `${ApiPaths.SUPPORT_THREAD}/${uuid}/message`,
-        { content, authorName },
-        { params }
-      )
+      const res = await axios.post<SupportMessageView>(`${ApiPaths.SUPPORT_THREAD}/${uuid}/message`, { content, authorName }, { params })
       return res.data
     },
     onSuccess: (_data, variables) => {

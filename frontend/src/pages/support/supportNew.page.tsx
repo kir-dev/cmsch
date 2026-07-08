@@ -82,13 +82,17 @@ const SupportNewPage = () => {
       ) : (
         <form onSubmit={handleSubmit} className="w-full mx-auto mt-5">
           <div className="mt-5">
-            <Label htmlFor="title" className="text-xl">Tárgy *</Label>
+            <Label htmlFor="title" className="text-xl">
+              Tárgy *
+            </Label>
             <div className="mt-2">
               <Input id="title" name="title" placeholder="Mi a kérdésed témája?" required />
             </div>
           </div>
           <div className="mt-5">
-            <Label htmlFor="content" className="text-xl">Üzenet *</Label>
+            <Label htmlFor="content" className="text-xl">
+              Üzenet *
+            </Label>
             <div className="mt-2">
               <Textarea id="content" name="content" rows={6} placeholder="Írd le részletesen a kérdésedet..." required />
             </div>
