@@ -120,7 +120,7 @@ class ApplicationApiController(
 
     @GetMapping("/app/render-qr")
     fun renderQr(response: HttpServletResponse, @RequestParam text: String?, @RequestParam size: Int = 300) {
-        if (text.isNullOrBlank() || size < 20) {
+        if (text.isNullOrBlank() || size < 20 || size > 2048) {
             response.status = HttpStatus.BAD_REQUEST.value()
             return
         }
