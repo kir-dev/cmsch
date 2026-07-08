@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.config
 import hu.bme.sch.cmsch.component.countdown.CountdownFilterConfigurer
 import hu.bme.sch.cmsch.component.login.CmschUserDetailsService
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import hu.bme.sch.cmsch.component.login.LoginRejectedException
 import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
@@ -41,6 +42,8 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import tools.jackson.databind.ObjectMapper
+import java.nio.charset.StandardCharsets
+import java.net.URLEncoder
 import java.util.*
 
 @EnableWebSecurity
@@ -184,6 +187,15 @@ class SecurityConfig(
                         }
                         .userService { resolveAuthschUser(it) }
                 }.defaultSuccessUrl("/control/post-login")
+                .failureHandler { request, response, exception ->
+                    val message = if (exception is LoginRejectedException)
+                        exception.userMessage
+                    else
+                        "Sikertelen bejelentkezés."
+                    log.info("OAuth2 login failed: ${exception.message}")
+                    val encoded = URLEncoder.encode(message, StandardCharsets.UTF_8)
+                    response.sendRedirect("/oauth2/authorization?error=$encoded")
+                }
         }
         serviceAccountFilterConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
         countdownConfigurer.ifPresent { http.with(it, Customizer.withDefaults()) }
