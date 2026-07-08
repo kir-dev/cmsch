@@ -52,7 +52,6 @@ dependencies {
     implementation("tools.jackson.dataformat:jackson-dataformat-csv")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-    implementation("com.google.auth:google-auth-library-oauth2-http:1.47.0")
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.google.zxing:javase:3.5.4")
     implementation("com.itextpdf:itext-core:9.6.0")
