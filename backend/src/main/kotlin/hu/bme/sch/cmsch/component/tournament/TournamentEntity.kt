@@ -50,22 +50,29 @@ data class TournamentEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.SWITCH, order = 5, label = "Lehet-e jelentkezni")
+    @property:GenerateInput(type = InputType.SWITCH, order = 5, label = "Lehet-e jelentkezni (valamint lejelentkezni)")
     @property:GenerateOverview(columnName = "Joinable", order = 4)
     @property:ImportFormat
     var joinable: Boolean = false,
 
     @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Jelentkezés határideje")
+    @property:GenerateOverview(columnName = "Jelentkezés határideje", order = 5, renderer = OverviewType.DATE, useForSearch = false)
+    @property:ImportFormat
+    var joinDeadline: Long = 0,
+
+    @Column(nullable = false)
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(type = InputType.SWITCH, order = 6, label = "Látható")
-    @property:GenerateOverview(columnName = "Visible", order = 5)
+    @property:GenerateInput(type = InputType.SWITCH, order = 7, label = "Látható")
+    @property:GenerateOverview(columnName = "Visible", order = 6)
     @property:ImportFormat
     var visible: Boolean = false,
 
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
     @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
-    @property:GenerateOverview(columnName = "Résztvevők száma", order = 6)
+    @property:GenerateOverview(columnName = "Résztvevők maximális száma", order = 7)
     @property:ImportFormat
     var participantCount: Int = 0,
 
@@ -85,9 +92,9 @@ data class TournamentEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7, label = "Résztvevő típus",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 8, label = "Résztvevő típus",
         source = ["GROUP", "USER"])
-    @property:GenerateOverview(columnName = "Résztvevő típus", order = 7)
+    @property:GenerateOverview(columnName = "Résztvevő típus", order = 8)
     @property:ImportFormat
     var participantType: OwnershipType = OwnershipType.GROUP,
 

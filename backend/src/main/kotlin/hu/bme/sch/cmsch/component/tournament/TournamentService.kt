@@ -1,16 +1,17 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.OwnershipType
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.repository.GroupRepository
+import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.ObjectMapper
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -20,8 +21,9 @@ class TournamentService(
     private val stageRepository: TournamentStageRepository,
     private val groupRepository: GroupRepository,
     private val tournamentComponent: TournamentComponent,
+    private val matchRepository: TournamentMatchRepository,
     private val objectMapper: ObjectMapper,
-    private val matchRepository: TournamentMatchRepository
+    private val clock: TimeService
 ){
     @Transactional(readOnly = true)
     fun findAll(): List<TournamentEntity> {
@@ -67,16 +69,22 @@ class TournamentService(
     }
 
     private fun mapTournament(tournament: TournamentEntity, user: CmschUser?): TournamentDetailedView {
-        val participants = if (tournament.participants != "") tournament.participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) } else listOf()
+        val participants = getParticipants(tournament)
+
+        val now = clock.getTimeInSeconds()
 
         val playerId = when (tournament.participantType) {
             OwnershipType.GROUP -> user?.groupId
             OwnershipType.USER -> user?.id
         }
-        val isJoined = participants.any { it.teamId == playerId }
-        val joinEnabled = tournament.joinable && !isJoined &&
-            ((user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED ||
-            (tournament.participantType == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC))
+        val joined = participants.any { it.teamId == playerId }
+        val joinChangable = tournament.joinable && tournament.joinDeadline > now &&
+                participants.size < tournament.participantCount &&
+                (
+                    (user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED ||
+                    (tournament.participantType == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC)
+                )
+
 
         val stages = stageRepository.findAllByTournamentId(tournament.id)
             .sortedBy { it.level }
@@ -87,10 +95,11 @@ class TournamentService(
                 tournament.title,
                 tournament.description,
                 tournament.location,
-                joinEnabled,
-                isJoined,
+                joinChangable && !joined,
+                joined,
+                joinChangable && joined,
                 tournament.participantCount,
-                getParticipants(tournament.id),
+                participants,
                 tournament.status
             ), stages.map { KnockoutStageDetailedView(
                 it.id,
@@ -98,7 +107,7 @@ class TournamentService(
                 it.name,
                 it.level,
                 it.participantCount,
-                it.participants.split("\n").map { p -> objectMapper.readValue(p, SeededParticipantDto::class.java) },
+                it.participants.split("\n").filter { p -> p.isNotEmpty() }.map { p -> objectMapper.readValue(p, SeededParticipantDto::class.java) },
                 it.nextRound,
                 it.groupCount,
                 it.status,
@@ -125,7 +134,18 @@ class TournamentService(
         if (tournament.isEmpty || tournament.get().participants.isEmpty()) {
             return emptyList()
         }
-        return tournament.get().participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) }
+        return tournament.get().participants.split("\n")
+            .filter { it.isNotEmpty() }
+            .map { objectMapper.readValue(it, ParticipantDto::class.java) }
+    }
+
+    fun getParticipants(tournament: TournamentEntity): List<ParticipantDto> {
+        if (tournament.participants.isEmpty()) {
+            return emptyList()
+        }
+        return tournament.participants.split("\n")
+            .filter { it.isNotEmpty() }
+            .map { objectMapper.readValue(it, ParticipantDto::class.java) }
     }
 
     @Transactional(readOnly = true)
@@ -155,22 +175,35 @@ class TournamentService(
         }.sortedByDescending { it.matchCount }
     }
 
-
     @Retryable
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun register(tournamentId: Int, user: CmschUser): TournamentJoinStatus {
+        val now = clock.getTimeInSeconds()
+        val tournament = findById(tournamentId)
+            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
+        if (tournament.joinDeadline < now) return TournamentJoinStatus.NOT_JOINABLE
+        if (!tournament.joinable) return TournamentJoinStatus.NOT_JOINABLE
+        return when (tournament.participantType) {
+            OwnershipType.GROUP -> teamRegister(tournament, user)
+            OwnershipType.USER -> userRegister(tournament, user)
+        }
+    }
+
+
     fun teamRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
         val groupId = user.groupId
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
         val team = groupRepository.findById(groupId).getOrNull()
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
+        if (user.role >= RoleType.PRIVILEGED) return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
 
-        val participants = tournament.participants
-        val parsed = mutableListOf<ParticipantDto>()
-        if(participants != "") parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
+        val parsed = getParticipants(tournament).toMutableList()
         if (parsed.any { it.teamId == groupId }) {
             return TournamentJoinStatus.ALREADY_JOINED
         }
-
+        if (parsed.size >= tournament.participantCount) {
+            return TournamentJoinStatus.NOT_JOINABLE
+        }
         parsed.add(ParticipantDto(groupId, team.name))
 
         tournament.participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
@@ -183,11 +216,13 @@ class TournamentService(
     @Retryable
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun userRegister(tournament: TournamentEntity, user: CmschUser): TournamentJoinStatus {
-        val participants = tournament.participants
-        val parsed = mutableListOf<ParticipantDto>()
-        parsed.addAll(participants.split("\n").map { objectMapper.readValue(it, ParticipantDto::class.java) })
+        if (user.role < RoleType.BASIC) return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
+        val parsed = getParticipants(tournament).toMutableList()
         if (parsed.any { it.teamId == user.id }) {
             return TournamentJoinStatus.ALREADY_JOINED
+        }
+        if (parsed.size >= tournament.participantCount) {
+            return TournamentJoinStatus.NOT_JOINABLE
         }
         parsed.add(ParticipantDto(user.id, user.userName))
 
@@ -196,6 +231,55 @@ class TournamentService(
 
         tournamentRepository.save(tournament)
         return TournamentJoinStatus.OK
+    }
+
+    @Retryable
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
+    fun unregister(tournamentId: Int, user: CmschUser): TournamentCancelStatus {
+        val now = clock.getTimeInSeconds()
+        val tournament = findById(tournamentId)
+            ?: return TournamentCancelStatus.TOURNAMENT_NOT_FOUND
+        if (tournament.joinDeadline < now) return TournamentCancelStatus.NOT_CANCELABLE
+        return when (tournament.participantType) {
+            OwnershipType.GROUP -> teamUnregister(tournament, user)
+            OwnershipType.USER -> userUnregister(tournament, user)
+        }
+    }
+
+
+    fun teamUnregister(tournament: TournamentEntity, user: CmschUser): TournamentCancelStatus {
+        val groupId = user.groupId
+            ?: return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+        val team = groupRepository.findById(groupId).getOrNull()
+            ?: return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+        if (user.role >= RoleType.PRIVILEGED) return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+
+        val parsed = getParticipants(tournament).toMutableList()
+        if (parsed.none { it.teamId == groupId }) {
+            return TournamentCancelStatus.NOT_PLAYING
+        }
+        parsed.removeIf { it.teamId == groupId }
+
+        tournament.participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        tournament.participantCount = parsed.size
+
+        tournamentRepository.save(tournament)
+        return TournamentCancelStatus.OK
+    }
+
+    fun userUnregister(tournament: TournamentEntity, user: CmschUser): TournamentCancelStatus {
+        if (user.role < RoleType.BASIC) return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+        val parsed = getParticipants(tournament).toMutableList()
+        if (parsed.none { it.teamId == user.id }) {
+            return TournamentCancelStatus.NOT_PLAYING
+        }
+        parsed.removeIf { it.teamId == user.id }
+
+        tournament.participants = parsed.joinToString("\n") { objectMapper.writeValueAsString(it) }
+        tournament.participantCount = parsed.size
+
+        tournamentRepository.save(tournament)
+        return TournamentCancelStatus.OK
     }
 
     @Transactional

@@ -12,7 +12,9 @@ export type TournamentWithParticipantsView = {
   description: string
   location: string
   joinEnabled: boolean
-  isJoined: boolean
+  joined: boolean
+  joinCancellable: boolean
+  participantCount: number
   participants: ParticipantView[]
   status: number
 }
@@ -26,25 +28,42 @@ export type SeededParticipantView = ParticipantView & {
   seed: number
 }
 
-export const TournamentResponses = {
+export const TournamentJoinResponses = {
   OK: 'OK',
-  JOINING_DISABLED: 'JOINING_DISABLED',
   ALREADY_JOINED: 'ALREADY_JOINED',
   TOURNAMENT_NOT_FOUND: 'TOURNAMENT_NOT_FOUND',
   NOT_JOINABLE: 'NOT_JOINABLE',
   INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
   ERROR: 'ERROR'
 }
-export type TournamentResponses = (typeof TournamentResponses)[keyof typeof TournamentResponses]
+export type TournamentJoinResponses = (typeof TournamentJoinResponses)[keyof typeof TournamentJoinResponses]
 
-export const TournamentResponseMessages: Record<TournamentResponses, string> = {
-  [TournamentResponses.OK]: 'Sikeresen csatlakoztál a versenyhez.',
-  [TournamentResponses.JOINING_DISABLED]: 'A versenyhez való csatlakozás jelenleg le van tiltva.',
-  [TournamentResponses.ALREADY_JOINED]: 'Már csatlakoztál ehhez a versenyhez.',
-  [TournamentResponses.TOURNAMENT_NOT_FOUND]: 'A verseny nem található.',
-  [TournamentResponses.NOT_JOINABLE]: 'A versenyhez való csatlakozás nem lehetséges.',
-  [TournamentResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs elég jogosultságod ehhez a művelethez.',
-  [TournamentResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
+export const TournamentJoinResponseMessages: Record<TournamentJoinResponses, string> = {
+  [TournamentJoinResponses.OK]: 'Sikeresen csatlakoztál a versenyhez.',
+  [TournamentJoinResponses.ALREADY_JOINED]: 'Már csatlakoztál ehhez a versenyhez.',
+  [TournamentJoinResponses.TOURNAMENT_NOT_FOUND]: 'A verseny nem található.',
+  [TournamentJoinResponses.NOT_JOINABLE]: 'A versenyhez nem lehet csatlakozni: lejárt a határidő, le van tiltva vagy betelt.',
+  [TournamentJoinResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs elég jogosultságod ehhez a művelethez.',
+  [TournamentJoinResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
+}
+
+export const TournamentCancelResponses = {
+  OK: 'OK',
+  NOT_PLAYING: 'NOT_PLAYING',
+  TOURNAMENT_NOT_FOUND: 'TOURNAMENT_NOT_FOUND',
+  NOT_CANCELABLE: 'NOT_CANCELABLE',
+  INSUFFICIENT_PERMISSIONS: 'INSUFFICIENT_PERMISSIONS',
+  ERROR: 'ERROR'
+}
+export type TournamentCancelResponses = (typeof TournamentCancelResponses)[keyof typeof TournamentCancelResponses]
+
+export const TournamentCancelResponseMessages: Record<TournamentCancelResponses, string> = {
+  [TournamentCancelResponses.OK]: 'Sikeresen visszavontad a jelentkezésed a versenyről.',
+  [TournamentCancelResponses.NOT_PLAYING]: 'Nem vagy résztvevője ennek a versenynek.',
+  [TournamentCancelResponses.TOURNAMENT_NOT_FOUND]: 'A verseny nem található.',
+  [TournamentCancelResponses.NOT_CANCELABLE]: 'A jelentkezésedet nem lehet visszavonni: lejárt a határidő.',
+  [TournamentCancelResponses.INSUFFICIENT_PERMISSIONS]: 'Nincs elég jogosultságod ehhez a művelethez.',
+  [TournamentCancelResponses.ERROR]: 'Hiba történt a művelet végrehajtása során.'
 }
 
 export const StageStatus = {

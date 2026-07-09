@@ -45,7 +45,7 @@ data class TournamentStageEntity(
     var name: String = "",
 
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.HIDDEN, min = 1, order = 2, label = "Verseny ID")
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
     @property:GenerateOverview(columnName = "Verseny ID", order = 2, centered = true)
     @property:ImportFormat
     var tournamentId: Int = 0,

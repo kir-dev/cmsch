@@ -1,10 +1,10 @@
 package hu.bme.sch.cmsch.component.tournament
 
-enum class TournamentJoinStatus {
+enum class TournamentCancelStatus {
     OK,
-    ALREADY_JOINED,
+    NOT_PLAYING,
     TOURNAMENT_NOT_FOUND,
-    NOT_JOINABLE,
+    NOT_CANCELABLE,
     INSUFFICIENT_PERMISSIONS,
     ERROR
 }

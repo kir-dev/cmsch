@@ -1,14 +1,8 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import com.fasterxml.jackson.annotation.JsonView
-import hu.bme.sch.cmsch.config.OwnershipType
-import hu.bme.sch.cmsch.dto.Preview
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.util.getUserOrNull
 import hu.bme.sch.cmsch.util.isAvailableForRole
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,14 +16,8 @@ class TournamentApiController(
     private val tournamentComponent: TournamentComponent,
     private val tournamentService: TournamentService,
 ) {
-    @JsonView(Preview::class)
+
     @GetMapping("/tournament")
-    @Operation(
-        summary = "List all tournaments.",
-    )
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "List of tournaments")
-    ])
     fun listTournaments(auth: Authentication?): ResponseEntity<List<TournamentPreviewView>> {
         val user = auth?.getUserOrNull()
         if (!tournamentComponent.minRole.isAvailableForRole(user?.role ?: RoleType.GUEST))
@@ -43,13 +31,6 @@ class TournamentApiController(
 
 
     @GetMapping("/tournament/{tournamentId}")
-    @Operation(
-        summary = "Get details of a tournament.",
-    )
-    @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Details of the tournament"),
-        ApiResponse(responseCode = "404", description = "Tournament not found")
-    ])
     fun tournamentDetails(
         @PathVariable tournamentId: Int,
         auth: Authentication?
@@ -62,20 +43,24 @@ class TournamentApiController(
             ?: ResponseEntity.status(HttpStatus.NOT_FOUND).build()
     }
 
-    @PostMapping("/tournament/register")
+    @PutMapping("/tournament/register")
     fun registerTeam(
         @RequestBody tournamentJoinDto: TournamentJoinDto,
         auth: Authentication?
     ): TournamentJoinStatus {
         val user = auth?.getUserOrNull()
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
+        return tournamentService.register(tournamentJoinDto.id, user)
+    }
 
-        val tournament = tournamentService.findById(tournamentJoinDto.id)
-            ?: return TournamentJoinStatus.TOURNAMENT_NOT_FOUND
-        return when (tournament.participantType) {
-            OwnershipType.GROUP -> tournamentService.teamRegister(tournament, user)
-            OwnershipType.USER -> tournamentService.userRegister(tournament, user)
-        }
+    @PutMapping("/tournament/unregister")
+    fun unregisterTeam(
+        @RequestBody tournamentJoinDto: TournamentJoinDto,
+        auth: Authentication?
+    ): TournamentCancelStatus {
+        val user = auth?.getUserOrNull()
+            ?: return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+        return tournamentService.unregister(tournamentJoinDto.id, user)
     }
 
 }

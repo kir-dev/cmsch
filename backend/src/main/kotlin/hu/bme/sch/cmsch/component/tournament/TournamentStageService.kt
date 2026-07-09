@@ -37,8 +37,8 @@ class TournamentStageService(
 
     fun getResultsForStage(stage: TournamentStageEntity): List<StageResultDto> {
         if (stage.level <= 1) {
-            return tournamentService.getParticipants(stage.tournamentId)
-                .mapIndexed { index, participant ->
+            val parts = tournamentService.getParticipants(stage.tournamentId)
+            return parts.mapIndexed { index, participant ->
                     StageResultDto(
                         participant.teamId,
                         participant.teamName,

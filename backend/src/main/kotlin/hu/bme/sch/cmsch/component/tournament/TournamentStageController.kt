@@ -1,6 +1,5 @@
 package hu.bme.sch.cmsch.component.tournament
 
-import tools.jackson.databind.ObjectMapper
 import hu.bme.sch.cmsch.controller.admin.ButtonAction
 import hu.bme.sch.cmsch.controller.admin.ControlAction
 import hu.bme.sch.cmsch.controller.admin.TwoDeepEntityPage
@@ -16,8 +15,8 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.TransactionDefinition
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartRequest
+import tools.jackson.databind.ObjectMapper
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -40,8 +39,8 @@ class TournamentStageController(
     "tournament-stage",
     StageGroupDto::class,
     TournamentStageEntity::class, ::TournamentStageEntity,
-    "Kiesési szakasz", "Kiesési szakaszok",
-    "A kiesési szakaszok kezelése.",
+    "Szakasz", "Szakaszok",
+    "A verseny szakaszok kezelése.",
     transactionManager,
     object : ManualRepository<StageGroupDto, Int>() {
         override fun findAll(): MutableIterable<StageGroupDto> {
@@ -101,7 +100,7 @@ class TournamentStageController(
             permission = StaffPermissions.PERMISSION_SHOW_BRACKETS,
             order = 200,
             newPage = false,
-            usageString = "A kiesési szakasz seedjeinek kezelése"
+            usageString = "A szakasz seedjeinek kezelése"
         )
     )
 ) {
@@ -120,7 +119,7 @@ class TournamentStageController(
             true
         )
         val createGroupButtonAction = ButtonAction(
-            "Új csoport a tornához",
+            "Új csoportkör a tornához",
             "create-group/$id",
             createPermission,
             100,
