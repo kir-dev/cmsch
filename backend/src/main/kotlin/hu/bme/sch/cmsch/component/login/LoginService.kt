@@ -91,9 +91,18 @@ class LoginService(
                 user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as google user")
             } else {
-                val existingByEmail = users.findByEmailIgnoreCase(profile.email)
+                if (loginComponent.rejectUnverifiedEmail && !profile.emailVerified) {
+                    log.warn("Rejecting google login for ${profile.email}: email is not verified")
+                    throw LoginRejectedException("A belépéshez megerősített email cím szükséges.")
+                }
+                val existingByEmail =
+                    if (profile.email.isNotBlank()) users.findByEmailIgnoreCase(profile.email) else Optional.empty()
                 if (existingByEmail.isPresent) {
                     user = existingByEmail.get()
+                    if (loginComponent.restrictCrossProviderMerge && user.provider != GOOGLE) {
+                        log.warn("Rejecting google login for ${profile.email}: existing account belongs to provider '${user.provider}'")
+                        throw LoginRejectedException("Ehhez az email címhez másik bejelentkezési mód tartozik.")
+                    }
                     log.info("Logging in with existing user ${user.fullName} (found by email) as google user, internalId updated from ${user.internalId} to ${profile.internalId}")
                     user.internalId = profile.internalId
                 } else {
@@ -402,10 +411,18 @@ class LoginService(
                 user = existingByInternalId.get()
                 log.info("Logging in with existing user ${user.fullName} as keycloak user")
             } else {
+                if (loginComponent.rejectUnverifiedEmail && !profile.emailVerified) {
+                    log.warn("Rejecting keycloak login for ${profile.email}: email is not verified")
+                    throw LoginRejectedException("A belépéshez megerősített email cím szükséges.")
+                }
                 val existingByEmail =
                     if (!profile.email.isBlank()) users.findByEmailIgnoreCase(profile.email) else Optional.empty()
                 if (existingByEmail.isPresent) {
                     user = existingByEmail.get()
+                    if (loginComponent.restrictCrossProviderMerge && user.provider != KEYCLOAK) {
+                        log.warn("Rejecting keycloak login for ${profile.email}: existing account belongs to provider '${user.provider}'")
+                        throw LoginRejectedException("Ehhez az email címhez másik bejelentkezési mód tartozik.")
+                    }
                     log.info("Logging in with existing user ${user.fullName} (found by email) as keycloak user, internalId updated from ${user.internalId} to ${profile.sid}")
                     user.internalId = profile.sid
                 } else {

@@ -42,14 +42,17 @@ class EntrypointController(
         val authschEnabled = loginComponent.authschPromoted
 
         // AuthSCH option must always be available, so it's fine if we don't check it, otherwise nobody can log in
-        if (!googleEnabled && !keycloakEnabled)
-            return "redirect:/oauth2/authorization/authsch"
+        // When an error is present, skip auto-redirects so the message can be shown to the user
+        if (error.isBlank()) {
+            if (!googleEnabled && !keycloakEnabled)
+                return "redirect:/oauth2/authorization/authsch"
 
-        if (!keycloakEnabled && !authschEnabled)
-            return "redirect:/oauth2/authorization/google"
+            if (!keycloakEnabled && !authschEnabled)
+                return "redirect:/oauth2/authorization/google"
 
-        if (!authschEnabled && !googleEnabled)
-            return "redirect:/oauth2/authorization/keycloak"
+            if (!authschEnabled && !googleEnabled)
+                return "redirect:/oauth2/authorization/keycloak"
+        }
 
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         model.addAttribute("showAuthSch", authschEnabled)

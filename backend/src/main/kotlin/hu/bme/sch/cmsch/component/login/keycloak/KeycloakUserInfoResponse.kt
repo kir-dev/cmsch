@@ -20,6 +20,9 @@ data class KeycloakUserInfoResponse(
 
         var email: String = "",
 
+        @set:JsonProperty("email_verified")
+        var emailVerified: Boolean = false,
+
         @set:JsonProperty(required = false)
         @get:JsonProperty(required = false)
         var groups: List<String> = mutableListOf(),

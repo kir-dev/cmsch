@@ -72,6 +72,19 @@ class LoginComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
+    val ssoSecurityGroup by SettingGroup(fieldName = "SSO biztonság",
+        description = "Google és Keycloak belépés biztonsági beállításai")
+
+    var rejectUnverifiedEmail by BooleanSettingRef(true, serverSideOnly = true,
+        fieldName = "Nem megerősített email elutasítása",
+        description = "Ha be van kapcsolva, a Google/Keycloak belépés elutasításra kerül, ha az email cím nincs megerősítve. Nem jön létre duplikált felhasználó.")
+
+    var restrictCrossProviderMerge by BooleanSettingRef(true, serverSideOnly = true,
+        fieldName = "Provider-közti összevonás tiltása",
+        description = "Ha be van kapcsolva, egy meglévő fiók csak akkor vonható össze email alapján, ha ugyanaz a bejelentkezési provider hozta létre.")
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
     val googleSsoGroup by SettingGroup(fieldName = "Google SSO",
         description = "A körtagságok és egyéb körös funkciók ezzel nem működnek automatikusan")
 
