@@ -49,22 +49,18 @@ class EmailService(
         values: Map<String, String>,
         to: List<String>,
         subjectOverride: String? = null,
-        rawValues: Map<String, String> = emptyMap()
     ) {
-        val content = fillOutText(template.template, template.selector, values, rawValues)
-        val subject = fillOutText(subjectOverride ?: template.subject, "${template.selector}_subject", values, rawValues)
+        val content = fillOutText(template.template, template.selector, values)
+        val subjectValues = values["title"]?.let { mapOf("title" to it) } ?: emptyMap()
+        val subject = fillOutText(subjectOverride ?: template.subject, "${template.selector}_subject", subjectValues)
         return when (template.mode) {
             EmailMode.TEXT -> sendTextEmail(responsible, subject, content, to)
             EmailMode.HTML -> sendHtmlEmail(responsible, subject, content, to)
         }
     }
 
-    private fun fillOutText(text: String, cacheKey: String, values: Map<String, String>, rawValues: Map<String, String>): String {
-        var result = text
-        for ((key, value) in rawValues) {
-            result = result.replace("{{$key}}", value)
-        }
-        val mustache = mustacheFactory.compile(result.reader(), cacheKey)
+    private fun fillOutText(text: String, cacheKey: String, values: Map<String, String>): String {
+        val mustache = mustacheFactory.compile(text.reader(), cacheKey)
         val writer = StringWriter()
         mustache.execute(writer, values).flush()
         return writer.toString()

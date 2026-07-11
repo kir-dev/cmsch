@@ -85,11 +85,11 @@ class SupportComponent(
     var answerEmailTemplateSelector by StringSettingRef("support_answer",
         fieldName = "Válasz email sablon",
         serverSideOnly = true,
-        description = "A válaszoláshoz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{messageHtml}}, {{solver}}, {{threadUrl}}")
+        description = "A válaszoláshoz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{{messageHtml}}}, {{solver}}, {{threadUrl}}, {{creationDate}}, {{lastAnswerDate}}. A {{{messageHtml}}} háromszoros kapcsos zárójelekkel illesztendő be.")
 
     var newThreadEmailTemplateSelector by StringSettingRef("support_new_thread", serverSideOnly = true,
         fieldName = "Megkeresés visszaigazoló sablon",
-        description = "Ha üres, nem küld visszaigazolást. Sablon neve (selector). Változók: {{title}}, {{message}}, {{messageHtml}}, {{threadUrl}}")
+        description = "Ha üres, nem küld visszaigazolást. Sablon neve (selector). Változók: {{title}}, {{message}}, {{{messageHtml}}}, {{threadUrl}}, {{creationDate}}, {{lastAnswerDate}}. A {{{messageHtml}}} háromszoros kapcsos zárójelekkel illesztendő be.")
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -133,5 +133,5 @@ class SupportComponent(
 
     var assignEmailTemplateSelector by StringSettingRef("support_assign", serverSideOnly = true,
         fieldName = "Hozzárendelés email sablon",
-        description = "A hozzárendelési értesítőhöz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{messageHtml}}, {{userName}}, {{creationDate}}, {{lastAnswerDate}}, {{adminUrl}}")
+        description = "A hozzárendelési értesítőhöz használt email sablon neve (selector). Változók: {{title}}, {{message}}, {{{messageHtml}}}, {{userName}}, {{creationDate}}, {{lastAnswerDate}}, {{adminUrl}}. A {{{messageHtml}}} háromszoros kapcsos zárójelekkel illesztendő be.")
 }

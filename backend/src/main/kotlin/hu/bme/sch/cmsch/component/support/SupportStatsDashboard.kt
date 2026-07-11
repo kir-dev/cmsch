@@ -2,12 +2,17 @@ package hu.bme.sch.cmsch.component.support
 
 import hu.bme.sch.cmsch.admin.dashboard.*
 import hu.bme.sch.cmsch.component.login.CmschUser
+import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
+import hu.bme.sch.cmsch.service.TimeService
+import hu.bme.sch.cmsch.service.UserService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import java.time.Instant
+import java.time.ZonedDateTime
 
 private const val VIEW = "support-stats"
 
@@ -16,9 +21,13 @@ private const val VIEW = "support-stats"
 @ConditionalOnBean(SupportComponent::class)
 class SupportStatsDashboard(
     adminMenuService: AdminMenuService,
-    supportComponent: SupportComponent,
+    private val supportComponent: SupportComponent,
     auditLogService: AuditLogService,
     private val threadRepository: SupportThreadRepository,
+    private val scheduleRepository: SupportScheduleRepository,
+    private val userRepository: UserRepository,
+    private val userService: UserService,
+    private val clock: TimeService,
 ) : DashboardPage(
     VIEW,
     "Ügyfélszolgálat statisztikák",
@@ -45,11 +54,53 @@ class SupportStatsDashboard(
 
         val doneThreads = threadRepository.findByStatus(SupportThreadStatus.DONE)
 
-        return listOf(
+        val components = mutableListOf(
+            buildCurrentScheduleCard(),
             buildCompletedBySolverTable(doneThreads),
             buildFastCompletedBySolverTable(doneThreads),
             buildOverallStatsTable(doneThreads),
             permissionCard
+        )
+        return components
+    }
+
+    private fun resolveDisplayName(internalId: String): String {
+        val user = userRepository.findByInternalId(internalId).orElse(null) ?: return internalId
+        val configName = userService.resolveConfig(user.config).supportDefaultName
+        return configName.ifBlank { user.fullName }.ifBlank { internalId }
+    }
+
+    private fun buildCurrentScheduleCard(): DashboardCard {
+        val nowTime = ZonedDateTime.now(clock.timeZone).toLocalTime()
+        val schedules = scheduleRepository.findAll().toList()
+
+        val inSchedule = schedules.filter { schedule ->
+            if (schedule.supportUserId.isBlank() || schedule.from <= 0 || schedule.to <= 0) return@filter false
+            val fromTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(schedule.from), clock.timeZone).toLocalTime()
+            val toTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(schedule.to), clock.timeZone).toLocalTime()
+            nowTime >= fromTime && nowTime <= toTime
+        }
+
+        val names: List<String> = when {
+            inSchedule.isNotEmpty() -> inSchedule.map { resolveDisplayName(it.supportUserId) }
+            else -> {
+                val defaults = supportComponent.defaultSupportUserIds
+                    .split(",")
+                    .map { it.trim() }
+                    .filter { it.isNotBlank() }
+                if (defaults.isNotEmpty())
+                    defaults.map { resolveDisplayName(it) + " (default)" }
+                else
+                    listOf("Jelenleg senki sem elérhető")
+            }
+        }
+
+        return DashboardCard(
+            id = 2,
+            wide = wide,
+            title = "Jelenlegi ügyeletes",
+            description = "Az aktuálisan beosztásban lévő, vagy alapértelmezett ügyfélszolgálatosok.",
+            content = names
         )
     }
 
@@ -61,7 +112,7 @@ class SupportStatsDashboard(
             .map { it.second }
 
         return DashboardTableCard(
-            id = 2,
+            id = 3,
             title = "Lezárt megkeresések felelősönként",
             description = "Az egyes felelősök által lezárt megkeresések száma, csökkenő sorrendben.",
             header = listOf("Felelős", "Lezárt megkeresések"),
@@ -81,7 +132,7 @@ class SupportStatsDashboard(
             .map { it.second }
 
         return DashboardTableCard(
-            id = 3,
+            id = 4,
             title = "8 órán belül lezárt megkeresések felelősönként",
             description = "Azok a lezárt megkeresések, amelyek a nyitástól számított 8 órán belül lezárásra kerültek.",
             header = listOf("Felelős", "Gyors lezárások"),
@@ -100,7 +151,7 @@ class SupportStatsDashboard(
         val avgMinutes = (avgSeconds % 3600) / 60
 
         return DashboardTableCard(
-            id = 4,
+            id = 5,
             title = "Összesített statisztikák",
             description = "Az összes lezárt szál összesített adatai.",
             header = listOf("Mutató", "Érték"),

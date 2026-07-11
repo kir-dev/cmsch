@@ -63,7 +63,11 @@ class SupportService(
     }
 
     fun toMessageHtml(text: String): String =
-        text.replace("\n", "<br>")
+        text.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("\n", "<br>")
             .replace(Regex("\\*([^*\n]+)\\*"), "<b>$1</b>")
 
     fun normalizeSubject(subject: String): String {
@@ -94,7 +98,6 @@ class SupportService(
     @Transactional(readOnly = true)
     fun findMatchingThread(normalizedSubject: String, email: String): SupportThreadEntity? {
         val candidates = threadRepository.findByUserEmail(email)
-            .filter { it.status != SupportThreadStatus.DONE }
             .sortedByDescending { it.updatedAt }
         candidates.firstOrNull { normalizeSubject(it.title).equals(normalizedSubject, ignoreCase = true) }
             ?.let { return it }
@@ -189,13 +192,13 @@ class SupportService(
                         values = mapOf(
                             "title" to title,
                             "message" to content,
+                            "messageHtml" to toMessageHtml(content),
                             "solver" to "",
                             "threadUrl" to buildThreadUrl(savedThread),
                             "creationDate" to formatHungarianDate(now),
                             "lastAnswerDate" to formatHungarianDate(now)
                         ),
-                        to = listOf(userEmail),
-                        rawValues = mapOf("messageHtml" to toMessageHtml(content))
+                        to = listOf(userEmail)
                     )
                 } else {
                     log.warn("New thread confirmation template '{}' not found, skipping", confirmSelector)
@@ -262,14 +265,14 @@ class SupportService(
                     values = mapOf(
                         "title" to thread.title,
                         "message" to content,
+                        "messageHtml" to toMessageHtml(content),
                         "solver" to displayName,
                         "threadUrl" to threadUrl,
                         "creationDate" to formatHungarianDate(thread.createdAt),
                         "lastAnswerDate" to formatHungarianDate(now)
                     ),
                     to = listOf(thread.userEmail),
-                    subjectOverride = "RE: ${thread.title}",
-                    rawValues = mapOf("messageHtml" to toMessageHtml(content))
+                    subjectOverride = "RE: {{title}}"
                 )
             } else {
                 log.warn("Email template '{}' not found, skipping notification", supportComponent.answerEmailTemplateSelector)
@@ -384,14 +387,13 @@ class SupportService(
     }
 
     private fun pickAvailableSupportUser(): Pair<String, String>? {
-        val now = clock.getTimeInSeconds()
+        val nowTime = ZonedDateTime.now(clock.timeZone).toLocalTime()
         val schedules = scheduleRepository.findAll().toList()
         val available = schedules.filter { schedule ->
-            schedule.supportUserId.isNotBlank()
-                && schedule.from > 0
-                && schedule.to > 0
-                && now >= schedule.from
-                && now <= schedule.to
+            if (schedule.supportUserId.isBlank() || schedule.from <= 0 || schedule.to <= 0) return@filter false
+            val fromTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(schedule.from), clock.timeZone).toLocalTime()
+            val toTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(schedule.to), clock.timeZone).toLocalTime()
+            nowTime >= fromTime && nowTime <= toTime
         }
         if (available.isNotEmpty()) {
             val pickedId = available.random().supportUserId
@@ -445,13 +447,13 @@ class SupportService(
             values = mapOf(
                 "title" to thread.title,
                 "message" to messageContent,
+                "messageHtml" to toMessageHtml(messageContent),
                 "userName" to customerName,
                 "creationDate" to formatHungarianDate(thread.createdAt),
                 "lastAnswerDate" to formatHungarianDate(messageTime),
                 "adminUrl" to buildAdminThreadUrl(thread)
             ),
-            to = listOf(supportUserEmail),
-            rawValues = mapOf("messageHtml" to toMessageHtml(messageContent))
+            to = listOf(supportUserEmail)
         )
     }
 }

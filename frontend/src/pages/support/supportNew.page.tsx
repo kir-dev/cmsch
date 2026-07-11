@@ -10,9 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 
 import { useToast } from '@/hooks/use-toast'
 import { AbsolutePaths } from '@/util/paths'
-import type { SupportThreadEntity } from '@/util/views/support.view'
 import axios from 'axios'
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
 const SupportNewPage = () => {
@@ -23,7 +21,6 @@ const SupportNewPage = () => {
   const { isLoggedIn } = useAuthContext()
   const { toast } = useToast()
   const navigate = useNavigate()
-  const [created, setCreated] = useState<SupportThreadEntity | null>(null)
   const mutation = useCreateSupportThreadMutation()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +43,7 @@ const SupportNewPage = () => {
     mutation.mutate(
       { title, content, authorName, authorEmail },
       {
-        onSuccess: (data) => setCreated(data),
+        onSuccess: (data) => navigate(`${AbsolutePaths.SUPPORT}/${data.uuid}?secret=${data.uuidSecret}`, { replace: true }),
         onError: (err) => {
           if (axios.isAxiosError(err) && err.response?.status === 429) {
             toast({
@@ -59,26 +56,6 @@ const SupportNewPage = () => {
           }
         }
       }
-    )
-  }
-
-  if (created) {
-    const threadPath = `${AbsolutePaths.SUPPORT}/${created.uuid}?secret=${created.uuidSecret}`
-    const threadUrl = `${window.location.origin}${threadPath}`
-    return (
-      <CmschPage title="Üzenet elküldve">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Üzenet elküldve!</h1>
-        <p className="mb-2 text-muted-foreground">
-          Az üzenetváltásod elindult. Mentsd el az alábbi linket, hogy visszatérhess hozzá bejelentkezés nélkül is:
-        </p>
-        <div className="rounded border p-3 bg-muted font-mono text-sm break-all mb-4 select-all">{threadUrl}</div>
-        <div className="flex gap-2">
-          <Button onClick={() => navigate(threadPath)}>Megnyitás</Button>
-          <Button variant="outline" asChild>
-            <Link to={AbsolutePaths.SUPPORT}>Vissza a listához</Link>
-          </Button>
-        </div>
-      </CmschPage>
     )
   }
 
