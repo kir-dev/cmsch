@@ -47,17 +47,20 @@ class EmailService(
         responsible: CmschUser?,
         template: EmailTemplateEntity,
         values: Map<String, String>,
-        to: List<String>
+        to: List<String>,
+        subjectOverride: String? = null,
     ) {
-        val content = fillOutEmailTemplate(template, values)
+        val content = fillOutText(template.template, template.selector, values)
+        val subjectValues = values["title"]?.let { mapOf("title" to it) } ?: emptyMap()
+        val subject = fillOutText(subjectOverride ?: template.subject, "${template.selector}_subject", subjectValues)
         return when (template.mode) {
-            EmailMode.TEXT -> sendTextEmail(responsible, template.subject, content, to)
-            EmailMode.HTML -> sendHtmlEmail(responsible, template.subject, content, to)
+            EmailMode.TEXT -> sendTextEmail(responsible, subject, content, to)
+            EmailMode.HTML -> sendHtmlEmail(responsible, subject, content, to)
         }
     }
 
-    private fun fillOutEmailTemplate(template: EmailTemplateEntity, values: Map<String, String>): String {
-        val mustache = mustacheFactory.compile(template.template.reader(), template.selector)
+    private fun fillOutText(text: String, cacheKey: String, values: Map<String, String>): String {
+        val mustache = mustacheFactory.compile(text.reader(), cacheKey)
         val writer = StringWriter()
         mustache.execute(writer, values).flush()
         return writer.toString()

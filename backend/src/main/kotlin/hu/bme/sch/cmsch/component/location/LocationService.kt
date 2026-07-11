@@ -206,8 +206,8 @@ class LocationService(
 
     override fun deleteAll() = clean()
 
-    override fun <S : LocationEntity> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
-        return entities.map { save(it) }.toMutableList()
+    override fun <S : LocationEntity> saveAll(entities: Iterable<S>): Iterable<S> {
+        return entities.map { save(it) }
     }
 
     override fun <S : LocationEntity> save(entity: S): S {

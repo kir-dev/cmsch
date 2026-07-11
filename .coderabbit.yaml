@@ -1,0 +1,27 @@
+reviews:
+  auto_review:
+    enabled: false
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+    simplify:
+      enabled: false
+    autofix:
+      enabled: false
+
+chat:
+  auto_reply: false
+
+knowledge_base:
+  opt_out: true
+  web_search:
+    enabled: false
+
+issue_enrichment:
+  auto_enrich:
+    enabled: false
+  planning:
+    enabled: false
