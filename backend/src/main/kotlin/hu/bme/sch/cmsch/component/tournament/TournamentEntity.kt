@@ -71,8 +71,16 @@ data class TournamentEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [ Preview::class, FullDetails::class ])
-    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateInput(type = InputType.NUMBER, order = 8, label = "Résztvevők maximális száma",
+        note = "Ha -1, akkor nincsen limit")
     @property:GenerateOverview(columnName = "Résztvevők maximális száma", order = 7)
+    @property:ImportFormat
+    var participantMaxCount: Int = 0,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
+    @property:GenerateInput(type = InputType.HIDDEN, visible = true, ignore = true)
+    @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var participantCount: Int = 0,
 

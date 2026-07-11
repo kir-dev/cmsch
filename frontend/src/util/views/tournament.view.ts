@@ -14,7 +14,8 @@ export type TournamentWithParticipantsView = {
   joinEnabled: boolean
   joined: boolean
   joinCancellable: boolean
-  participantCount: number
+  joinDeadline: number
+  participantMaxCount: number
   participants: ParticipantView[]
   status: number
 }

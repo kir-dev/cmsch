@@ -8,7 +8,8 @@ data class TournamentWithParticipants(
     val joinEnabled: Boolean,
     val joined: Boolean,
     val joinCancellable: Boolean,
-    val participantCount: Int,
+    val joinDeadline: Long,
+    val participantMaxCount: Int,
     val participants: List<ParticipantDto>,
     val status: Int,
 )

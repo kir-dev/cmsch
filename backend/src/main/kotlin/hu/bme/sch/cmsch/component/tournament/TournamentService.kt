@@ -79,7 +79,6 @@ class TournamentService(
         }
         val joined = participants.any { it.teamId == playerId }
         val joinChangable = tournament.joinable && tournament.joinDeadline > now &&
-                participants.size < tournament.participantCount &&
                 (
                     (user?.role ?: RoleType.GUEST) >= RoleType.PRIVILEGED ||
                     (tournament.participantType == OwnershipType.USER && (user?.role ?: RoleType.GUEST) >= RoleType.BASIC)
@@ -95,10 +94,11 @@ class TournamentService(
                 tournament.title,
                 tournament.description,
                 tournament.location,
-                joinChangable && !joined,
+                joinChangable && !joined && participants.size < tournament.participantMaxCount,
                 joined,
                 joinChangable && joined,
-                tournament.participantCount,
+                tournament.joinDeadline,
+                tournament.participantMaxCount,
                 participants,
                 tournament.status
             ), stages.map { KnockoutStageDetailedView(
@@ -195,13 +195,13 @@ class TournamentService(
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
         val team = groupRepository.findById(groupId).getOrNull()
             ?: return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
-        if (user.role >= RoleType.PRIVILEGED) return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
+        if (user.role < RoleType.PRIVILEGED) return TournamentJoinStatus.INSUFFICIENT_PERMISSIONS
 
         val parsed = getParticipants(tournament).toMutableList()
         if (parsed.any { it.teamId == groupId }) {
             return TournamentJoinStatus.ALREADY_JOINED
         }
-        if (parsed.size >= tournament.participantCount) {
+        if (parsed.size >= tournament.participantMaxCount && tournament.participantMaxCount != -1) {
             return TournamentJoinStatus.NOT_JOINABLE
         }
         parsed.add(ParticipantDto(groupId, team.name))
@@ -221,7 +221,7 @@ class TournamentService(
         if (parsed.any { it.teamId == user.id }) {
             return TournamentJoinStatus.ALREADY_JOINED
         }
-        if (parsed.size >= tournament.participantCount) {
+        if (parsed.size >= tournament.participantMaxCount && tournament.participantMaxCount != -1) {
             return TournamentJoinStatus.NOT_JOINABLE
         }
         parsed.add(ParticipantDto(user.id, user.userName))
@@ -252,7 +252,7 @@ class TournamentService(
             ?: return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
         val team = groupRepository.findById(groupId).getOrNull()
             ?: return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
-        if (user.role >= RoleType.PRIVILEGED) return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
+        if (user.role < RoleType.PRIVILEGED) return TournamentCancelStatus.INSUFFICIENT_PERMISSIONS
 
         val parsed = getParticipants(tournament).toMutableList()
         if (parsed.none { it.teamId == groupId }) {

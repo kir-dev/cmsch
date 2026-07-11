@@ -5,10 +5,12 @@ import { ComponentUnavailable } from '@/common-components/ComponentUnavailable.t
 import { CustomTabButton } from '@/common-components/CustomTabButton.tsx'
 import { CmschPage } from '@/common-components/layout/CmschPage.tsx'
 import { Button } from '@/components/ui/button.tsx'
+import { Separator } from '@/components/ui/separator.tsx'
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs.tsx'
 import { useToast } from '@/hooks/use-toast.ts'
 import GroupStage from '@/pages/tournament/components/GroupStage.tsx'
 import KnockoutStage from '@/pages/tournament/components/KnockoutStage.tsx'
+import { stringifyTimeStamp } from '@/util/core-functions.util.ts'
 import type { TournamentDetailsView } from '@/util/views/tournament.view.ts'
 import {
   TournamentCancelResponseMessages,
@@ -16,7 +18,7 @@ import {
   TournamentJoinResponseMessages,
   TournamentJoinResponses
 } from '@/util/views/tournament.view.ts'
-import { Undo2 } from 'lucide-react'
+import { Check, FileText, LandPlot, Undo2, X } from 'lucide-react'
 
 interface TournamentProps {
   tournament: TournamentDetailsView
@@ -85,26 +87,39 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
       <div className="mb-5">
         <h1 className="mb-5 text-4xl font-bold tracking-tight">{tournament.tournament.title}</h1>
         <p className="mb-2">{tournament.tournament.description}</p>
-        <p className="mb-2">{tournament.tournament.location}</p>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {tournament.tournament.joined ? (
-            <Button
-              className="flex items-center gap-2 bg-primary text-primary-foreground"
-              onClick={() => cancelJoinTournament()}
-              disabled={!tournament.tournament.joinCancellable}
-            >
+        <p className="mb-2 flex items-center gap-2">
+          <LandPlot className="h-4 w-4" /> {tournament.tournament.location}
+        </p>
+        {tournament.tournament.joined ? (
+          <div className="mb-2 flex items-center gap-15">
+            <p className="mb-2 flex items-center gap-2 text-green-500">
+              <Check className="h-4 w-4 text-green-500" /> Jelentkezve
+            </p>
+            <p className="mb-2">Határidő: {stringifyTimeStamp(tournament.tournament.joinDeadline)}</p>
+          </div>
+        ) : (
+          <div className="mb-2 flex items-center gap-5">
+            <p className="mb-2 flex items-center gap-2 text-red-500">
+              <X className="h-4 w-4 text-red-500" /> Nem jelentkezve
+            </p>
+            <p className="mb-2">Határidő: {stringifyTimeStamp(tournament.tournament.joinDeadline)}</p>
+          </div>
+        )}
+        <div className="flex flex-wrap gap-8">
+          {tournament.tournament.joinCancellable && (
+            <Button className="flex items-center gap-2 bg-primary text-primary-foreground" onClick={() => cancelJoinTournament()}>
               <Undo2 className="h-4 w-4" /> Jelentkezés visszavonása
             </Button>
-          ) : (
-            <Button
-              className="flex items-center gap-2 bg-primary text-primary-foreground"
-              onClick={() => joinTournament()}
-              disabled={!tournament.tournament.joinEnabled}
-            >
-              Jelentkezés a versenyre
+          )}
+          {tournament.tournament.joinEnabled && (
+            <Button className="flex items-center gap-2 bg-primary text-primary-foreground" onClick={() => joinTournament()}>
+              <FileText className="h-4 w-4" /> Jelentkezés a versenyre
             </Button>
           )}
         </div>
+
+        <Separator className="mt-5 mb-5 h-px bg-border" />
+
         <Tabs defaultValue="participants" className="w-full">
           <TabsList className="mb-5 flex w-full flex-wrap justify-start">
             <CustomTabButton value="participants">Résztvevők</CustomTabButton>
@@ -117,7 +132,7 @@ const Tournament = ({ tournament, refetch = () => {} }: TournamentProps) => {
             <div className="flex flex-col gap-0">
               {tournament.tournament.participants.map((participant) => (
                 <div key={participant.teamId}>
-                  <h3 className="mb-3 text-xl tracking-tight">{participant.teamName}</h3>
+                  <h3 className="mb-0.5 text-lg tracking-tight">{participant.teamName}</h3>
                 </div>
               ))}
             </div>

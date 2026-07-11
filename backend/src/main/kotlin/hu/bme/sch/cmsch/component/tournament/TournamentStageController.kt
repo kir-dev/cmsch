@@ -217,8 +217,6 @@ class TournamentStageController(
             }} ?: return "redirect:/admin/control/$view"
         val tournamentId = toCreate.getOrNull(1)?.toIntOrNull()
             ?: return "redirect:/admin/control/$view"
-//        val tournamentId = referer.substringAfterLast("/create/").toIntOrNull()
-//            ?: return "redirect:/admin/control/$view"
         val user = auth.getUser()
         adminMenuService.addPartsForMenu(user, model)
         if (createPermission.validate(user).not()) {
