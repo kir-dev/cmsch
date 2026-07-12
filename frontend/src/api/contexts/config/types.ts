@@ -338,6 +338,11 @@ export interface Login {
   keycloakEnabled: boolean
   onlyBmeProvider: boolean
   title: string
+  organizerLoginEnabled: boolean
+  organizerAuthschEnabled: boolean
+  organizerGoogleEnabled: boolean
+  organizerKeycloakEnabled: boolean
+  organizerPasswordEnabled: boolean
 }
 
 export interface Team {

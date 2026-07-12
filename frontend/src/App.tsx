@@ -27,6 +27,7 @@ import IndexPage from './pages/index/index.page'
 import KirPayLeaderboardPage from './pages/kirpay-leaderboard/kirpay-leaderboard.page.tsx'
 import LeaderboardPage from './pages/leaderboard/leaderboard.page.tsx'
 import LoginPage from './pages/login/login.page'
+import LoginOrgPage from './pages/login/loginOrg.page.tsx'
 import ResetPasswordPage from './pages/login/resetPassword.page.tsx'
 import MapPage from './pages/map/map.page.tsx'
 import NewsPage from './pages/news/news.page.tsx'
@@ -162,6 +163,7 @@ export function App() {
                 </Route>
                 <Route index element={<IndexPage />} />
                 <Route path="login" element={<LoginPage />} />
+                <Route path={Paths.LOGIN_ORG} element={<LoginOrgPage />} />
                 <Route path={Paths.RESET_PASSWORD} element={<ResetPasswordPage />} />
                 <Route path="logout" element={<HomePage />} />
                 {/** Error handling pages */}

@@ -199,4 +199,24 @@ class LoginComponent(
     var bottomMessage by StringSettingRef("", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "A belépési felület alján lévő szöveg", description = "Ha üres akkor nincs ilyen")
 
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val organizerLoginGroup by SettingGroup(fieldName = "Szervező bejelentkezési oldal",
+        description = "A /login-org útvonalon elérhető külön belépési oldal szervezőknek")
+
+    var organizerLoginEnabled by BooleanSettingRef(false, fieldName = "Szervező bejelentkezési oldal elérhető",
+        description = "Ha be van kapcsolva, akkor a /login-org oldal elérhető, egyébként nem jelenik meg")
+
+    var organizerAuthschEnabled by BooleanSettingRef(false, fieldName = "AuthSCH opció (szervező oldal)",
+        description = "Ha be van kapcsolva, akkor a szervező bejelentkezési oldalon látszik az AuthSCH / BME Címtár SSO")
+
+    var organizerGoogleEnabled by BooleanSettingRef(false, fieldName = "Google opció (szervező oldal)",
+        description = "Ha be van kapcsolva, akkor a szervező bejelentkezési oldalon látszik a Google SSO")
+
+    var organizerKeycloakEnabled by BooleanSettingRef(false, fieldName = "Keycloak opció (szervező oldal)",
+        description = "Ha be van kapcsolva, akkor a szervező bejelentkezési oldalon látszik a Keycloak")
+
+    var organizerPasswordEnabled by BooleanSettingRef(false, fieldName = "Emailes belépés (szervező oldal)",
+        description = "Ha be van kapcsolva, akkor a szervező bejelentkezési oldalon látszik az emailes belépés")
+
 }
