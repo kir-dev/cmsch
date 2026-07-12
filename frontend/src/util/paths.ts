@@ -32,7 +32,8 @@ export const Paths = {
   DEBT: 'debt',
   GALLERY: 'gallery',
   RESET_PASSWORD: 'reset-password',
-  SUPPORT: 'support'
+  SUPPORT: 'support',
+  LOGIN_ORG: 'login-org'
 } as const
 export type Paths = (typeof Paths)[keyof typeof Paths]
 
