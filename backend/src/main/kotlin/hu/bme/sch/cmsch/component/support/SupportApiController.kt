@@ -9,11 +9,13 @@ import hu.bme.sch.cmsch.util.isAvailableForRole
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import tools.jackson.databind.ObjectMapper
 
 @RestController
 @RequestMapping("/api")
@@ -21,8 +23,11 @@ import org.springframework.web.bind.annotation.*
 class SupportApiController(
     private val supportService: SupportService,
     private val supportComponent: SupportComponent,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val objectMapper: ObjectMapper
 ) {
+
+    private val log = LoggerFactory.getLogger(SupportApiController::class.java)
 
     data class CreateThreadRequest(
         val title: String = "",
@@ -187,13 +192,31 @@ class SupportApiController(
     ])
     fun incomingEmail(
         @PathVariable secret: String,
-        @RequestBody dto: IncomingEmailDto
+        @RequestBody body: String
     ): ResponseEntity<String> {
-        if (!supportComponent.emailWebhookEnabled)
+        log.error("incomingEmail")
+        if (!supportComponent.emailWebhookEnabled) {
+            log.error("emailWebhookEnabled")
             return ResponseEntity.notFound().build()
-        if (secret != supportComponent.incomingEmailSecret)
+        }
+        if (secret != supportComponent.incomingEmailSecret) {
+            log.error("incomingEmailSecret ${secret}")
             return ResponseEntity.notFound().build()
-        supportService.processIncomingEmail(dto)
+        }
+
+        val dto = try {
+            objectMapper.readValue(body, IncomingEmailDto::class.java)
+        } catch (e: Exception) {
+            log.error("Failed to parse incoming email payload: {} | payload: {}", e.message, body.take(10000), e)
+            return ResponseEntity.badRequest().body("invalid payload")
+        }
+
+        try {
+            supportService.processIncomingEmail(dto)
+        } catch (e: Exception) {
+            log.error("Failed to process incoming email id='{}' subject='{}'", dto.id, dto.subject, e)
+            return ResponseEntity.internalServerError().body("processing failed")
+        }
         return ResponseEntity.ok("ok")
     }
 

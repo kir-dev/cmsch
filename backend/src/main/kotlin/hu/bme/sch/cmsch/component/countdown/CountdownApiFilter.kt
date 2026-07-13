@@ -15,7 +15,7 @@ class CountdownApiFilter(
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, filterChain: FilterChain) {
-        if (req.servletPath.startsWith("/api/") && !req.servletPath.startsWith("/api/app")) {
+        if (req.servletPath.startsWith("/api/") && !req.servletPath.startsWith("/api/support/incoming-email/")) {
             val cmschUser = SecurityContextHolder.getContext().authentication?.getUserOrNull()
             val role = cmschUser?.role ?: RoleType.GUEST
             if (countdown.isBlockedAt(clock.getTimeInSeconds(), role)) {
