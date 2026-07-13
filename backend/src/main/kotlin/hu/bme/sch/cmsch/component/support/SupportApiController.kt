@@ -194,13 +194,12 @@ class SupportApiController(
         @PathVariable secret: String,
         @RequestBody body: String
     ): ResponseEntity<String> {
-        log.error("incomingEmail")
         if (!supportComponent.emailWebhookEnabled) {
-            log.error("emailWebhookEnabled")
+            log.warn("emailWebhookEnabled = false")
             return ResponseEntity.notFound().build()
         }
         if (secret != supportComponent.incomingEmailSecret) {
-            log.error("incomingEmailSecret ${secret}")
+            log.warn("incomingEmailSecret is invalid")
             return ResponseEntity.notFound().build()
         }
 
