@@ -54,6 +54,10 @@ class KirPayComponent(
     var leaderboardMaxEntries by NumberSettingRef(50, fieldName = "Toplista sorainak száma",
         description = "Hány felhasználót mutasson, -1 = az összeset")
 
+    var leaderboardRefreshIntervalMinutes by NumberSettingRef(defaultValue = 600, serverSideOnly = true,
+        strictConversion = false, fieldName = "Toplista frissítési idő",
+        description = "Ennyi percenként frissül a toplista")
+
     var kirPayCurrency by StringSettingRef("JMF", fieldName = "A megjelenített Kir-Pay valuta")
 
 }

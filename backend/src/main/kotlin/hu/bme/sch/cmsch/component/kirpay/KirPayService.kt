@@ -37,14 +37,23 @@ class KirPayService(
             .build()
     }
 
-    @Scheduled(fixedRate = 1000L * 60 * 60 * 10)
-    fun refreshCache() {
+    private var lastRefreshedAt = 0L
+
+    @Scheduled(fixedRate = 1000L * 60)
+    fun tick() {
+        val now = System.currentTimeMillis()
+        if (now - lastRefreshedAt >= kirPayComponent.leaderboardRefreshIntervalMinutes * 60_000L) {
+            refreshCache()
+        }
+    }
+
+    private fun refreshCache() {
         if (!kirPayComponent.leaderboardEnabled) return
+        lastRefreshedAt = System.currentTimeMillis()
         val refreshed = fetchConsumptionLeaderboard()
         synchronized(leaderboardLock) {
             cachedLeaderboard = refreshed
         }
-        log.info("Kir-Pay consumption leaderboard cache refreshed, {} entries", refreshed.size)
     }
 
     fun getConsumptionLeaderboard(): List<KirPayLeaderboardEntry> {
