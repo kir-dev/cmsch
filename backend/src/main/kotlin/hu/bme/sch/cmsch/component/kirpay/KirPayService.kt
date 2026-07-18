@@ -86,11 +86,13 @@ class KirPayService(
 
     private fun fetchConsumptionLeaderboard(): List<KirPayLeaderboardEntry> {
         return try {
-            val response = kirPayClient.get()
-                .uri("${kirPayComponent.kirPayBackendUrl}/admin/consumption-leaderboard")
+            val uriBuilder = kirPayClient.get()
+                .uri("${kirPayComponent.kirPayBackendUrl}/admin/consumption-leaderboard?limit={limit}",
+                    kirPayComponent.leaderboardMaxEntries)
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString(
                     kirPayComponent.kirPayBackendToken.toByteArray()
                 ))
+            val response = uriBuilder
                 .retrieve()
                 .bodyToMono<List<Map<String, Any>>>()
                 .block()
