@@ -43,7 +43,10 @@ export interface ProfileView {
 
   groupMessage?: string
   userMessage?: string
-  kirPayBalance?: number
+  kirPayBalance?: {
+    account: { balance: number }
+    vouchers: { itemName: string; count: number }[]
+  }
 }
 
 export interface RaceStatsView {

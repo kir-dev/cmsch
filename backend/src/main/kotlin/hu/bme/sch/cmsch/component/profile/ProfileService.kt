@@ -4,6 +4,7 @@ import hu.bme.sch.cmsch.component.admission.AdmissionService
 import hu.bme.sch.cmsch.component.bmejegy.CheersBmejegyService
 import hu.bme.sch.cmsch.component.debt.DebtDto
 import hu.bme.sch.cmsch.component.debt.SoldProductRepository
+import hu.bme.sch.cmsch.component.kirpay.KirPayAccountWithVouchersView
 import hu.bme.sch.cmsch.component.kirpay.KirPayService
 import hu.bme.sch.cmsch.component.location.LocationService
 import hu.bme.sch.cmsch.component.login.CmschUser
@@ -24,6 +25,7 @@ import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.util.isAvailableForRole
 import hu.bme.sch.cmsch.util.mapIfTrue
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.resilience.annotation.Retryable
 import org.springframework.stereotype.Service
@@ -53,6 +55,7 @@ class ProfileService(
     private val cheersBmejegyService: CheersBmejegyService?,
     private val kirPayService: Optional<KirPayService>
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     fun getProfileForUser(user: UserEntity): ProfileView {
@@ -231,7 +234,7 @@ class ProfileService(
             .associate { Pair(it.id, it.name) }
     }
 
-    private fun fetchKirPayBalance(user: UserEntity) =
+    private fun fetchKirPayBalance(user: UserEntity): Optional<KirPayAccountWithVouchersView?> =
         kirPayService
             .filter { profileComponent.showKirPayBalance }
             .map { it.getBalanceByEmail(user.email) }

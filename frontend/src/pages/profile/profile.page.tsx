@@ -50,7 +50,7 @@ const ProfilePage = () => {
   }
 
   const raceStats = profile?.raceStats
-
+  const kirPayVouchers = profile.kirPayBalance?.vouchers?.filter((voucher) => voucher.count > 0) || []
   return (
     <CmschPage loginRequired={true} title={component?.title}>
       {component.messageBoxContent && (
@@ -85,10 +85,23 @@ const ProfilePage = () => {
           {component.showAlias && <p className="text-xl">Becenév: {profile.alias || 'nincs'}</p>}
           {component.showNeptun && <p className="text-xl">Neptun: {profile.neptun || 'nincs'}</p>}
           {component.showEmail && <p className="text-xl">E-mail: {profile.email || 'nincs'}</p>}
-          {component.showKirPayBalance && (profile.kirPayBalance === 0 || !!profile.kirPayBalance) && (
-            <p className="text-xl">
-              Kir-Pay egyenleg: {profile.kirPayBalance} {config.kirpay?.kirPayCurrency}
-            </p>
+          {component.showKirPayBalance && (profile.kirPayBalance?.account?.balance === 0 || !!profile.kirPayBalance) && (
+            <>
+              <p className="text-xl">
+                Kir-Pay Egyenleg: {profile.kirPayBalance?.account?.balance} {config.kirpay?.kirPayCurrency}
+              </p>
+              {!!kirPayVouchers.length && (
+                <p className="text-xl flex flex-wrap gap-x-2 max-w-120">
+                  Kir-Pay Tokenek:
+                  {kirPayVouchers.map((voucher, i) => (
+                    <span key={voucher.itemName}>
+                      {voucher.count}× {voucher.itemName}
+                      {i < kirPayVouchers.length - 1 ? ', ' : null}
+                    </span>
+                  ))}
+                </p>
+              )}
+            </>
           )}
 
           {component.showGuild && <p className="text-xl">Gárda: {GuildType[profile?.guild || 'UNKNOWN'] || 'nincs'}</p>}

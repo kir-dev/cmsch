@@ -38,7 +38,7 @@ class KirPayComponent(
 
     val connectionGroup by SettingGroup(fieldName = "Kapcsolat")
 
-    var kirPayBackendUrl by StringSettingRef("http://localhost:3001/v1/api/admin", serverSideOnly = true,
+    var kirPayBackendUrl by StringSettingRef("http://localhost:8081/v1/api", serverSideOnly = true,
         fieldName = "Kir-Pay backend URL", description = "A Kir-Pay backend admin API URL-je")
 
     var kirPayBackendToken by StringSettingRef(serverSideOnly = true, fieldName = "Kir-Pay backend token",

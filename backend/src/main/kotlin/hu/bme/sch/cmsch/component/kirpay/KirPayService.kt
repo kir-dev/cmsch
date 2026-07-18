@@ -16,7 +16,7 @@ import java.util.*
 @ConditionalOnBean(KirPayComponent::class)
 class KirPayService(
     private val kirPayComponent: KirPayComponent,
-    webClientBuilder: WebClient.Builder
+    private val webClientBuilder: WebClient.Builder
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -30,10 +30,6 @@ class KirPayService(
             .responseTimeout(Duration.ofSeconds(15))
         webClientBuilder
             .clientConnector(ReactorClientHttpConnector(httpClient))
-            .baseUrl(kirPayComponent.kirPayBackendUrl)
-            .defaultHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString(
-                kirPayComponent.kirPayBackendToken.toByteArray()
-            ))
             .build()
     }
 
@@ -67,17 +63,19 @@ class KirPayService(
         }
     }
 
-    fun getBalanceByEmail(email: String?): Long? {
+
+    fun getBalanceByEmail(email: String?): KirPayAccountWithVouchersView? {
         if (email.isNullOrBlank()) return null
 
         return try {
-            val response = kirPayClient.get()
-                .uri("/accounts-by-email/{email}", email)
+            kirPayClient.get()
+                .uri("${kirPayComponent.kirPayBackendUrl}/terminal/account-by-email/{email}", email)
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString(
+                    kirPayComponent.kirPayBackendToken.toByteArray()
+                ))
                 .retrieve()
-                .bodyToMono<Map<String, Any>>()
+                .bodyToMono<KirPayAccountWithVouchersView>()
                 .block()
-
-            response?.get("balance")?.let { (it as Number).toLong() }
         } catch (e: WebClientResponseException.NotFound) {
             null
         } catch (e: Exception) {
@@ -89,7 +87,10 @@ class KirPayService(
     private fun fetchConsumptionLeaderboard(): List<KirPayLeaderboardEntry> {
         return try {
             val response = kirPayClient.get()
-                .uri("/consumption-leaderboard")
+                .uri("${kirPayComponent.kirPayBackendUrl}/admin/consumption-leaderboard")
+                .header("Authorization", "Basic " + Base64.getEncoder().encodeToString(
+                    kirPayComponent.kirPayBackendToken.toByteArray()
+                ))
                 .retrieve()
                 .bodyToMono<List<Map<String, Any>>>()
                 .block()
