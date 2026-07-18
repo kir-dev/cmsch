@@ -2,7 +2,7 @@ package hu.bme.sch.cmsch.component.profile
 
 import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.debt.DebtDto
-import hu.bme.sch.cmsch.component.leaderboard.LeaderBoardEntry
+import hu.bme.sch.cmsch.component.kirpay.KirPayAccountWithVouchersView
 import hu.bme.sch.cmsch.component.race.RaceStatsView
 import hu.bme.sch.cmsch.component.token.TokenDto
 import hu.bme.sch.cmsch.dto.FullDetails
@@ -103,5 +103,5 @@ data class ProfileView(
     val userMessage: String? = null,
 
     @field:JsonView(FullDetails::class)
-    val kirPayBalance: Long? = null,
+    val kirPayBalance: KirPayAccountWithVouchersView? = null,
 )
