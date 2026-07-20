@@ -8,13 +8,13 @@ apiHostProtocol: https
 allowedOriginPatterns: ""
 
 apiImage: harbor.sch.bme.hu/org-kir-dev/cmsch:release
-frontendImage: harbor.sch.bme.hu/org-kir-dev/cmsch-frontend:latest
+frontendImage: harbor.sch.bme.hu/org-kir-dev/cmsch-frontend:release
 imagePullSecretName:
 imagePullPolicy: Always
 
 springLoggingLevel: INFO
-springProfiles: prod,docker,env
-deploymentStrategy: Recreate # because of resource constraints and H2 allowing only 1 connection at a time
+springProfiles: prod,docker,env,postgres
+deploymentStrategy: RollingUpdate # Use Recreate if running in StatefulSet mode
 backendDistributedMode: false
 replicas: 1
 sessionDurationSeconds: 172800
@@ -121,8 +121,10 @@ driveBackup:
 
 
 postgres:
-  enabled: false # Remember to set this too → springProfiles: prod,docker,env,postgres
+  enabled: true # Remember to set this too → springProfiles: prod,docker,env,postgres
   global:
+    security:
+      allowInsecureImages: true # TODO fix https://github.com/bitnami/containers/issues/83267
     defaultStorageClass: memory-ssd
     postgresql:
       auth:
@@ -130,8 +132,12 @@ postgres:
         username: admin
         password: admin
   architecture: standalone
+  image:
+    repository: bitnamilegacy/postgresql
   metrics:
     enabled: true
+    image:
+      repository: bitnamilegacy/postgres-exporter
     serviceMonitor:
       relabelings:
         - sourceLabels: [ __meta_kubernetes_pod_name ]
@@ -147,6 +153,9 @@ postgres:
         cpu: 150m
         memory: 192Mi
         ephemeral-storage: 50Mi
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   primary:
     networkPolicy:
       allowExternal: false
@@ -155,7 +164,7 @@ postgres:
     resourcesPreset: "micro"
 
 s3:
-  enabled: false
+  enabled: true
   accessKey: secret
   secretKey: secret
   bucket: cmsch

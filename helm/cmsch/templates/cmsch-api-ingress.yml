@@ -5,13 +5,9 @@ metadata:
   name: {{ .Release.Name }}-api
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
-  annotations:
-    {{- with .Values.ingress.annotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    {{- if .Values.blockActuatorEndpoints }}
-    nginx.ingress.kubernetes.io/server-snippet: "location /actuator/ { return 403; }"
-    {{- end }}
+  {{- with .Values.ingress.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   tls:
@@ -29,4 +25,13 @@ spec:
                 name: {{ .Release.Name }}
                 port:
                   number: 80
+        {{ if .Values.blockActuatorEndpoints }}
+          - path: /actuator/
+            pathType: Prefix
+            backend:
+              service:
+                name: default-backend
+                port:
+                  number: 80
+        {{ end }}
 {{ end }}
