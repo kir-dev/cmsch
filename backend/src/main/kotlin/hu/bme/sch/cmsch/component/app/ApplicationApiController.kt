@@ -10,6 +10,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import hu.bme.sch.cmsch.component.ComponentBase
 import hu.bme.sch.cmsch.component.countdown.CountdownComponent
+import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.dto.FullDetails
 import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.TimeService
@@ -37,6 +38,7 @@ class ApplicationApiController(
     private val menuService: MenuService,
     private val applicationComponent: ApplicationComponent,
     private val countdownComponent: Optional<CountdownComponent>,
+    private val loginComponent: Optional<LoginComponent>,
     private val clock: TimeService,
     private val stylingComponent: StylingComponent,
     private val applicationService: ApplicationService,
@@ -56,11 +58,19 @@ class ApplicationApiController(
 
                 // Remove any image urls from the styles, because it might be a spoiler
                 val styleSettings = stylingComponent.attachConstants().filter { !it.key.lowercase().contains("url") }
-                val components = mapOf(
+                val components = mutableMapOf(
                     applicationComponent.component to appComponentFields(),
                     countdown.component to countdownSettings,
                     stylingComponent.component to styleSettings
                 )
+                // Keep the organizer login page usable during the countdown, but SSO only:
+                // password login stays hidden because the CountdownApiFilter blocks /api/login anyway
+                loginComponent.ifPresent { login ->
+                    components[login.component] = login.attachConstants().toMutableMap().also {
+                        it["passwordEnabled"] = false
+                        it["organizerPasswordEnabled"] = false
+                    }
+                }
                 return ApplicationConfigDto(
                     role = role,
                     menu = listOf(),

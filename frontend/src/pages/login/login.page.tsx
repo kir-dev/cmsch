@@ -33,7 +33,7 @@ const LoginPage = () => {
         {component.passwordEnabled && <UsernamePasswordLogin />}
 
         <div className="flex flex-col items-center space-y-4 w-full max-w-md">
-          {component.authschPromoted && (
+          {component.authschPromotedFrontend && (
             <>
               <Button className="w-full" onClick={() => (window.location.href = `${API_BASE_URL}/oauth2/authorization/authsch`)}>
                 <LogIn className="mr-2 h-4 w-4" /> {component.onlyBmeProvider ? 'BME Címtár' : 'AuthSCH'}

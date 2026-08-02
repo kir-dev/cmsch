@@ -1,8 +1,10 @@
 import { useConfigContext } from '@/api/contexts/config/ConfigContext'
 import type { Countdown } from '@/api/contexts/config/types.ts'
 import { useTime } from '@/hooks/useDate.ts'
+import { Paths } from '@/util/paths.ts'
 import { Title } from '@/util/TitleProvider.tsx'
 import { type PropsWithChildren } from 'react'
+import { useMatch } from 'react-router'
 import Clock from './components/clock'
 import { parseTopMessage } from './countdown.util'
 
@@ -42,8 +44,9 @@ const ForcedCountdown = ({ children, component }: PropsWithChildren & { componen
 export const CountdownPage = ({ children }: PropsWithChildren) => {
   const component = useConfigContext()?.components?.countdown
   const timeOfLoading = useTime(undefined)
+  const isOrganizerLogin = useMatch(`/${Paths.LOGIN_ORG}`)
 
-  if (component?.enabled && component?.showOnly && isCountdownActive(component, timeOfLoading)) {
+  if (!isOrganizerLogin && component?.enabled && component?.showOnly && isCountdownActive(component, timeOfLoading)) {
     return <ForcedCountdown component={component}>{children}</ForcedCountdown>
   } else return <>{children}</>
 }
