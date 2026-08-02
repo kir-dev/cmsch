@@ -68,7 +68,7 @@ class LoginComponent(
         fieldName = "Címtáron keresztüli belépés", description = "Csak BME címtáron keresztüli belépés jelenik meg")
 
     var authschPromoted by BooleanSettingRef(true, fieldName = "Authsch opció látszik",
-        description = "Ha ez be van kapcsolva, akkor az admin/control belépésnél (Spring Security /login) látszik az AuthSCH SSO")
+        description = "Ha ez be van kapcsolva, akkor az admin belépésnél látszik az AuthSCH SSO")
 
     var authschPromotedFrontend by BooleanSettingRef(true, fieldName = "Authsch opció látszik (frontend)",
         description = "Ha ez be van kapcsolva, akkor a felhasználói felület /login oldalán látszik az AuthSCH SSO")
