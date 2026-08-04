@@ -77,6 +77,8 @@ Ha az **Email küldése felelős válaszkor** be van kapcsolva, a felelős vála
 
 Ha a **Megkeresés visszaigazoló sablon** meg van adva és létezik, az új megkeresés megnyitásakor a rendszer automatikusan visszaigazoló emailt küld az ügyfélnek. Ugyanazok a változók érhetők el, mint a válasz sablonnál (a `{{solver}}` üres lesz).
 
+Ha az **Ügyfél válasz email sablon** meg van adva és a megkeresésnek már van felelőse, az ügyfél minden újabb válasza esetén a rendszer emailt küld a felelősnek (nem a beosztás alapján kiválasztott, hanem konkrétan a megkeresést igénylő/megválaszoló ügyfélszolgálatosnak). Elérhető változók: `{{title}}`, `{{message}}`, `{{messageHtml}}`, `{{userName}}` (ügyfél neve), `{{creationDate}}`, `{{lastAnswerDate}}`, `{{adminUrl}}`.
+
 > A `{{threadUrl}}` az Alkalmazás komponens `siteUrl` beállításából épül fel – ellenőrizd, hogy ott a helyes frontend URL van megadva.
 > A `{{creationDate}}` és `{{lastAnswerDate}}` magyar formátumban jelenik meg (pl. „2024. január 15. 14:30").
 

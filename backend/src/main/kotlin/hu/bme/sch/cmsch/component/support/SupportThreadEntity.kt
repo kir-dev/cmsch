@@ -10,6 +10,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -105,6 +106,13 @@ data class SupportThreadEntity(
     @property:GenerateInput(type = InputType.DATE, order = 11, label = "Utolsó ügyfél válasz", enabled = false)
     @property:GenerateOverview(visible = false)
     var lastCustomerAnswerAt: Long = 0,
+
+    @field:JsonView(value = [Edit::class])
+    @Column(nullable = false, length = 128)
+    @ColumnDefault("''")
+    @property:GenerateInput(maxLength = 128, order = 12, label = "Felelős belső azonosítója", enabled = false)
+    @property:GenerateOverview(visible = false)
+    var solverInternalId: String = "",
 ) : ManagedEntity {
 
     @get:Transient
