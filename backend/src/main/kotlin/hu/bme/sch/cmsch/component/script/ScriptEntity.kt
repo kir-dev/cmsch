@@ -56,7 +56,7 @@ data class ScriptEntity(
 
     @Column(nullable = false, columnDefinition = "TEXT")
     @field:JsonView(value = [ Edit::class ])
-    @property:GenerateInput(order = 5, type = InputType.KOTLIN_EDITOR, label = "Script", defaultValue = "context.info(\"Hello Schönherz!\")")
+    @property:GenerateInput(order = 5, type = InputType.BLOCK_TEXT, label = "Script", defaultValue = "context.info(\"Hello Schönherz!\")")
     @property:GenerateOverview(visible = false)
     var script: String = "",
 

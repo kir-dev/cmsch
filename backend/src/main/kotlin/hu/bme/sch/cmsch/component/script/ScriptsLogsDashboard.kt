@@ -1,8 +1,6 @@
 package hu.bme.sch.cmsch.component.script
 
-import com.fasterxml.jackson.annotation.JsonView
 import hu.bme.sch.cmsch.component.script.sandbox.ScriptArtifact
-import hu.bme.sch.cmsch.dto.Edit
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.AuditLogService
 import hu.bme.sch.cmsch.service.StaffPermissions
@@ -68,7 +66,6 @@ class ScriptsLogsDashboard(
     }
 
     @ResponseBody
-    @JsonView(Edit::class)
     @GetMapping("/api/script-logs/{scriptResultId}")
     fun fetchScriptLogs(auth: Authentication?, @PathVariable scriptResultId: Int): ScriptResultEntity {
         val user = auth?.getUser()

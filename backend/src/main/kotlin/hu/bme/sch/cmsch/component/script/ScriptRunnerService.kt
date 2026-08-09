@@ -4,8 +4,6 @@ import kotlinx.coroutines.runBlocking
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.CompoundDependenciesResolver
-import kotlin.script.experimental.dependencies.DependsOn
-import kotlin.script.experimental.dependencies.Repository
 import kotlin.script.experimental.dependencies.maven.MavenDependenciesResolver
 import kotlin.script.experimental.dependencies.resolveFromScriptSourceAnnotations
 import kotlin.script.experimental.host.toScriptSource
@@ -35,7 +33,6 @@ object ScriptHelper {
 
 object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
     {
-        defaultImports(DependsOn::class, Repository::class)
         defaultImports(
             "kotlin.math.*",
             "hu.bme.sch.cmsch.model.*",
@@ -68,9 +65,6 @@ object ScriptWithMavenDepsConfiguration : ScriptCompilationConfiguration(
         jvm {
             dependenciesFromCurrentContext(wholeClasspath = true, unpackJarCollections = true)
             jvmTarget(Runtime.version().version().first().toString())
-        }
-        refineConfiguration {
-            onAnnotations(DependsOn::class, Repository::class, handler = ScriptHelper::configureMavenDepsOnAnnotations)
         }
     }
 )
