@@ -66,7 +66,8 @@ enum class MajorType {
     UNKNOWN,
     IT,
     EE,
-    BPROF
+    BIS,
+    BPROF,
 }
 
 @Entity
@@ -166,7 +167,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BIS", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN,

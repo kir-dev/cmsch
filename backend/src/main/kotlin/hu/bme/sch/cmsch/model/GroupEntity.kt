@@ -43,7 +43,7 @@ data class GroupEntity(
         type = InputType.BLOCK_SELECT,
         order = 2,
         label = "Típus",
-        source = ["UNKNOWN", "IT", "EE", "BPROF"]
+        source = ["UNKNOWN", "IT", "EE", "BIS", "BPROF"]
     )
     @property:GenerateOverview(visible = false)
     @property:ImportFormat

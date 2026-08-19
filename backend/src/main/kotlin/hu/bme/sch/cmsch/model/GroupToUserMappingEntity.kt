@@ -58,7 +58,7 @@ data class GroupToUserMappingEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 4, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 4, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BIS", "BPROF" ])
     @property:GenerateOverview(columnName = "Szak", order = 5, centered = true)
     @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN
