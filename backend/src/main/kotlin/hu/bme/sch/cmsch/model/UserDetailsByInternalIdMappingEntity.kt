@@ -71,7 +71,7 @@ data class UserDetailsByInternalIdMappingEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 6, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 6, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BIS", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var major: MajorType? = null,
