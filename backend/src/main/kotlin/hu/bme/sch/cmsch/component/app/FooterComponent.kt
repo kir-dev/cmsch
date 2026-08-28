@@ -26,7 +26,7 @@ class FooterComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
-        minRoleToEdit = RoleType.NOBODY,
+        minRoleToEdit = RoleType.STAFF,
         fieldName = "Jogosultságok",
         description = "Melyik roleokkal nyitható meg az oldal"
     )

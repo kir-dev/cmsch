@@ -29,7 +29,7 @@ class ChallengeComponent(
 
     final override val menuDisplayName = null
 
-    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.STAFF,
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
 }

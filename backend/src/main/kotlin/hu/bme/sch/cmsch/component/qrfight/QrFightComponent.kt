@@ -31,7 +31,7 @@ class QrFightComponent(
     final override var menuDisplayName by StringSettingRef("QR Fight", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.STAFF,
         fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var enabled by BooleanSettingRef(fieldName = "QR Fight engedélyezve",

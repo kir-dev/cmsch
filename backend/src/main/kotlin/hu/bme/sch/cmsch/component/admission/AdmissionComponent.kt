@@ -25,7 +25,7 @@ class AdmissionComponent(
 
     final override val menuDisplayName = null
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.NOBODY,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.STAFF,
         fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal"
     )
 

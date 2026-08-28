@@ -33,7 +33,7 @@ class ApplicationComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(defaultValue = MinRoleSettingRef.ALL_ROLES,
-        fieldName = "Jogosultságok", minRoleToEdit = RoleType.NOBODY,
+        fieldName = "Jogosultságok", minRoleToEdit = RoleType.STAFF,
         description = "Mely szerepkörökkel nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------

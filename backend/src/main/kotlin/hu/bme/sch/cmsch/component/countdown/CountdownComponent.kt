@@ -39,7 +39,7 @@ class CountdownComponent(
     final override val menuDisplayName = null
 
     final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, fieldName = "Jogosultságok",
-        description = "Mely szerepkörökkel nyitható meg az oldal", minRoleToEdit = RoleType.NOBODY)
+        description = "Mely szerepkörökkel nyitható meg az oldal", minRoleToEdit = RoleType.STAFF)
 
     var enabled by BooleanSettingRef(false, fieldName = "Bekapcsolva",
         description = "Aktív legyen-e a visszaszámlálás")
