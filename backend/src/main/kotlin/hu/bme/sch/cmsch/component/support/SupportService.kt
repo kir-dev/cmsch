@@ -212,9 +212,15 @@ class SupportService(
     }
 
     @Transactional
-    fun addCustomerMessage(threadUuid: String, content: String, authorName: String, authorEmail: String): SupportMessageEntity? {
+    fun addCustomerMessage(
+        threadUuid: String,
+        content: String,
+        authorName: String,
+        authorEmail: String,
+        reopenIfClosed: Boolean = false
+    ): SupportMessageEntity? {
         val thread = threadRepository.findByUuid(threadUuid).orElse(null) ?: return null
-        if (thread.status == SupportThreadStatus.DONE) return null
+        if (thread.status == SupportThreadStatus.DONE && !reopenIfClosed) return null
         val now = clock.getTimeInSeconds()
         thread.status = SupportThreadStatus.WAITING_FOR_ADMIN
         thread.updatedAt = now
@@ -228,7 +234,9 @@ class SupportService(
             authorEmail = authorEmail,
             fromAdmin = false
         ))
-        if (supportComponent.scheduleEnabled) {
+        if (thread.solverInternalId.isNotBlank()) {
+            notifySolverOfCustomerReply(thread, content, authorName, now)
+        } else if (supportComponent.scheduleEnabled) {
             autoAssignSupportUser(thread, content, authorName, now)
         }
         return message
@@ -242,6 +250,7 @@ class SupportService(
         if (!internalOnly) {
             thread.status = SupportThreadStatus.WAITING_FOR_CUSTOMER
             thread.solver = displayName
+            thread.solverInternalId = adminUser.internalId
         }
         thread.updatedAt = now
         threadRepository.save(thread)
@@ -284,6 +293,7 @@ class SupportService(
     fun claimThread(threadId: Int, adminUser: CmschUser, displayName: String = adminUser.userName) {
         val thread = threadRepository.findById(threadId).orElse(null) ?: return
         thread.solver = displayName.ifBlank { adminUser.userName }
+        thread.solverInternalId = adminUser.internalId
         thread.updatedAt = clock.getTimeInSeconds()
         threadRepository.save(thread)
     }
@@ -347,7 +357,10 @@ class SupportService(
         val existing = findMatchingThread(normalized, realEmail)
         val user = userRepository.findByEmailIgnoreCase(realEmail).orElse(null)
         if (existing != null) {
-            addCustomerMessage(existing.uuid, body, user?.fullName ?: realEmail, realEmail)
+            if (existing.status == SupportThreadStatus.DONE) {
+                log.info("Incoming email reopens closed thread '{}' from '{}'", existing.uuid, realEmail)
+            }
+            addCustomerMessage(existing.uuid, body, user?.fullName ?: realEmail, realEmail, reopenIfClosed = true)
         } else {
             createThread(subject, body, user?.internalId ?: "", realEmail, user?.fullName ?: realEmail)
         }
@@ -422,6 +435,7 @@ class SupportService(
 
         if (thread.solver.isBlank()) {
             thread.solver = userName
+            thread.solverInternalId = userId
             thread.updatedAt = clock.getTimeInSeconds()
             threadRepository.save(thread)
         }
@@ -454,6 +468,38 @@ class SupportService(
                 "adminUrl" to buildAdminThreadUrl(thread)
             ),
             to = listOf(supportUserEmail)
+        )
+    }
+
+    private fun notifySolverOfCustomerReply(thread: SupportThreadEntity, messageContent: String, customerName: String, messageTime: Long) {
+        val selector = supportComponent.customerReplyEmailTemplateSelector.trim()
+        if (selector.isBlank() || thread.solverInternalId.isBlank()) return
+
+        val solverUser = userRepository.findByInternalId(thread.solverInternalId).orElse(null)
+        val solverEmail = solverUser?.email ?: run {
+            log.warn("Could not find email for thread solver '{}', skipping reply notification", thread.solverInternalId)
+            return
+        }
+        if (solverEmail.isBlank()) return
+
+        val template = emailService.getTemplateBySelector(selector) ?: run {
+            log.warn("Customer reply email template '{}' not found, skipping", selector)
+            return
+        }
+
+        emailService.sendTemplatedEmail(
+            responsible = null,
+            template = template,
+            values = mapOf(
+                "title" to thread.title,
+                "message" to messageContent,
+                "messageHtml" to toMessageHtml(messageContent),
+                "userName" to customerName,
+                "creationDate" to formatHungarianDate(thread.createdAt),
+                "lastAnswerDate" to formatHungarianDate(messageTime),
+                "adminUrl" to buildAdminThreadUrl(thread)
+            ),
+            to = listOf(solverEmail)
         )
     }
 }

@@ -91,6 +91,10 @@ class SupportComponent(
         fieldName = "Megkeresés visszaigazoló sablon",
         description = "Ha üres, nem küld visszaigazolást. Sablon neve (selector). Változók: {{title}}, {{message}}, {{{messageHtml}}}, {{threadUrl}}, {{creationDate}}, {{lastAnswerDate}}. A {{{messageHtml}}} háromszoros kapcsos zárójelekkel illesztendő be.")
 
+    var customerReplyEmailTemplateSelector by StringSettingRef("support_customer_reply", serverSideOnly = true,
+        fieldName = "Ügyfél válasz email sablon",
+        description = "Ha üres, nem küld értesítést. Az ügyfél válaszáról a felelősnek küldött értesítő sablon neve (selector). Változók: {{title}}, {{message}}, {{{messageHtml}}}, {{userName}}, {{creationDate}}, {{lastAnswerDate}}, {{adminUrl}}. A {{{messageHtml}}} háromszoros kapcsos zárójelekkel illesztendő be.")
+
     // -----------------------------------------------------------------------------------------------------------------
 
     val biztonsag by SettingGroup(fieldName = "Biztonság")

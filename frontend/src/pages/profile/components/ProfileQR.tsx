@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import type { ProfileView } from '@/util/views/profile.view'
 import { QrCode } from 'lucide-react'
 import { useState } from 'react'
-import QRCode from 'react-qr-code'
+import { QRCode } from 'react-qr-code'
 
 export const ProfileQR = ({ profile, component }: { profile: ProfileView; component: Profile }) => {
   const [isOpen, setIsOpen] = useState(false)

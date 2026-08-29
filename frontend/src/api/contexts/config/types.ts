@@ -325,6 +325,7 @@ export interface Location {
 
 export interface Login {
   authschPromoted: boolean
+  authschPromotedFrontend: boolean
   passwordEnabled: boolean
   emailConfirmationEnabled: boolean
   forgotPasswordEnabled: boolean
