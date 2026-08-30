@@ -12,6 +12,7 @@ import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.RoleToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserDetailsByInternalIdMappingRepository
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
@@ -29,6 +30,7 @@ class LoginService(
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val userDetailsByInternalIdMapping: UserDetailsByInternalIdMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
+    private val roleToUserMapping: RoleToUserMappingRepository,
     private val groups: GroupRepository,
     private val loginComponent: LoginComponent,
     private val unitScopeComponent: UnitScopeComponent,
@@ -146,6 +148,7 @@ class LoginService(
         }
 
         grantGuildAndGroup(user)
+        grantRole(user)
 
         // Assign a fallback group if the user still doesn't have one
         if (user.groupName.isBlank()) {
@@ -176,6 +179,7 @@ class LoginService(
         }
 
         grantGuildAndGroup(user)
+        grantRole(user)
 
         if (user.internalId.isNotBlank() && !user.detailsImported) {
             userDetailsByInternalIdMapping.findByInternalId(user.internalId).ifPresent {
@@ -294,6 +298,22 @@ class LoginService(
                 user.major = it.major
                 addUserToGroup(user, it)
                 user.detailsImported = true
+            }
+        }
+    }
+
+    private fun grantRole(user: UserEntity) {
+        if (user.role.value > RoleType.BASIC.value) return
+        var applied = false
+        if (user.neptun.isNotBlank()) {
+            roleToUserMapping.findByNeptun(user.neptun).ifPresent {
+                user.role = it.role
+                applied = true
+            }
+        }
+        if (!applied && user.email.isNotBlank()) {
+            roleToUserMapping.findByEmailIgnoreCase(user.email).ifPresent {
+                user.role = it.role
             }
         }
     }
@@ -485,6 +505,7 @@ class LoginService(
         }
 
         grantGuildAndGroup(user)
+        grantRole(user)
 
         // Assign fallback group if user still don't have one
         if (user.groupName.isBlank()) {

@@ -58,7 +58,7 @@ class TszImportDashboard(
     adminMenuCategory = ApplicationComponent.DATA_SOURCE_CATEGORY,
     showPermission = ControlPermissions.PERMISSION_CONTROL_APP,
     adminMenuIcon = "upgrade",
-    adminMenuPriority = 4
+    adminMenuPriority = 10
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
