@@ -20,7 +20,7 @@ class LoginComponent(
     "/login",
     "Bejelentkezés",
     ControlPermissions.PERMISSION_CONTROL_APP,
-    listOf(UserEntity::class, GroupEntity::class, GroupToUserMappingEntity::class, GuildToUserMappingEntity::class),
+    listOf(UserEntity::class, GroupEntity::class, GroupToUserMappingEntity::class, GuildToUserMappingEntity::class, RoleToUserMappingEntity::class),
     env
 ) {
 

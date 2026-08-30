@@ -1035,6 +1035,34 @@ object StaffPermissions : PermissionGroup {
         component = UserHandlingComponent::class
     )
 
+    val PERMISSION_SHOW_ROLE_MAPPINGS = PermissionValidator(
+        "ROLE_MAPPING_SHOW",
+        "Jogkör hozzárendelések megtekintése",
+        readOnly = true,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_EDIT_ROLE_MAPPINGS = PermissionValidator(
+        "ROLE_MAPPING_EDIT",
+        "Jogkör hozzárendelések szerkesztése",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_CREATE_ROLE_MAPPINGS = PermissionValidator(
+        "ROLE_MAPPING_CREATE",
+        "Jogkör hozzárendelések létrehozása",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
+    val PERMISSION_DELETE_ROLE_MAPPINGS = PermissionValidator(
+        "ROLE_MAPPING_DELETE",
+        "Jogkör hozzárendelések törlése",
+        readOnly = false,
+        component = UserHandlingComponent::class
+    )
+
     val PERMISSION_SHOW_PERMISSION_GROUPS = PermissionValidator(
         "PERMISSION_GROUP_SHOW",
         "Jogkörök megtekintése",
@@ -1746,6 +1774,10 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_GROUP_MAPPINGS,
         PERMISSION_CREATE_GROUP_MAPPINGS,
         PERMISSION_DELETE_GROUP_MAPPINGS,
+        PERMISSION_SHOW_ROLE_MAPPINGS,
+        PERMISSION_EDIT_ROLE_MAPPINGS,
+        PERMISSION_CREATE_ROLE_MAPPINGS,
+        PERMISSION_DELETE_ROLE_MAPPINGS,
         PERMISSION_SHOW_PERMISSION_GROUPS,
         PERMISSION_EDIT_PERMISSION_GROUPS,
         PERMISSION_CREATE_PERMISSION_GROUPS,

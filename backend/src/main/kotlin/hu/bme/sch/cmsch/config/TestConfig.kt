@@ -27,6 +27,7 @@ import hu.bme.sch.cmsch.model.*
 import hu.bme.sch.cmsch.repository.GroupRepository
 import hu.bme.sch.cmsch.repository.GroupToUserMappingRepository
 import hu.bme.sch.cmsch.repository.GuildToUserMappingRepository
+import hu.bme.sch.cmsch.repository.RoleToUserMappingRepository
 import hu.bme.sch.cmsch.repository.UserRepository
 import hu.bme.sch.cmsch.service.UserProfileGeneratorService
 import hu.bme.sch.cmsch.util.sha256
@@ -65,6 +66,7 @@ class TestConfig(
     private val groupRepository: GroupRepository,
     private val groupToUserMapping: GroupToUserMappingRepository,
     private val guildToUserMapping: GuildToUserMappingRepository,
+    private val roleToUserMapping: RoleToUserMappingRepository,
     private val profileService: UserProfileGeneratorService,
     private val news: Optional<NewsRepository>,
     private val events: Optional<EventRepository>,
@@ -114,6 +116,7 @@ class TestConfig(
         extraPages.ifPresent { addExtraPages(it) }
         addGroupMapping()
         addGuildMappings()
+        addRoleMappings()
         riddleRepository.ifPresent { riddle ->
             riddleCategoryRepository.ifPresent { category ->
                 addRiddles(riddle, category)
@@ -1121,6 +1124,11 @@ class TestConfig(
         guildToUserMapping.save(GuildToUserMappingEntity(0, "RZPZTT", GuildType.RED))
         guildToUserMapping.save(GuildToUserMappingEntity(0, "HITMAN", GuildType.WHITE))
         guildToUserMapping.save(GuildToUserMappingEntity(0, "BATMAN", GuildType.BLACK))
+    }
+
+    private fun addRoleMappings() {
+        roleToUserMapping.save(RoleToUserMappingEntity(0, "RZPZTT", null, "Mottomén Kiez", RoleType.STAFF))
+        roleToUserMapping.save(RoleToUserMappingEntity(0, null, "hitman@sch.bme.hu", "Hitman Lajos", RoleType.PRIVILEGED))
     }
 
     private fun addExtraMenus() {
