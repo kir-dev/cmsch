@@ -84,7 +84,7 @@ const TaskPage = () => {
   const submissionAllowed =
     (data?.status === TaskStatus.NOT_SUBMITTED ||
       data?.status === TaskStatus.REJECTED ||
-      (component?.resubmissionEnabled && data.status === TaskStatus.SUBMITTED)) &&
+      (component?.resubmissionEnabled && (data.status === TaskStatus.SUBMITTED || data.status === TaskStatus.ACCEPTED))) &&
     !expired
   const reviewed = data.status === TaskStatus.ACCEPTED || data.status === TaskStatus.REJECTED
   const localSubmission = data?.task?.format === TaskFormat.NONE

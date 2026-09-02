@@ -192,7 +192,7 @@ class TasksService(
         val previous = submitted.findByTask_IdAndGroupId(answer.taskId, groupId)
         if (previous.isPresent) {
             val submission = previous.get()
-            if (submission.approved)
+            if (submission.approved && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_APPROVED
             if (!submission.rejected && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
@@ -220,7 +220,7 @@ class TasksService(
         val previous = submitted.findByTask_IdAndUserId(answer.taskId, user.id)
         if (previous.isPresent) {
             val submission = previous.get()
-            if (submission.approved)
+            if (submission.approved && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_APPROVED
             if (!submission.rejected && !taskComponent.resubmissionEnabled)
                 return TaskSubmissionStatus.ALREADY_SUBMITTED
