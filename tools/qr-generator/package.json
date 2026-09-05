@@ -14,7 +14,7 @@
     "csv-stringify": "^6.5.1",
     "mime": "^4.0.4",
     "progress": "^2.0.3",
-    "puppeteer": "^23.11.1",
+    "puppeteer": "^25.10.0",
     "yargs": "^17.7.2"
   },
   "packageManager": "npm@11.2.0+",
