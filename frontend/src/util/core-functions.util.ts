@@ -104,10 +104,5 @@ export function formatHu(date: Date | number, formatString: string) {
 }
 
 export function useOpaqueBackground(intensity: number = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10) {
-  const portion = 10
-  let intensityHex = Math.round(intensity * portion).toString(16)
-  if (intensityHex.length === 1) {
-    intensityHex = '0' + intensityHex
-  }
   return useColorModeValue('rgba(0,0,0,' + intensity / 10 + ')', 'rgba(255,255,255,' + intensity / 10 + ')')
 }
