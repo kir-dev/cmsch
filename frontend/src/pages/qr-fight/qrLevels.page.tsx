@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AbsolutePaths } from '@/util/paths'
 import { QrCode } from 'lucide-react'
 import { DataDisplayWrapper } from './components/DataDisplayWrapper'
-import { TreasureDataDisplayWrapper } from './components/TreasureDataDisplayWrapper.tsx'
 
 export default function QrLevelsPage() {
   const component = useConfigContext()?.components?.qrFight
@@ -32,7 +31,7 @@ export default function QrLevelsPage() {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="main">Fő szintek</TabsTrigger>
           <TabsTrigger value="extra">Extra szintek</TabsTrigger>
-          <TabsTrigger value="tour">Tour de QR</TabsTrigger>
+          {/*<TabsTrigger value="tour">Tour de QR</TabsTrigger>*/}
         </TabsList>
         <TabsContent value="main" className="px-0">
           {data.mainLevels.map((a) => (
@@ -44,11 +43,11 @@ export default function QrLevelsPage() {
             <DataDisplayWrapper level={a} key={a.name} />
           ))}
         </TabsContent>
-        <TabsContent value="tour">
+        {/*<TabsContent value="tour">
           {data.treasureHuntLevels.map((a) => (
             <TreasureDataDisplayWrapper level={a} key={a.name} />
           ))}
-        </TabsContent>
+        </TabsContent>*/}
       </Tabs>
     </CmschPage>
   )
