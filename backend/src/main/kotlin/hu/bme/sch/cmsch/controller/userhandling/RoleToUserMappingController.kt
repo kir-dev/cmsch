@@ -28,7 +28,7 @@ class RoleToUserMappingController(
 ) : OneDeepEntityPage<RoleToUserMappingEntity>(
     "role-to-user",
     RoleToUserMappingEntity::class, ::RoleToUserMappingEntity,
-    "Jogkör Hozzárendelés", "Jogkör hozzárendelések",
+    "Jogkör hozzárendelés", "Jogkör hozzárendelések",
     "Felhasználók neptun kód vagy email cím alapján jogkörhöz rendelése. A hozzárendelés minden bejelentkezésnél " +
             "megtörténik ha van egyezés és a felhasználónak még nincs BASIC-nél magasabb jogköre.",
 

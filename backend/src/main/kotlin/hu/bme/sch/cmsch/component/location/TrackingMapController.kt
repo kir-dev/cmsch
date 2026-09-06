@@ -65,7 +65,7 @@ class TrackingMapController(
             model.addAttribute("permission", PERMISSION_TRACK_EVERYBODY.permissionString)
             model.addAttribute("user", user)
             auditLogService.admin403(user, locationComponent.component, "GET /tracking",
-                PERMISSION_TRACK_ONE_GROUP.permissionString)
+                PERMISSION_TRACK_EVERYBODY.permissionString)
             return "admin403"
         }
 
