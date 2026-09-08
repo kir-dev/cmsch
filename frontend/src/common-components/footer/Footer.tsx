@@ -31,7 +31,12 @@ export const Footer = () => {
   const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
   if (!component) return null
 
-  const partnersVisible = component?.bmeEnabled || component?.vikEnabled || component?.schonherzEnabled || component?.schdesignEnabled
+  const partnersVisible =
+    component?.bmeEnabled ||
+    component?.vikEnabled ||
+    component?.schonherzEnabled ||
+    component?.schdesignEnabled ||
+    component?.partnerLogoUrls?.length > 0
   const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
   return (
     <footer className="flex flex-col items-center w-full" style={{ backdropFilter, backgroundColor: background }}>
