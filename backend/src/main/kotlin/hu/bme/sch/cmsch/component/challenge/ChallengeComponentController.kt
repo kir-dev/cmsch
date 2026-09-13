@@ -30,24 +30,46 @@ class ChallengeComponentController(
     auditLogService = auditLogService,
     storageService = storageService,
     documentationMarkdown = """
-A **Beadások** (Challenge) komponens egyszerű, pontozható beadások kezelésére szolgál.
+A **Beadások** komponens kézzel felvitt pontbejegyzések adminisztrációja. Nincs résztvevői oldala: a pontokat nem a résztvevők küldik be, hanem a szervezők rögzítik (helyszínen értékelt feladatok, külső rendszerből átvett pontok, korrekció, levonás). A bejegyzések a **Toplista** pontszámításába folynak be.
 
-## Beállítások
+## Hol találod
 
-A komponensnek nincsenek bonyolult globális beállításai:
+Az admin menü **Beadások** kategóriájában: **Beadások** (a bejegyzések listája), **Beadások testreszabása** (a komponens beállításai) és **Beadások Dokumentáció** (ez az oldal).
 
-- **Jogosultságok** – mely szerepkörökkel érhető el a beadások modul.
+A listához **Beadások megtekintése**, új bejegyzéshez **Beadások létrehozása**, módosításhoz **Beadások szerkesztése**, törléshez **Beadások törlése** jogosultság kell. A beállítások és a dokumentáció a **Beadások komponens testreszabása** jogosultság mögött van.
 
-## Beadások kezelése
+## Egy bejegyzés mezői
 
-A **Beadások** menüpont alatt:
+| Mező | Jelentése |
+| --- | --- |
+| **Kategória** | szabad szöveg; a **Toplista kategória szerint aktív** nézetben ez lesz a pont sora, ezért érdemes mindig ugyanazt a szöveget írni |
+| **Felhasználó** | a pontot kapó felhasználó (csak USER üzemmódban számít) |
+| **Csoport** | a pontot kapó csoport (csak GROUP üzemmódban számít) |
+| **Adott pont** | negatív érték is adható, így levonásra és korrekcióra is használható |
+| **Cimke** | szabad szöveges címke, a listában nem látszik |
 
-- **Beadások megtekintése** – láthatod a felhasználók által beküldött megoldásokat.
-- **Pontozás** – az adminisztrátorok pontot adhatnak a beküldött munkákra.
+A soroknál **Megtekintés**, **Szerkesztés**, **Másolat készítése** és **Törlés**, felül **Új Beadás**, **Import / Export** és **Összes törlése** érhető el; a kereső a Kategória, Felhasználó, Csoport és Pont oszlopokon működik.
 
-## Használati tippek
+## Felhasználó vagy csoport kapja a pontot?
 
-- Ezt a komponenst akkor használd, ha egyszerűbb, nem kategóriákba sorolt feladatokat akarsz beadatni a résztvevőkkel.
-- Ha komplexebb feladatkezelésre van szükséged (határidőkkel, kategóriákkal), használd a **Feladatok** komponenst.
+Ezt nem a Beadások beállításaiban, hanem a backend induló konfigurációjában lehet megadni (OWNER_CHALLENGE, azaz hu.bme.sch.cmsch.startup.challenge-ownership-mode), módosítása újraindítást igényel:
+
+- **USER**: a **Felhasználó** mezőt kell kitölteni, a csoportot a rendszer a felhasználó csoportjából írja be.
+- **GROUP**: a **Csoport** mezőt kell kitölteni, ilyenkor a bejegyzésben megadott felhasználó törlődik.
+
+Ha egyik mező sincs kitöltve (marad a "-"), a bejegyzés elmentődik, de senkihez nem tartozik, így a toplistán sem jelenik meg.
+
+## Hogyan lesz ebből toplista pont?
+
+- A pontok a **Toplista** komponens **Beadások szorzó (%)** beállításával skálázódnak (100 = 1x).
+- USER üzemmódban a felhasználói toplistán jelennek meg; a csoportos pontszámba csak a **Felhasználói pontok felhasználása pontszámításnál** bekapcsolásával számítanak bele.
+- GROUP üzemmódban csak azok a csoportok kapnak belőle pontot, amelyeknél a csoport adatlapján be van jelölve a **Játszik a csoport a versenyben?**.
+
+## Figyelmeztetések
+
+- **CSV importnál nem fut le a hivatkozás feloldása**: a **userId** és **groupId** oszlopot is ki kell tölteni, különben a pont nem a megfelelő résztvevőhöz kerül. A programból exportált CSV ezeket tartalmazza, kézzel írt fájlban pótolni kell.
+- A **Felhasználó**/**Csoport** mezőt mindig a legördülő listából válaszd, mert mentéskor a rendszer a kiválasztott rekord belső azonosítóját tárolja.
+- A csoportos pontszámítás a csoportot név szerint keresi, ezért egy csoport átnevezése után a korábbi bejegyzései kiesnek a csoportos toplistából.
+- A **Jogosultságok** beállítás jelenleg nem nyit meg semmit, mert a komponensnek nincs résztvevői oldala; az admin oldalakat a fenti jogosultságok szabályozzák.
 """
 )

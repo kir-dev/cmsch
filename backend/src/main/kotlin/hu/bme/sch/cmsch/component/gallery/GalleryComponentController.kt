@@ -30,37 +30,32 @@ class GalleryComponentController(
     auditLogService = auditLogService,
     storageService = storageService,
     documentationMarkdown = """
-A **Galéria** komponens a rendezvényen készült fotók és képek feltöltését és megjelenítését teszi lehetővé.
+A **Galéria** komponens a rendezvényen készült fotók gyűjteménye. A képeket az adminfelületen töltitek fel, a látogatók a galéria oldalán böngészik (kattintásra nagyban is megnyílnak), a kezdőlapra jelölt képek pedig a kezdőlapi carouselben jelennek meg.
 
 ## Beállítások
 
-A **Komponens beállításai** menüpontban konfigurálhatod a galéria alapvető adatait:
+A **Galéria** menü **Galéria testreszabása** pontjában:
 
-- **Lap címe** – a böngésző címsorában megjelenő szöveg.
-- **Menü neve** – a menüben látható név.
-- **Jogosultságok** – mely szerepkörökkel érhető el a galéria oldala.
+- **Jogosultságok** – mely szerepkörök nyithatják meg a galéria oldalát. Alapból üres, ilyenkor csak adminok látják, ezért élesítés előtt mindenképp állítsd be.
+- **Oldal tetején megjelenő szöveg** / **Oldal alján megjelenő szöveg** – Markdown szöveg a galériaoldal tetején, illetve alján; üresen nem jelenik meg.
 
-## Képoptimalizálás
+## Képek feltöltése
 
-A feltöltött képek automatikusan optimalizálásra kerülnek a jobb betöltési idő és kisebb tárolási igény érdekében:
+A **Képfeltöltés** menüpontban egyszerre több fájlt is kijelölhetsz, és mindegyikhez külön **Cím**, **Leírás**, valamint **Kiemelt** és **Kezdőlapra** kapcsoló tartozik. Feltölteni **GALLERY_CREATE** („Galéria képek létrehozása”) jogosultsággal lehet; a feltöltés végén a felület visszajelzi a hozzáadott képek nevét.
 
-- **Thumbnail generálás** – minden képhez automatikusan létrejön egy 800×800 pixeles thumbnail.
-- **Progressive JPEG** – a JPEG képek progresszív kódolással kerülnek mentésre, így a kép már a teljes betöltés előtt látható.
-- **Tömörítés** – a képek 85%-os minőségen kerülnek mentésre.
-- **Átlátszóság kezelése** – ha az eredeti kép rendelkezik alpha csatornával (PNG), az átalakítás során fehér háttér kerül a kép mögé.
+Feltöltéskor minden képhez készül egy legfeljebb 800×800 pixeles JPEG előnézet (**Thumbnail Url**), a galéria rácsában ez látszik, nagy nézetben viszont az eredeti fájl. Az eredeti feltöltött kép nem kerül átméretezésre vagy tömörítésre, ezért érdemes előre optimalizált képet feltölteni – a kezdőlapi carousel is az eredetit tölti. A szerver a teljes feltöltési kérést 30 MB-ra korlátozza, ennél nagyobb kép (vagy egyszerre túl sok kép) esetén a feltöltés hibára fut.
 
-## Galéria kezelése
+## Képek listája
 
-A [Képfeltöltés](/admin/control/gallery-upload) menüpont alatt töltheted fel a képeket. A feltöltéshez `PERMISSION_CREATE_GALLERY` jogosultság szükséges.
+A **Galéria** menüpont listázza az összes képet: innen tudsz egyesével új képet felvenni (ekkor az **Url** és **Thumbnail Url** mezőt neked kell kitöltened), szerkeszteni, törölni, illetve CSV-ben importálni és exportálni. A lista keresője a **Cím** és **Leírás** mezőben keres.
 
-- **Új kép feltöltése** – új fotó rögzítése.
-- **Szerkesztés / Törlés** – képek adatainak módosítása vagy eltávolítása.
-
-## Kép feltöltése / szerkesztése
-
-- **Cím** – a kép neve vagy rövid leírása.
-- **Kép** – a fájl feltöltése.
-- **Látható** – ha be van kapcsolva, megjelenik a galériában.
-- **Kezdőlapra mehet** – ha be van kapcsolva, a kép megjelenhet a kezdőlapi carouselben is (ha a kezdőlap komponensnél ez engedélyezve van).
+| Mező | Jelentés |
+| --- | --- |
+| **Cím** | A kép neve. |
+| **Leírás** | Rövid leírás, a galéria rácsában a kép alatt jelenik meg. |
+| **Url** | A kép linkje (a feltöltő automatikusan kitölti). |
+| **Thumbnail Url** | Az előnézet linkje (a feltöltő automatikusan kitölti; ha üres, a rács az eredeti képet használja). |
+| **Ezek a képek szerepelnek először** | A feltöltőn **Kiemelt**; jelenleg a galéria sorrendjét nem befolyásolja. |
+| **Megjelenhet a kezdőlapon** | A feltöltőn **Kezdőlapra**; a képet beveszi a kezdőlapi carouselbe, de csak ha a **Kezdőlap** komponensnél a **Galéria képek láthatóak** be van kapcsolva. |
 """
 )

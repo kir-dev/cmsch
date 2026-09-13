@@ -31,53 +31,38 @@ class FooterComponentController(
     auditLogService = auditLogService,
     storageService = storageService,
     documentationMarkdown = """
-# Stílus
+A **Lábléc** a felhasználói oldalak alján minden oldalon megjelenő sáv. A beállításai a **Stílus** kategória **Lábléc** menüpontjában találhatók, a színei (**Footer színe**, **Footer alsó sáv színe**, **A footerre alkalmazott filter**) viszont a **Stílus beállítások** menüpontban állíthatók, világos és sötét témához külön.
 
-A **Stílus** komponens segítségével testre szabhatod a weboldal megjelenését CSS-ismeretek nélkül.
+## Felépítés
 
-## Beállítások
+- Bal oldalon a **Footer szöveg**, mellette a szervező logója a linkjeivel és a Kir-Dev logó.
+- Felette a támogatói és partneri logósáv, legalul pedig egy fix, nem állítható sáv (Made with ♥ by Kir-Dev / Minden jog fenntartva, az aktuális évszámmal).
 
-A **Komponens beállításai** menüpontban konfigurálhatod a témákat:
+## Lábléc
 
-- **Világos téma (Light Mode)** – színek (háttér, szöveg, brand), háttérképek és logók beállítása nappali módhoz.
-- **Sötét téma (Dark Mode)** – színek és képek éjszakai módhoz. Szabályozható, hogy a rendszer automatikusan kövesse-e az eszköz beállításait, vagy kényszerítve legyen valamelyik mód.
-- **Tipográfia** – az oldalon használt betűtípusok (fontok) és azok forrásának (CDN) megadása.
+- **Minimalisztikus lábléc** – elrejti a támogatói és partneri logósávot, valamint a szervező linkjeit (Weboldal, Facebook, Instagram); csak a logók, a **Footer szöveg** és az alsó sáv maradnak.
+- **Esemény szervezőjének a logója** – feltölthető kép vagy URL; ha üres, nem jelenik meg kép. **Esemény szervezőjének alt szövege** – ha a kép nem tölt be, ez látszik.
+- **Esemény szervezőjének oldala** – a logó melletti Weboldal link. **Facebook url**, **Instagram url** – üresen hagyva az adott ikon nem jelenik meg.
+- **Footer szöveg** – a lábléc szöveges tartalma, Markdown formázással, több sorban is írható.
+- **A kir-dev oldala**, **A kir-dev kapcsolat linkje** – a Kir-Dev logó melletti linkek, csak **Fejlesztő** (SUPERUSER) szerepkörrel szerkeszthetők.
 
-## Funkciók
+## Támogatók
 
-- **Brand-szín** – egyetlen szín megadásával az egész oldal arculatát a rendezvényhez igazíthatod (gombok, linkek, kiemelések).
-- **Reszponzív hátterek** – külön háttérképet állíthatsz be asztali és mobil nézethez.
+- **Sponsorok láthatóak** – enélkül a támogatói blokk egyáltalán nem jelenik meg.
+- **Szponzorok fejléc** – a blokk fölé kerülő cím (alapértéke: Támogatóink).
+- **Sponsor logók**, **Sponsor alt üzenetek**, **Sponsor weblapok** – vesszővel elválasztott listák, amelyek pozíció szerint párosulnak: az első logóhoz az első alt szöveg és az első weblap tartozik. Ha egy weblap üres, az adott logó nem lesz kattintható.
 
-# Manifest
+## Partnerek
 
-A **Manifest** komponens a webalkalmazás (PWA - Progressive Web App) telepítési tulajdonságait szabályozza. Ez határozza meg, hogyan jelenik meg az oldal, ha a felhasználó hozzáadja a kezdőképernyőjéhez.
+- **BME VIK logó**, **BME logó**, **Schönherz logó**, **schdesign logó** – beépített logók, világos és sötét témához külön változatban.
+- **Szponzorok fejléc** – a partneri blokk címe (a felirat tévesen ugyanaz, mint a támogatóknál, alapértéke: Partnereink), továbbá **Partner logók**, **Partner alt üzenetek**, **Partner weblapok** – a támogatókéhoz hasonló vesszős listák.
+- A partneri blokk akkor jelenik meg, ha bármelyik beépített logó be van kapcsolva, vagy a **Partner logók** mező nem üres.
 
-## Beállítások
+## Figyelmeztetések
 
-A **Komponens beállításai** menüpontban konfigurálhatod a manifest fájlt:
-
-- **A manifest.json tartalma** – az alkalmazás neve, rövid neve, leírása, színei és megjelenítési módja (pl. `standalone`, `browser`).
-- **Ikonok** – a különböző eszközökhöz és felbontásokhoz szükséges ikonok feltöltése.
-
-## Funkciók
-
-- **PWA támogatás** – a helyesen beállított manifest lehetővé teszi, hogy az oldal alkalmazásként viselkedjen (ikon a főképernyőn, nincs böngésző keret).
-
-# Lábléc
-
-A **Lábléc** (Footer) komponens az oldal alján megjelenő információkat kezeli.
-
-## Beállítások
-
-A **Komponens beállításai** menüpontban konfigurálhatod a láblécet:
-
-- **Lábléc** – alapvető adatok: szervező logója, linkje, közösségi média elérhetőségek és a copyright szöveg.
-- **Támogatók** – a rendezvény szponzorainak logói és weboldalai.
-- **Partnerek** – együttműködő partnerek (pl. BME, VIK, SCH) logóinak megjelenítése.
-
-## Funkciók
-
-- **Minimalisztikus lábléc** – ha be van kapcsolva, a lábléc kevesebb helyet foglal, és csak a legszükségesebb információkat mutatja.
-- **Dinamikus partnerek** – a szponzorok és partnerek listája vesszővel elválasztott URL-ek megadásával egyszerűen bővíthető.
+- A **Sponsor logók** és **Partner logók** alapértéke `url1,url2`: írd felül valódi URL-ekkel vagy töröld, különben törött képek jelennek meg.
+- A három lista mindig ugyanannyi és ugyanolyan sorrendű elemet tartalmazzon, különben elcsúsznak az alt szövegek és a linkek.
+- A támogatói és partneri sáv a **Minimalisztikus lábléc** bekapcsolása esetén nem jelenik meg, hiába állítod be a többi beállítást.
+- A Kir-Dev logó és linkjei az admin felületről nem kapcsolhatók ki, csak a frontend `VITE_HIDE_KIR_DEV_IN_FOOTER` beállításával.
 """
 )

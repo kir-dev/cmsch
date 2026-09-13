@@ -31,31 +31,32 @@ class AccessKeyComponentController(
 
     storageService = storageService,
     documentationMarkdown = """
-A **Hozzáférési kulcsok** komponens segítségével egyedi kódokat generálhatsz, amelyeket a felhasználók beválthatnak bizonyos előnyökért (pl. csoportba kerülés, jogosultság szerzés).
+A **Hozzáférési kulcsok** komponenssel egyszer beváltható kódokat adhatsz ki: a kódot beváltó felhasználó csoportot és/vagy szerepkört kap. Minden kód egy sor a kulcsok listájában, és a beváltás ténye rákerül a sorra.
 
-## Beállítások
+## Beüzemelés
 
-A **Komponens beállításai** menüpontban konfigurálhatod a kódbeváltás folyamatát:
+1. A **Hozzáférések testreszabása** oldalon kapcsold be a **Lehet beváltani** opciót, és a **Jogosultságok** listában pipáld be azokat a szerepköröket, akik beválthatnak (pl. `ATTENDEE`). Ha egyet sem pipálsz be, a menüpontot és az oldalt az adminokon kívül senki nem látja.
+2. A **Hozzáférési kulcsok** oldalon az **Új Hozzáférési kulcs** gombbal vedd fel a kódokat. Kódgenerátor nincs: a **Kulcs** mezőbe kézzel írt szöveget kell beírni, a **Cimke** pedig csak emlékeztető (kit vagy mit jelöl).
+3. A **Menü neve** és a **Lap címe** adja a menüpont és az oldal nevét. A **Lapon megjelenő szöveg** (markdown) az oldal tetején jelenik meg, de csak akkor, ha a beváltás be van kapcsolva.
 
-- **Lap címe** – a böngésző címsorában megjelenő szöveg.
-- **Menü neve** – a menüben látható név.
-- **Hibaüzenetek** – testre szabható üzenetek különböző esetekre (hibás kód, már felhasznált kód, nincs bejelentkezve stb.).
-- **Működés** – engedélyezhető vagy tiltható a beváltás, illetve beállítható, hogy egy felhasználó több kódot is felhasználhat-e.
-- **Megjelenés** – egyedi leírás és mezőnév a beváltó oldalon.
+## Mit ad a kulcs?
 
-## Kulcsok kezelése
+A beváltás önmagában csak felhasználttá teszi a kulcsot; csoportot és szerepkört a soron lévő kapcsolók adnak:
 
-A **Hozzáférési kulcsok** menüpont alatt:
+| Mező a kulcs sorában | Hatás beváltáskor |
+| --- | --- |
+| **Csoport átállítása** + **Csoport neve** | a felhasználó csoportja erre a névre áll be. A névnek pontosan egyeznie kell egy létező csoporttal (a **Csoportok** menüben láthatók), különben a csoport nem változik, viszont a kód elhasználódik. |
+| **Szerep átállítása** + **Szerepkör** | a felhasználó szerepe erre áll be (`BASIC`-tól `SUPERUSER`-ig). |
 
-- **Új kulcs létrehozása** – egyedi kód generálása.
-- **Szerkesztés / Törlés** – kulcsok módosítása.
+Beváltáskor a **Felhasználó ID-je**, a **Felhasználó neve** és a **Mikor használta fel** mezők kitöltődnek; a név és az idő csak napló, a **Felhasználó ID-je** dönti el, hogy a kód fel van-e használva. Ha ezt visszaírod 0-ra, a kód újra beváltható.
 
-## Kulcs létrehozása / szerkesztése
+## Amire figyelni kell
 
-- **Név** – a kulcs belső neve.
-- **Kulcs** – maga a beváltandó kód (pl. `SECRET123`).
-- **Csoport** – melyik belső csoportba kerüljön a felhasználó beváltás után.
-- **Gárda** – melyik gárdába kerüljön a felhasználó.
-- **Szerepkör** – milyen jogosultságot kapjon (pl. ATTENDEE).
+- Egy **Kulcs** csak egyszer érvényes, és pontos egyezéssel keresődik: a beírt szöveg elejéről és végéről a szóköz levágódik, de a kis- és nagybetű számít.
+- Ha az **Egy felhasználó többet is beválthat** ki van kapcsolva, aki már beváltott egy kódot, az semmilyen további kódot nem tud beváltani (ilyenkor a **Te már használtál fel hibaüzenet** jön).
+- A **Szerepkör** valódi jogosultságot ad, akár `SUPERUSER`-ig, ezért a kulcs gyakorlatilag jelszó: csak annak add oda, akit fel akarsz jogosítani.
+- A hibaüzenetek külön beállításokként átírhatók: **Hibás kód hibaüzenet**, **Kód be lett váltva hibaüzenet**, **Nem lett bejelentkezve hibaüzenet** (bejelentkezés nélkül nem lehet beváltani), **Te már használtál fel hibaüzenet**, **Kikapcsolt hibaüzenet**.
+- A **Lehet beváltani** kikapcsolásakor a beváltó oldal figyelmeztetést mutat, beküldésre pedig a **Kikapcsolt hibaüzenet** szövege jön vissza.
+- A kulcsok listája CSV-ben importálható és exportálható, egy sorról pedig a **Másolat készítése** gombbal készíthető új kulcs.
 """
 )
