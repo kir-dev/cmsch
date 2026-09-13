@@ -10,16 +10,18 @@ import hu.bme.sch.cmsch.service.StorageService
 import hu.bme.sch.cmsch.service.TimeService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.resilience.annotation.Retryable
+import org.springframework.dao.CannotAcquireLockException
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.TransactionDefinition
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.multipart.MultipartFile
-import java.sql.SQLException
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 private const val target = "task"
+private const val MAX_SERIALIZABLE_ATTEMPTS = 5
 
 @Service
 @ConditionalOnBean(TaskComponent::class)
@@ -32,10 +34,30 @@ class TasksService(
     private val listeners: List<TaskSubmissionListener>,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
-    private val storageService: StorageService
+    private val storageService: StorageService,
+    private val transactionManager: PlatformTransactionManager
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    private val serializableTransaction = TransactionTemplate(transactionManager).apply {
+        isolationLevel = TransactionDefinition.ISOLATION_SERIALIZABLE
+    }
+
+    private fun <T> withSerializableRetry(action: String, block: () -> T): T {
+        var attempt = 0
+        while (true) {
+            try {
+                return serializableTransaction.execute { block() }!!
+            } catch (e: CannotAcquireLockException) {
+                // Postgres aborts one of the concurrent SERIALIZABLE transactions at commit time;
+                // retrying in a fresh transaction succeeds once the competing one is done.
+                if (++attempt >= MAX_SERIALIZABLE_ATTEMPTS) throw e
+                log.warn("Serializable transaction conflict during $action, retrying ($attempt/$MAX_SERIALIZABLE_ATTEMPTS)")
+                Thread.sleep(100L shl (attempt - 1))
+            }
+        }
+    }
 
 
     @Transactional(readOnly = true)
@@ -116,9 +138,21 @@ class TasksService(
         }
     }
 
-    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun submitTaskReview(
+        taskId: Int,
+        userId: Int?,
+        groupId: Int?,
+        reviewMessage: String,
+        isApproved: Boolean,
+        score: Int,
+        adminUserName: String
+    ): Boolean {
+        return withSerializableRetry("task review") {
+            doSubmitTaskReview(taskId, userId, groupId, reviewMessage, isApproved, score, adminUserName)
+        }
+    }
+
+    private fun doSubmitTaskReview(
         taskId: Int,
         userId: Int?,
         groupId: Int?,
@@ -172,9 +206,11 @@ class TasksService(
         return true
     }
 
-    @Retryable(value = [ SQLException::class ], maxRetries = 5, delay = 500L, multiplier = 1.5)
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun submitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
+        return withSerializableRetry("task submission") { doSubmitTaskForGroup(answer, file, user) }
+    }
+
+    private fun doSubmitTaskForGroup(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
         val groupId = user.groupId
             ?: return TaskSubmissionStatus.NO_ASSOCIATE_GROUP
         val task = taskRepository.findById(answer.taskId).orElse(null)
@@ -203,8 +239,11 @@ class TasksService(
         }
     }
 
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun submitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
+        return withSerializableRetry("task submission") { doSubmitTaskForUser(answer, file, user) }
+    }
+
+    private fun doSubmitTaskForUser(answer: TaskSubmissionDto, file: MultipartFile?, user: CmschUser): TaskSubmissionStatus {
         val task = taskRepository.findById(answer.taskId).orElse(null)
             ?: return TaskSubmissionStatus.INVALID_TASK_ID
 
