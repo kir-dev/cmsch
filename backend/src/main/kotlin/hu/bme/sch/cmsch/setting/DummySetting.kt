@@ -21,7 +21,7 @@ class DummySetting(
 data class SettingGroup(
     private val fieldName: String,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN,
+    private val minRoleToEdit: RoleType = RoleType.STAFF,
 ) : SettingRegisteringLoader<DummySetting>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): DummySetting =

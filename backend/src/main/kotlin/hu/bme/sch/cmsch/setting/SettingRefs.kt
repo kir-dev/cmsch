@@ -14,7 +14,7 @@ data class StringSettingRef(
     private val type: SettingType = SettingType.TEXT,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN
+    private val minRoleToEdit: RoleType = RoleType.STAFF
 ) : SettingRegisteringLoader<SettingRef<String>>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
@@ -46,7 +46,7 @@ data class SelectSettingRef(
     private val type: SettingType = SettingType.SELECT,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN,
+    private val minRoleToEdit: RoleType = RoleType.STAFF,
 ) : SettingRegisteringLoader<SettingRef<String>>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<String> =
@@ -79,7 +79,7 @@ data class EnumSettingRef<T>(
     private val type: SettingType = SettingType.SELECT,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN
+    private val minRoleToEdit: RoleType = RoleType.STAFF
 ) : SettingRegisteringLoader<SettingRef<T>>() where T : Enum<T> {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<T> =
@@ -112,7 +112,7 @@ data class JsonSettingRef<T : Any>(
     private val type: SettingType = SettingType.JSON,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN
+    private val minRoleToEdit: RoleType = RoleType.STAFF
 ) : SettingRegisteringLoader<SettingRef<T>>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<T> =
@@ -143,7 +143,7 @@ data class NumberSettingRef(
     private val type: SettingType = SettingType.NUMBER,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN
+    private val minRoleToEdit: RoleType = RoleType.STAFF
 ) : SettingRegisteringLoader<SettingRef<Long>>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Long> =
@@ -174,7 +174,7 @@ data class BooleanSettingRef(
     private val type: SettingType = SettingType.BOOLEAN,
     private val fieldName: String? = null,
     private val description: String = "",
-    private val minRoleToEdit: RoleType = RoleType.ADMIN
+    private val minRoleToEdit: RoleType = RoleType.STAFF
 ) : SettingRegisteringLoader<SettingRef<Boolean>>() {
 
     override fun provideSetting(thisRef: ComponentBase, prop: KProperty<*>): SettingRef<Boolean> =
