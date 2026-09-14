@@ -30,29 +30,49 @@ class DebtComponentController(
     auditLogService = auditLogService,
     storageService = storageService,
     documentationMarkdown = """
-A **Tartozások** (vagy Fogyasztás) komponens a rendezvény alatt vásárolt termékek és az értük fizetendő összegek nyilvántartására szolgál.
+A **Tartozások** komponens a rendezvény alatti vásárlások nyilvántartása: ki mit vett, mennyiért (JMF), fizetett-e már, és melyik csoport felel érte. A vásárlók a **Fogyasztás** menüpontban látják a saját tételeiket.
 
 ## Beállítások
 
-A **Komponens beállításai** menüpontban konfigurálhatod a modult:
+- **Oldal tetején megjelenő szöveg** – markdown szöveg a vásárlói oldal tetején (fizetés módja, határidő). Ha üres, nem jelenik meg.
+- **Lap címe** és **Menü neve** alapértéke „Fogyasztás", miközben az admin menüben minden **Tartozások** néven szerepel.
 
-- **Lap címe** – a böngésző címsorában megjelenő szöveg.
-- **Menü neve** – a menüben látható név.
-- **Jogosultságok** – mely szerepkörökkel érhető el a saját fogyasztás oldala.
-- **Oldal tetején megjelenő szöveg** – egyedi tájékoztató a fizetés módjáról vagy a határidőkről. Ha üres, nem jelenik meg.
+## Beüzemelés sorrendje
 
-## Tartozások kezelése
+1. A **Termékek** oldalon vedd fel a terméket, és állítsd **Elérhető**-re, amit árulni fogtok.
+2. Árusításkor a sor végén az **Árusít** gomb nyitja a QR-fizetés oldalt: a vevő profil-QR kódját olvassa be (kézzel a **Neptun-kód** is megadható), és megerősítés után azonnal létrejön a tranzakció.
+3. A vevő a **Fogyasztás** oldalon és a **Saját tartozásaim** oldalon követi, mi tartozik hozzá. A tartozás mindig a vevő csoportjához kerül.
+4. A csoport bármely tagja a **Csoportom tartozásai** oldalon a **Fizetve** gombbal jelölheti, hogy átvette a pénzt – onnantól a **Felelős neve** ő lesz, és neki kell elszámolnia a gazdaságissal.
+5. A **Tranzakciók** oldalon (és a csoportosított listák szerkesztésénél) az **Átadva**, **Fizetve**, **Lezárva** jelölők kézzel is átállíthatók; a **Napló** mező naplózza a változtatásokat.
 
-Két fő részből áll a rendszer:
+## Termék mezői
 
-1. **Termékek** – itt veheted fel a megvásárolható tételeket (pl. "Póló", "Ételjegy", "Sör"). Megadható a név és az ár.
-2. **Eladott termékek** – a konkrét vásárlások listája. Itt látszik, hogy ki mit vett, és hogy kifizette-e már (fizetve státusz).
+| Mező | Mit jelent |
+| --- | --- |
+| **Név**, **Ár** | A termék neve és egységára JMF-ben. |
+| **Típus** | MERCH / FOOD / OTHER. Csak ennek alapján kerül fel a termék az **Étel árusítás** vagy **Merch árusítás** listára; az OTHER típus csak a **Termék árusítás** listán jelenik meg. |
+| **Elérhető** | Csak az elérhető terméket lehet eladni, ezt ellenőrzi az árusítás. |
+| **Látható** | Jelenleg semmilyen felületet nem szabályoz. |
+| **Termék leírása**, **Kép a termékről**, **Material Ikon** | Megjelenítéshez használt adatok. |
 
-## Termék létrehozása / szerkesztése
+## Admin oldalak
 
-- **Név** – a termék megnevezése.
-- **Ár** – a termék egységára.
-- **Típus** – kategória (opcionális).
-- **Látható** – elérhető-e a termék az eladáshoz.
+| Oldal | Mit tudsz itt |
+| --- | --- |
+| **Termékek** | A vásárolható termékek kezelése, importtal és exporttal. |
+| **Termék árusítás**, **Étel árusítás**, **Merch árusítás** | Árusító listák (mind / FOOD / MERCH típus), innen nyílik a QR-fizetés. |
+| **Tranzakciók** | Az összes eladás. Új tranzakció nem hozható létre, a vevő/eladó/termék adatai nem szerkeszthetők, csak a jelölők. |
+| **Eladott termékek** | Eladott darabszám termékenként. |
+| **Saját tartozásaim** | Mindenki a saját tételeit látja. |
+| **Csoportom tartozásai** | A saját csoportod tételei; csak csoporttagoknak jelenik meg. |
+| **Csoportok tartozásai** | Csoportonkénti összesítés: **Forgalom [JMF]**, **Fizetetlen [JMF]**, **Lezáratlan [JMF]**. |
+| **Felhasználó tartozásai** | Felhasználónkénti összesítés ugyanígy. |
+
+## Jogosultságok és buktatók
+
+- Árusításhoz **Bármilyen típusú termék eladása**, **Étel típusú termék eladása** vagy **Merch típusú termék eladása** jogosultság kell; az összesítésekhez **Összes tartozás megtekintése**, **Tartozások szerkesztése**, **Eladott termékek statisztikájának megtekintése**. Jogosultságot a **Felhasználó kezelés** alatt, a **Jogkörök** vagy a **Felhasználók** oldalon adhatsz.
+- A vevőnek csoportban kell lennie, különben nem jön létre a vásárlás.
+- A tranzakció a vásárlás pillanatában rögzíti a termék nevét és árát, az utólagos árváltozás a már eladott tételeket nem érinti.
+- A **Fizetve** gomb a **Csoportom tartozásai** oldalon nem vonható vissza (már fizetett tételre nem csinál semmit), a **Tranzakciók** oldalon viszont a jelölő átállítható.
 """
 )

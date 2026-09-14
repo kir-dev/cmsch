@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>%VITE_NAME%</title>
     <meta name="description" content="%VITE_DESCRIPTION%" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="%VITE_NAME%" />
+    <meta property="og:description" content="%VITE_DESCRIPTION%" />
 
     <style>
       html {
@@ -61,17 +64,41 @@
         fetch(apiBase + '/api/error/submit', {
           body: JSON.stringify(report),
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' }
         }).catch((err) => console.error('Failed to report error', err))
       }
 
+      // Third-party scripts (browser-internal or extension content scripts) throw these;
+      // they are not app errors, so don't report them.
+      function isNoise(message, stack) {
+        const text = (message || '') + '\n' + (stack || '')
+        return (
+          text.includes('iabjs://') || // Android in-app browser internals
+          text.includes('webkit-masked-url://') || // Safari content scripts
+          text.includes('__gCrWeb') || // iOS Chrome internals
+          text.includes('__firefox__') || // Firefox-iOS extension scripts
+          text.includes('DarkReader') || // Dark Reader extension
+          text.includes('window.ethereum') || // crypto wallet extensions
+          text.includes('contentScriptData') || // Safari extension content scripts
+          text.includes('runtime.sendMessage()') || // extension messaging
+          text.includes('standardSelectors') || // ad-blocker internals
+          text.includes('translateDisabled') // translate extension
+        )
+      }
+
       function processAndReportError(error) {
         if (typeof error !== 'object') {
-          reportError(JSON.stringify(error), null)
+          const message = JSON.stringify(error)
+          if (!isNoise(message, null)) {
+            reportError(message, null)
+          }
         } else {
           const message = error.message || null
           const stack = error.stack || null
-          reportError(message, stack)
+          if (!isNoise(message, stack)) {
+            reportError(message, stack)
+          }
         }
       }
 

@@ -32,45 +32,37 @@ class NewsComponentController(
     auditLogService = auditLogService,
     storageService = storageService,
     documentationMarkdown = """
-A **Hírek** komponens segítségével híreket és közleményeket tudsz létrehozni és megjeleníteni a felhasználók számára.  
-Az adminfelületen keresztül minden fontos beállítást elérsz.
+A **Hírek** komponens hírek és közlemények közzétételére való: a híreket az adminfelületen veszed fel, a látogatók pedig a nyilvános **Hírek** oldalon olvassák. Egy hír csak akkor kerül ki, ha a **Látható a hír** be van kapcsolva, a **Publikálás időpontja** már elmúlt, és a néző rangja eléri a **Minimum rang a megtekintéshez** értékét.
 
-## Beállítások
+## Hírek felvétele
 
-A **Komponens beállításai** menüpontban konfigurálhatod a hírek megjelenését:
+A **Hírek** menüpontban (**Új Hír** gomb) veszed fel a híreket. A lista oszlopai **ID**, **Cím**, **Látható** és **Kiemelt**, a kereső pedig csak a **Cím** mezőben keres. Soronként **Megtekintés**, **Szerkesztés**, **Másolat készítése** és **Törlés**, a lap tetején **Import / Export** és **Összes törlése** gomb van.
 
-- **Lap címe** – ez jelenik meg a böngésző címsorában.
-- **Menü neve** – a menüben látható név.
-- **Jogosultságok** – mely szerepkörökkel érhető el a hírek oldala.
-- **Részletes nézet** – ha be van kapcsolva, akkor a hírek külön oldalon is megnyithatók, nem csak listában.
+| Mező | Jelentés |
+| --- | --- |
+| **Cím** | a hír címe, ez látszik a listában és a részletes oldalon is. |
+| **Url** | a hír azonosítója, ez szerepel a részletes oldal és a megosztott link címében. Csak nem ékezetes kisbetűt és kötőjelet használj, és minden hírnél legyen egyedi. |
+| **Rövid tartalom** | Markdown szöveg, a listában a cím alatt jelenik meg. |
+| **Tartalom** | Markdown szöveg, csak a részletes nézetben látszik. |
+| **Kép a hír mellé** | kép linkje vagy feltöltött fájl; a listában kis négyzetben, a részletes nézetben nagyban jelenik meg. |
+| **Látható a hír** | kikapcsolva a hír sehol nem jelenik meg, akkor sem, ha az időpontja már elmúlt. |
+| **Kiemelt hír** | a lista tetejére kerül, nagyobb címmel és kiemelt színű kerettel. |
+| **Publikálás időpontja** | eddig az időpontig a hír nem jelenik meg; egyben a lista sorrendje is ez, csökkenően. |
+| **Minimum rang a megtekintéshez** | a látható hírt is csak az ennél legalább ilyen rangú felhasználók látják (GUEST = kijelentkezett, BASIC = belépett, STAFF = rendező). |
+| **OG:Title**, **OG:Image**, **OG:Description** | a megosztott link előnézetéhez; üresen hagyva az előnézet címe, képe és leírása is üres lesz. |
 
-## Hírek kezelése
+## Megjelenés a látogatóknál
 
-A hírek listájában láthatod az összes eddig létrehozott hírt. Innen tudsz:
+- A **Hírek** oldalon a **Kiemelt hír** bejegyzések jönnek elöl, utána a többi hír **Publikálás időpontja** szerint csökkenő sorrendben. A lista tetején a kereső a **Cím** mezőben szűr.
+- A listaelem címe csak akkor kattintható, ha a **Hírek testreszabása** oldalon a **Részletes nézet** be van kapcsolva: ekkor nyílik meg a külön hír oldal a **Tartalom** mezővel. Kikapcsolva a részletes oldal nem érhető el.
+- A kezdőlapon is megjelennek a hírek, de csak ha a Kezdőlap beállításai között a **Hírek láthatóak** be van kapcsolva, és legfeljebb a **Max megjelenő hír** értéknek megfelelő darabszámban.
+- A `share/news/{Url}` cím közösségi megosztásra való előnézetet ad, és a hír oldalára visz tovább.
 
-- **Új hír létrehozása** gombbal új hírt rögzíteni.
-- Meglévő hírt **szerkeszteni** vagy **törölni**.
-- Állapotukról információt szerezni (látható / kiemelt / publikálás ideje).
+## Amit érdemes tudni
 
-## Hír létrehozása / szerkesztése
-
-Új hír felvételekor vagy szerkesztéskor a következő mezőket tudod beállítani:
-
-- **URL** – rövid azonosító, ami a hír webcímében szerepel. Csak kisbetűk és kötőjelek használhatók.
-- **Cím** – a hír fő címe.
-- **Rövid tartalom** – rövid leírás, ami a hírek listájában jelenik meg.
-- **Tartalom** – a hír teljes szövege, Markdown-formázással.
-- **Kép** – illusztráció a hírhez (feltöltés szükséges).
-- **Látható** – ha be van kapcsolva, a hír megjelenik a felhasználók számára.
-- **Kiemelt** – ha be van jelölve, a hír külön kiemeltként jelenhet meg a felületen.
-- **Publikálás időpontja** – időzítésre használható. Az itt beállított időpont előtt nem látszik a hír.
-- **Minimum szerepkör a megtekintéshez** – korlátozhatod, hogy csak bizonyos szerepkörrel rendelkező felhasználók lássák.
-- **OG:Title, OG:Image, OG:Description** – a közösségi megosztásokhoz tartozó metaadatok.
-
-## Használati tippek
-
-- Ha **előre be szeretnéd időzíteni** a hírt, állítsd be a publikálás időpontját, és jelöld be a **Látható** kapcsolót. A hír csak az időpont után fog megjelenni.
-- A **Kiemelt hírek** előtérbe kerülnek a felhasználói oldalon, ezért fontos közleményeknél használd.
-- A **Jogosultságok** mezővel egyszerűen korlátozhatod, hogy egy hír csak a szervezőknek, vagy csak a bejelentkezett résztvevőknek látszódjon.
+- Ha nem adsz meg **Publikálás időpontját**, a hír azonnal látható, de a lista végére kerül, mert a sorrend időpont szerint csökkenő.
+- A **Másolat készítése** minden mezőt átmásol, az **Url**-t is: mentés előtt írd át, különben két hír kerül ki ugyanazzal az azonosítóval, és a részletes nézet hibára fut.
+- A CSV import és export nem tartalmazza a **Kép a hír mellé** és az OG mezőket, ezeket import után kézzel kell kitölteni.
+- Az **Összes törlése** az összes hírt véglegesen törli.
 """
 )

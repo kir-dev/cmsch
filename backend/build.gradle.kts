@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "4.0.6"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.owasp.dependencycheck") version "12.2.2"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
-    id("org.sonarqube") version "7.3.0.8198"
+    id("org.owasp.dependencycheck") version "13.0.0"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.spring") version "2.4.10"
+    id("org.sonarqube") version "7.5.0.8588"
 }
 
 group = "hu.bme.sch"
@@ -54,18 +54,18 @@ dependencies {
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.google.zxing:javase:3.5.4")
-    implementation("com.itextpdf:itext-core:9.6.0")
-    implementation("com.squareup.okhttp3:okhttp:5.3.2")
+    implementation("com.itextpdf:itext-core:9.7.1")
+    implementation("com.squareup.okhttp3:okhttp:5.5.0")
     implementation(platform("io.jsonwebtoken:jjwt-bom:0.13.0"))
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
     implementation("io.jsonwebtoken:jjwt-api")
-    implementation(platform("io.micrometer:micrometer-bom:1.16.5"))
+    implementation(platform("io.micrometer:micrometer-bom:1.17.1"))
     runtimeOnly("io.micrometer:micrometer-core")
     runtimeOnly("io.micrometer:micrometer-observation")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    implementation("org.commonmark:commonmark-ext-gfm-tables:0.28.0")
-    implementation("org.commonmark:commonmark:0.28.0")
+    implementation("org.commonmark:commonmark-ext-gfm-tables:0.30.0")
+    implementation("org.commonmark:commonmark:0.30.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
@@ -75,7 +75,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -85,7 +85,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webclient")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("software.amazon.awssdk:s3:2.44.12")
+    implementation("software.amazon.awssdk:s3:2.54.13")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -99,7 +99,7 @@ dependencyCheck {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_4)
         jvmTarget.set(JvmTarget.JVM_25)
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.TypeDescriptor
 import org.springframework.core.convert.converter.GenericConverter
+import org.springframework.resilience.annotation.EnableResilientMethods
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
@@ -21,6 +22,7 @@ import java.util.*
 @Configuration
 @EnableScheduling
 @EnableAsync
+@EnableResilientMethods
 class AppConfig {
 
     @Bean

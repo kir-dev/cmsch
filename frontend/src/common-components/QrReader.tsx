@@ -14,6 +14,11 @@ const selectCamera = async (): Promise<string> => {
 export function QrReader({ onScan }: QrReaderProps) {
   const codeReader = useRef(new BrowserQRCodeReader())
   const videoElement = useRef<HTMLVideoElement>(null)
+  const onScanRef = useRef(onScan)
+
+  useEffect(() => {
+    onScanRef.current = onScan
+  }, [onScan])
 
   useEffect(() => {
     let controls: IScannerControls | null
@@ -26,7 +31,7 @@ export function QrReader({ onScan }: QrReaderProps) {
       controls = await codeReader.current.decodeFromVideoDevice(selectedDeviceId, videoElement.current, (result, _err, controls) => {
         if (result) {
           controls.stop()
-          onScan(result.getText())
+          onScanRef.current(result.getText())
         }
       })
 
@@ -39,7 +44,7 @@ export function QrReader({ onScan }: QrReaderProps) {
       cancelled = true
       controls?.stop()
     }
-  }, [onScan, videoElement])
+  }, [videoElement])
   return (
     <div className=" w-fit h-fit rounded-lg overflow-hidden mx-auto">
       <video height="100%" width="100%" className="object-cover" ref={videoElement} />

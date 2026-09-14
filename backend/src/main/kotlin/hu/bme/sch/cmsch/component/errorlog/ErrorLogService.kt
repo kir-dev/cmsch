@@ -39,6 +39,7 @@ class ErrorLogService(
                 userAgent = userAgent,
                 href = href,
                 role = role,
+                lastReportedAt = clock.getTimeInSeconds(),
             )
             errorLogRepository.save(newLog)
         }

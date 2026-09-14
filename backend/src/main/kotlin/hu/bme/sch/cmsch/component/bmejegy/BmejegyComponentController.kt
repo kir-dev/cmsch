@@ -35,19 +35,43 @@ class BmejegyComponentController(
         menuService = menuService,
         storageService = storageService,
         documentationMarkdown = """
-    A **BME Jegy** komponens a bmejegy.hu rendszerével való integrációt valósítja meg. Lehetővé teszi a kifizetett jegyek automatikus szinkronizálását és a sikeres vásárlás utáni jogosultságkiosztást.
-    
+    A **BME JEGY** komponens a bmejegy.hu-s jegyvásárlásokat szinkronizálja a CMSch-ba: a megvásárolt jegyek a **Jegyek** menüben jelennek meg, a vásárló pedig automatikusan szerepkört vagy csoportot kaphat.
+
     ## Beállítások
-    
-    A **Komponens beállításai** menüpontban konfigurálhatod a szinkronizációt:
-    
-    - **Működés** – engedélyezhető az automatikus szinkronizáció és beállítható annak gyakorisága.
-    - **Fizetés utáni műveletek** – meghatározható, hogy egy adott termék (pl. "Gólyatábor jegy") megvásárlása után a felhasználó milyen jogosultságot (ATTENDEE, PRIVILEGED) kapjon, vagy melyik belső csoportba kerüljön át.
-    
-    ## Funkciók
-    
-    - **Automatikus szinkronizáció** – a rendszer rendszeres időközönként lekéri a bmejegy.hu-ról a friss vásárlásokat.
-    - **Voucher-kezelés** – a szinkronizált jegyek adatai (voucher-kód, típus) tárolódnak a rendszerben, és felhasználhatók beléptetésnél.
+
+    A **Jegyek testreszabása** menüpont **Működés** csoportjában:
+
+    - **Szinkronizáció** – a bmejegy.hu-s automatikus letöltés főkapcsolója. Ha a jegyeket a Cheers rendszer küldi be API-n keresztül, ez a kapcsoló nem befolyásolja a beérkezést.
+    - **Frissítési idő** – hány percenként nézze meg a bmejegy.hu-t (alapból 10).
+    - **Buffer méret** – [ADVANCED] a letöltött válasz maximális mérete; csak akkor növeld, ha a szinkronizálás mérethirdő hibát ír a naplóba.
+    - A **NEM TÁMOGATOTT** jelölésű mezőket csak indokolt esetben módosítsd: a **Keresés NEPTUN alapján** nincs implementálva, a **Szig. szám mező neve** viszont az egyeztetéshez kell.
+
+    ## Fizetés utáni műveletek
+
+    A **Fizetés utáni művelet #1**, **#2** és **#3** csoportokban három termékszabály adható meg:
+
+    - **Termék neve** – a megvásárolt termék nevének részlete; üresen hagyva a szabály nem él.
+    - **Adjon-e ATTENDEE ROLE-t**, **Adjon-e PRIVILEGED ROLE-t** – a vevő szerepkörét állítja. Ha mindkettő be van kapcsolva, a PRIVILEGED marad.
+    - **Csoportba helyezés** – a vevő átkerül az itt megadott nevű csoportba (pontos csoportnév kell, üresen nem állít).
+
+    ## Jegy és felhasználó összekapcsolása
+
+    Szerepkör és csoport csak akkor jár, ha a jegyhez tartozik beazonosított felhasználó – ez a **Jegyek** táblában a **Beazonosított user ID-ja** mező. Az egyeztetés csak az **Űrlapok** menüben a **BME jegy integráció** kapcsolóval megjelölt űrlapok beküldéseiből dolgozik, és csak azokra a jegyekre fut le, ahol a mező még 0:
+
+    | Jegyek honnan | Kapcsoló | Az űrlapmező neve |
+    | --- | --- | --- |
+    | bmejegy.hu letöltés | **Keresés SZIGSZÁM alapján** | **Szig. szám mező neve** |
+    | Cheers feltöltés | **Keresés EMAIL alapján** | **Email mező neve** |
+
+    ## Jegyek menü
+
+    Itt láthatók és szerkeszthetők a szinkronizált sorok (a listában **Termék**, **Vásárló**, **Email**, **Státusz**, **QR**), a sorok importálhatók és exportálhatók. A szinkronizáló **csak új jegyet vesz fel** – a **Rendelés termék azonosító** alapján dönti el, hogy egy jegyet ismer-e már –, a meglévő sorokat nem írja felül, így a kézi javításaid megmaradnak.
+
+    ## Figyelmeztetések
+
+    - A szerepkör-állítás csak **STAFF** alatti felhasználókra hat. Ha csak az **Adjon-e ATTENDEE ROLE-t** van bekapcsolva, a magasabb jogú (PRIVILEGED) vevő is **ATTENDEE**-re csökken.
+    - A **Beazonosított user ID-ja** kézi átírása maradandó: az automatikus egyeztetés csak a 0 értékű sorokat nézi.
+    - A jegy **QR** mezője a voucher-kód. Bmejegy.hu-s letöltésnél a **Jegyellenőrzés** menü ezzel lépteti be a jegyest (ha a beléptetésnél a **BME Jegyesek beengedése** be van kapcsolva); Cheers-es feltöltésnél a kód a **Profil beállítások** menü **BMEJEGY kód küldése** kapcsolójával kerül a felhasználó QR-kódjába.
     """
     )
      {

@@ -110,7 +110,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = <Input type="text" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
     case FormFieldVariants.VOTE: {
-      let values: VotingFieldOption[] = []
+      let values: VotingFieldOption[]
       try {
         values = JSON.parse(fieldProps.values)
       } catch (e) {
