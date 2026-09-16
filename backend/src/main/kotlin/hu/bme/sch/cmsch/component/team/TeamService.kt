@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.sql.SQLException
+import java.text.Collator
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -187,8 +188,12 @@ class TeamService(
             }
         }
 
-        if (teamComponent.sortByName)
-            teams = teams.sortedBy { it.name }
+        if (teamComponent.sortByName) {
+            val collator = Collator.getInstance(Locale.forLanguageTag("hu-HU")).apply {
+                strength = Collator.PRIMARY
+            }
+            teams = teams.sortedWith(compareBy(collator) { it.name })
+        }
 
         val introductions = teamIntroductionRepository.findAll()
             .filter { it.approved }
