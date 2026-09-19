@@ -20,7 +20,13 @@ class ErrorLogApiController(
     private val errorLogService: Optional<ErrorLogService>
 ) {
 
-    data class ErrorReportDto(val message: String?, val stack: String?, val userAgent: String?, val href: String?)
+    data class ErrorReportDto(
+        val message: String?,
+        val stack: String?,
+        val userAgent: String?,
+        val href: String?,
+        val source: String?
+    )
 
     @PostMapping("/error/submit")
     fun submitError(auth: Authentication?, @RequestBody error: ErrorReportDto): ResponseEntity<Any> {
@@ -37,7 +43,8 @@ class ErrorLogApiController(
                 stack = error.stack ?: "",
                 userAgent = error.userAgent ?: "",
                 href = error.href ?: "",
-                role = role
+                role = role,
+                source = error.source?.takeIf { source -> source.isNotBlank() }?.take(32) ?: "window"
             )
         }
 

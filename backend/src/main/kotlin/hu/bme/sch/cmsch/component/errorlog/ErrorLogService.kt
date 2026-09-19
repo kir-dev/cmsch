@@ -24,11 +24,19 @@ class ErrorLogService(
         multiplier = 2.0,
         jitter = 25,
     )
-    fun submit(message: String, stack: String, userAgent: String, href: String, role: RoleType) {
+    fun submit(
+        message: String,
+        stack: String,
+        userAgent: String,
+        href: String,
+        role: RoleType,
+        source: String = "window"
+    ) {
         if (!errorLogComponent.receiveReports) return
 
-        val existingLog =
-            errorLogRepository.findByMessageAndStackAndUserAgentAndHrefAndRole(message, stack, userAgent, href, role)
+        val existingLog = errorLogRepository.findByMessageAndStackAndUserAgentAndHrefAndRoleAndSource(
+            message, stack, userAgent, href, role, source
+        )
 
         if (existingLog.isPresent) {
             errorLogRepository.incrementCount(existingLog.get().id, clock.getTimeInSeconds())
@@ -38,6 +46,7 @@ class ErrorLogService(
                 stack = stack,
                 userAgent = userAgent,
                 href = href,
+                source = source,
                 role = role,
                 lastReportedAt = clock.getTimeInSeconds(),
             )
