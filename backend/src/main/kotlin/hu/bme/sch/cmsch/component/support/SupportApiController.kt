@@ -169,7 +169,7 @@ class SupportApiController(
         if (supportService.isBlockedUser(thread.userInternalId, authorEmail))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         if (supportService.isContentTooLong(request.content))
-            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build()
+            return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE).build()
         if (supportService.hasTooManyConsecutiveCustomerResponses(uuid))
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build()
 

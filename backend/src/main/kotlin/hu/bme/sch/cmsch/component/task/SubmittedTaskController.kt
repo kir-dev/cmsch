@@ -60,7 +60,7 @@ class SubmittedTaskController(
     createEnabled = false,
     editEnabled   = true,
     deleteEnabled = true,
-    importEnabled = true,
+    importEnabled = false,
     exportEnabled = true,
 
     adminMenuIcon = "raw_on",

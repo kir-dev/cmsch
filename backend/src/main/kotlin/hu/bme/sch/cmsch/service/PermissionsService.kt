@@ -5,6 +5,7 @@ import hu.bme.sch.cmsch.component.admission.AdmissionComponent
 import hu.bme.sch.cmsch.component.app.ApplicationComponent
 import hu.bme.sch.cmsch.component.app.UserHandlingComponent
 import hu.bme.sch.cmsch.component.bmejegy.BmejegyComponent
+import hu.bme.sch.cmsch.component.bounty.BountyComponent
 import hu.bme.sch.cmsch.component.challenge.ChallengeComponent
 import hu.bme.sch.cmsch.component.communities.CommunitiesComponent
 import hu.bme.sch.cmsch.component.conference.ConferenceComponent
@@ -346,6 +347,13 @@ object ControlPermissions : PermissionGroup {
         component = BmejegyComponent::class
     )
 
+    val PERMISSION_CONTROL_BOUNTY = PermissionValidator(
+        "BOUNTY_CONTROL",
+        "Fejvadászat komponens testreszabása",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
     val PERMISSION_CONTROL_LOCATION = PermissionValidator(
         "LOCATION_CONTROL",
         "Helymeghatározás komponens testreszabása",
@@ -483,6 +491,7 @@ object ControlPermissions : PermissionGroup {
         PERMISSION_CONTROL_TEAM,
         PERMISSION_CONTROL_QR_FIGHT,
         PERMISSION_CONTROL_BMEJEGY,
+        PERMISSION_CONTROL_BOUNTY,
         PERMISSION_SHOW_AUDIT_LOG,
         PERMISSION_DEV_DEBUG,
         PERMISSION_SHOW_INSTANCE,
@@ -1378,6 +1387,78 @@ object StaffPermissions : PermissionGroup {
         component = QrFightComponent::class
     )
 
+    /// BountyComponent
+
+    val PERMISSION_REGISTER_BOUNTY = PermissionValidator(
+        "BOUNTY_REGISTER",
+        "Fejvadászat regisztráció kezelése (infópult)",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_SHOW_BOUNTY_ROUNDS = PermissionValidator(
+        "BOUNTY_ROUNDS_SHOW",
+        "Fejvadászat körök megtekintése",
+        readOnly = true,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_EDIT_BOUNTY_ROUNDS = PermissionValidator(
+        "BOUNTY_ROUNDS_EDIT",
+        "Fejvadászat körök szerkesztése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_CREATE_BOUNTY_ROUNDS = PermissionValidator(
+        "BOUNTY_ROUNDS_CREATE",
+        "Fejvadászat körök létrehozása",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_DELETE_BOUNTY_ROUNDS = PermissionValidator(
+        "BOUNTY_ROUNDS_DELETE",
+        "Fejvadászat körök törlése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_SHOW_BOUNTY_REGISTRATIONS = PermissionValidator(
+        "BOUNTY_REGISTRATIONS_SHOW",
+        "Fejvadászat regisztrációk megtekintése",
+        readOnly = true,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_EDIT_BOUNTY_REGISTRATIONS = PermissionValidator(
+        "BOUNTY_REGISTRATIONS_EDIT",
+        "Fejvadászat regisztrációk szerkesztése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_DELETE_BOUNTY_REGISTRATIONS = PermissionValidator(
+        "BOUNTY_REGISTRATIONS_DELETE",
+        "Fejvadászat regisztrációk törlése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_SHOW_BOUNTY_TEAMS = PermissionValidator(
+        "BOUNTY_TEAMS_SHOW",
+        "Fejvadászat csapatok megtekintése",
+        readOnly = true,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_SHOW_BOUNTY_KILLS = PermissionValidator(
+        "BOUNTY_KILLS_SHOW",
+        "Fejvadászat gyilkosságok megtekintése",
+        readOnly = true,
+        component = BountyComponent::class
+    )
+
     /// CommunitiesComponent
 
     val PERMISSION_SHOW_COMMUNITIES = PermissionValidator(
@@ -1827,6 +1908,17 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_EDIT_QR_FIGHT,
         PERMISSION_CREATE_QR_FIGHT,
         PERMISSION_DELETE_QR_FIGHT,
+
+        PERMISSION_REGISTER_BOUNTY,
+        PERMISSION_SHOW_BOUNTY_ROUNDS,
+        PERMISSION_EDIT_BOUNTY_ROUNDS,
+        PERMISSION_CREATE_BOUNTY_ROUNDS,
+        PERMISSION_DELETE_BOUNTY_ROUNDS,
+        PERMISSION_SHOW_BOUNTY_REGISTRATIONS,
+        PERMISSION_EDIT_BOUNTY_REGISTRATIONS,
+        PERMISSION_DELETE_BOUNTY_REGISTRATIONS,
+        PERMISSION_SHOW_BOUNTY_TEAMS,
+        PERMISSION_SHOW_BOUNTY_KILLS,
 
         PERMISSION_SHOW_COMMUNITIES,
         PERMISSION_EDIT_COMMUNITIES,

@@ -22,6 +22,7 @@ export const Paths = {
   KIRPAY_LEADERBOARD: 'kirpay-leaderboard',
   RACE: 'race',
   QR_FIGHT: 'qr-fight',
+  BOUNTY: 'bounty',
   TEAMS: 'teams',
   CREATE_TEAM: 'create-team',
   EDIT_TEAM: 'edit-team',
@@ -63,6 +64,7 @@ export const AbsolutePaths = {
   MY_TEAM: '/my-team',
   TEAM_ADMIN: '/team-admin',
   QR_FIGHT: '/qr-fight',
+  BOUNTY: '/bounty',
   LEADER_BOARD: '/leaderboard',
   KIRPAY_LEADERBOARD: '/kirpay-leaderboard',
   ACCESS_KEY: '/access-key',
@@ -120,6 +122,8 @@ export const ApiPaths = {
   RESET_PASSWORD: '/api/reset-password',
   AUTH_STATUS: '/api/auth-status',
   SUPPORT_THREADS: '/api/support/threads',
-  SUPPORT_THREAD: '/api/support/thread'
+  SUPPORT_THREAD: '/api/support/thread',
+  BOUNTY: '/api/bounty',
+  BOUNTY_KILL: '/api/bounty/kill'
 } as const
 export type ApiPaths = (typeof ApiPaths)[keyof typeof ApiPaths]

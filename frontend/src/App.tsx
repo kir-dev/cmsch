@@ -4,6 +4,7 @@ import { useConfigContext } from './api/contexts/config/ConfigContext.tsx'
 import { CmschLayout } from './common-components/layout/CmschLayout'
 import { Toaster } from './components/ui/toaster'
 import AccessKeyPage from './pages/access-key/accessKey.page.tsx'
+import BountyPage from './pages/bounty/bounty.page.tsx'
 import CommunityPage from './pages/communities/community.page.tsx'
 import CommunityListPage from './pages/communities/communityList.page.tsx'
 import LikedCommunityListPage from './pages/communities/likedCommunityList.page.tsx'
@@ -122,6 +123,7 @@ export function App() {
                   <Route index element={<ProfilePage />} />
                 </Route>
                 <Route path={Paths.QR_FIGHT} element={<QrLevelsPage />} />
+                <Route path={Paths.BOUNTY} element={<BountyPage />} />
                 <Route path={Paths.RACE}>
                   <Route path="freestyle" element={<FreestyleRacePage />} />
                   <Route path=":category" element={<RacePage />} />

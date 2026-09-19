@@ -11,6 +11,7 @@ data class ComponentLoadConfig @ConstructorBinding constructor(
    var accessKeys: Boolean,
    var admission: Boolean,
    var bmejegy: Boolean,
+   var bounty: Boolean,
    var challenge: Boolean,
    var communities: Boolean,
    var conference: Boolean,
