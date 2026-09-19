@@ -206,6 +206,7 @@ class SecurityConfig(
                 "/admin/api/**",
                 "/admin/sell/**",
                 "/admin/admission/**",
+                "/admin/bounty-registration/**",
                 "/${StorageService.OBJECT_SERVE_PATH}/**",
             )
         }.cors(Customizer.withDefaults())

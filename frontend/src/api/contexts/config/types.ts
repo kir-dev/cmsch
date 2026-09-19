@@ -39,6 +39,7 @@ export interface Components {
   token?: Token
   pushnotification?: PushNotification
   qrFight?: QrFight
+  bounty?: Bounty
   communities?: Communities
   footer?: Footer
   support?: Support
@@ -386,6 +387,19 @@ export interface QrFight {
   title: string
   enabled: boolean
   topMessage: string
+}
+
+export interface Bounty {
+  title: string
+  topMessage: string
+  easyRoundLabel: string
+  mediumRoundLabel: string
+  hardRoundLabel: string
+  registrationInfo: string
+  killedMessage: string
+  eliminatedByInactivityMessage: string
+  teamEliminatedMessage: string
+  winnerMessage: string
 }
 
 export interface Signup {

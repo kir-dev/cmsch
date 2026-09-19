@@ -181,6 +181,7 @@ load:
   access_keys: false
   admission: false
   bmejegy: false
+  bounty: false
   challenge: false
   communities: false
   conference: false
