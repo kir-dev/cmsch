@@ -12,6 +12,7 @@ import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -21,7 +22,7 @@ import org.springframework.core.env.Environment
 @Entity
 @Table(
     name = "errorLog",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["message", "stack", "userAgent", "href", "role"])]
+    uniqueConstraints = [UniqueConstraint(columnNames = ["message", "stack", "userAgent", "href", "role", "source"])]
 )
 @ConditionalOnBean(ErrorLogComponent::class)
 data class ErrorLogEntity(
@@ -61,25 +62,36 @@ data class ErrorLogEntity(
     @property:ImportFormat
     var href: String = "",
 
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @ColumnDefault("'window'")
+    @Column(nullable = false, length = 32)
+    @property:GenerateInput(
+        type = InputType.BLOCK_SELECT, order = 5, label = "Forrás",
+        source = ["window", "console", "error", "unhandledrejection"]
+    )
+    @property:GenerateOverview(visible = true, columnName = "Forrás", order = 5, useForSearch = true)
+    @property:ImportFormat
+    var source: String = "window",
+
     @field:JsonView(value = [Edit::class, FullDetails::class])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @property:GenerateInput(
-        type = InputType.BLOCK_SELECT, order = 5, label = "Jogkör",
+        type = InputType.BLOCK_SELECT, order = 6, label = "Jogkör",
         source = ["GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER"],
         minimumRole = RoleType.ADMIN, note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog"
     )
-    @property:GenerateOverview(visible = true, columnName = "Jelentő jogköre", order = 5)
+    @property:GenerateOverview(visible = true, columnName = "Jelentő jogköre", order = 6)
     @property:ImportFormat
     var role: RoleType = RoleType.GUEST,
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.NUMBER, order = 6, label = "Ennyiszer jelentve")
+    @property:GenerateInput(type = InputType.NUMBER, order = 7, label = "Ennyiszer jelentve")
     @property:GenerateOverview(
         visible = true,
         columnName = "Ennyiszer jelentve",
-        order = 6,
+        order = 7,
         renderer = OverviewType.NUMBER
     )
     @property:ImportFormat
@@ -87,11 +99,11 @@ data class ErrorLogEntity(
 
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Utoljára jelentve")
+    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Utoljára jelentve")
     @property:GenerateOverview(
         visible = true,
         columnName = "Utoljára jelentve",
-        order = 7,
+        order = 8,
         renderer = OverviewType.DATE
     )
     @property:ImportFormat

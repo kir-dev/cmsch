@@ -10,10 +10,9 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs'
 import { useTime } from '@/hooks/useDate.ts'
 import { Paths } from '@/util/paths'
-import type { EventListView } from '@/util/views/event.view'
 import uniq from 'lodash/uniq'
 import { Calendar, Search } from 'lucide-react'
-import { createRef, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CardListItem } from './components/CardListItem'
 import { EventFilterOption } from './components/EventFilterOption'
 import EventList from './components/EventList'
@@ -23,8 +22,7 @@ const EventListPage = () => {
   const { isLoading, isError, data } = useEventListQuery()
   const event = useConfigContext()?.components?.event
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const inputRef = createRef<HTMLInputElement>()
-  const [filteredEvents, setFilteredEvents] = useState<EventListView[] | undefined>()
+  const [search, setSearch] = useState('')
   const now = useTime(10000)
 
   const availableFilters = []
@@ -35,21 +33,12 @@ const EventListPage = () => {
   const pastEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 < now), [data, now])
   const upcomingEvents = useMemo(() => data?.filter((event) => event.timestampEnd * 1000 >= now), [data, now])
 
-  const handleInput = () => {
-    const search = inputRef?.current?.value.toLowerCase()
-    if (!data) {
-      setFilteredEvents(undefined)
-    } else if (!search) {
-      setFilteredEvents(upcomingEvents)
-    } else {
-      setFilteredEvents(upcomingEvents?.filter((event) => event.title.toLowerCase().includes(search)))
-    }
-  }
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFilteredEvents(upcomingEvents)
-  }, [upcomingEvents])
+  const filteredEvents = useMemo(() => {
+    if (!data) return undefined
+    const s = search.toLowerCase()
+    if (!s) return upcomingEvents
+    return upcomingEvents?.filter((event) => event.title.toLowerCase().includes(s))
+  }, [data, upcomingEvents, search])
 
   if (!event) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={event.title} />
@@ -79,7 +68,13 @@ const EventListPage = () => {
           {event.searchEnabled && (
             <div className="relative mb-5 mt-5 flex items-center">
               <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
-              <Input ref={inputRef} placeholder="Keresés..." className="h-12 pl-10 pr-10" onChange={handleInput} autoFocus={true} />
+              <Input
+                value={search}
+                placeholder="Keresés..."
+                className="h-12 pl-10 pr-10"
+                onChange={(e) => setSearch(e.target.value)}
+                autoFocus={true}
+              />
             </div>
           )}
           <EventList eventList={filteredEvents || data || []} groupByDay />

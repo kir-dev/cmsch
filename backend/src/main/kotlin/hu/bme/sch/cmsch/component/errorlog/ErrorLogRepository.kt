@@ -16,12 +16,13 @@ interface ErrorLogRepository : CrudRepository<ErrorLogEntity, Int>, EntityPageDa
     @Query("select e from ErrorLogEntity e order by e.lastReportedAt desc")
     override fun findAll(): MutableIterable<ErrorLogEntity>
 
-    fun findByMessageAndStackAndUserAgentAndHrefAndRole(
+    fun findByMessageAndStackAndUserAgentAndHrefAndRoleAndSource(
         message: String,
         stack: String,
         userAgent: String,
         href: String,
-        role: RoleType
+        role: RoleType,
+        source: String
     ): Optional<ErrorLogEntity>
 
     @Modifying
