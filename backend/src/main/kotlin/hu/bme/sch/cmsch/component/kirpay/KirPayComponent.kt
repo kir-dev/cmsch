@@ -41,8 +41,11 @@ class KirPayComponent(
     var kirPayBackendUrl by StringSettingRef("http://localhost:8081/v1/api", serverSideOnly = true,
         fieldName = "Kir-Pay backend URL", description = "A Kir-Pay backend admin API URL-je")
 
-    var kirPayBackendToken by StringSettingRef(serverSideOnly = true, fieldName = "Kir-Pay backend token",
-        description = "Basic auth token a Kir-Pay admin API-hoz")
+    var kirPayBackendUsername by StringSettingRef(serverSideOnly = true, fieldName = "Kir-Pay felhasználónév",
+        description = "A Kir-Pay admin API-hoz használt felhasználónév")
+
+    var kirPayBackendPassword by StringSettingRef(serverSideOnly = true, fieldName = "Kir-Pay jelszó",
+        description = "A Kir-Pay admin API-hoz használt jelszó")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
