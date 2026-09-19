@@ -3,6 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="%VITE_API_BASE_URL%" />
+    <link rel="preconnect" href="%VITE_API_BASE_URL%" crossorigin />
+    <link href="%VITE_API_BASE_URL%/api/app/font-display.css" rel="stylesheet" />
+    <link href="%VITE_API_BASE_URL%/api/app/font-main.css" rel="stylesheet" />
+
     <title>%VITE_NAME%</title>
     <meta name="description" content="%VITE_DESCRIPTION%" />
     <meta property="og:type" content="website" />
@@ -14,11 +24,13 @@
         background-color: var(--light-bg, #ffffff);
         color: var(--light-text, #1a202c);
         font-family: var(--main-font, sans-serif);
+        color-scheme: light;
       }
 
       html.dark {
         background-color: var(--dark-bg, #171923);
         color: var(--dark-text, #ffffffeb);
+        color-scheme: dark;
       }
 
       h1,
@@ -31,6 +43,8 @@
         font-family: var(--display-font, inherit);
       }
     </style>
+
+    <meta name="theme-color" content="%VITE_THEME_COLOR%" />
 
     <script>
       window.config = {
@@ -59,9 +73,11 @@
           const styleJson = localStorage.getItem('persistent-style-setting')
           const theme = localStorage.getItem('theme')
           let isDark = false
+          let darkBackground = '#171923'
 
           if (styleJson) {
             const style = JSON.parse(styleJson)
+            darkBackground = style.darkBackgroundColor || '#171923'
             const root = document.documentElement
             root.style.setProperty('--light-bg', style.lightBackgroundColor || '#ffffff')
             root.style.setProperty('--dark-bg', style.darkBackgroundColor || '#171923')
@@ -116,6 +132,7 @@
 
           if (isDark) {
             document.documentElement.classList.add('dark')
+            document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkBackground)
           } else {
             document.documentElement.classList.remove('dark')
           }
@@ -129,12 +146,6 @@
     <link rel="icon" type="image/png" sizes="512x512" href="%VITE_API_BASE_URL%/cdn/manifest/icon-512x512.png" />
     <link rel="icon" type="image/x-icon" href="%VITE_API_BASE_URL%/cdn/manifest/favicon.ico" />
     <link rel="manifest" href="%VITE_API_BASE_URL%/manifest/manifest.json" />
-    <meta name="theme-color" content="%VITE_THEME_COLOR%" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="%VITE_API_BASE_URL%" />
-    <link href="%VITE_API_BASE_URL%/api/app/font-display.css" rel="stylesheet" />
-    <link href="%VITE_API_BASE_URL%/api/app/font-main.css" rel="stylesheet" />
     <script defer data-domain="%VITE_PLAUSIBLE_URL%" src="https://visit.kir-dev.hu/js/script.js"></script>
 
     <script type="module" src="/src/index.tsx"></script>
