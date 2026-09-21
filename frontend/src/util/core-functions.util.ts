@@ -86,6 +86,10 @@ export function isCheckbox(type: FormFieldVariants) {
   return type === FormFieldVariants.CHECKBOX || type === FormFieldVariants.MUST_AGREE
 }
 
+export function isMultiCheckbox(type?: FormFieldVariants) {
+  return type === FormFieldVariants.MULTI_CHECKBOX
+}
+
 export function isGridField(type?: FormFieldVariants | undefined) {
   return type === FormFieldVariants.CHOICE_GRID || type === FormFieldVariants.SELECTION_GRID
 }

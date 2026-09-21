@@ -42,26 +42,8 @@
 
     <script th:inline="javascript">
 
-        function changeFieldsText(property) {
-            /*<![CDATA[*/
-            const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
-            /*]]>*/
-            const fields = JSON.parse(document.getElementById(property).value);
-            let resultHtml = "";
-            let id = 0;
-            fields.forEach(field => {
-                if (typeof field.fieldName !== 'undefined'
-                    && typeof field.label !== 'undefined'
-                    && typeof field.type !== 'undefined'
-                    && typeof field.formatRegex !== 'undefined'
-                    && typeof field.invalidFormatMessage !== 'undefined'
-                    && typeof field.values !== 'undefined'
-                    && typeof field.note !== 'undefined'
-                    && typeof field.required !== 'undefined'
-                    && typeof field.permanent !== 'undefined'
-                    && field.fieldName !== ''
-                ) {
-                    resultHtml += `
+        function fieldCardHtml(property, id, field, elementTypes) {
+            return `
                     <div class="sub-card" id="form_${property}_${id}">
                         <div class="button-group">
                             <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
@@ -71,7 +53,7 @@
 
                         <div class="field-group">
                             <label for="${property}_${id}_fieldName">Mező neve *</label>
-                            <input id="${property}_${id}_fieldName" type="text" value="${escapeHtml(field.fieldName)}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_fieldName" type="text" value="${escapeHtml(field.fieldName || '')}" onchange="saveField('${property}')">
                             <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
                         </div>
 
@@ -92,18 +74,18 @@
                         <div class="field-group">
                             <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
                             <input id="${property}_${id}_defaultValue" type="text" value="${escapeHtml(field.defaultValue || '')}" onchange="saveField('${property}')">
-                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
+                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené. MULTI_CHECKBOX esetén JSON tömb vagy vesszővel elválasztott lista lehet.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_values">Értékek</label>
-                            <input id="${property}_${id}_values" type="text" value="${escapeHtml(field.values)}" onchange="saveField('${property}')">
-                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
+                            <input id="${property}_${id}_values" type="text" value="${escapeHtml(field.values || '')}" onchange="saveField('${property}')">
+                            <span class="note">SELECT és MULTI_CHECKBOX esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_note">Leírás</label>
-                            <input id="${property}_${id}_note" type="text" value="${escapeHtml(field.note)}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_note" type="text" value="${escapeHtml(field.note || '')}" onchange="saveField('${property}')">
                             <span class="note">A mező alatt megjelenő szöveg.</span>
                         </div>
 
@@ -127,16 +109,38 @@
 
                         <div class="field-group">
                             <label for="${property}_${id}_formatRegex">RegEx minta</label>
-                            <input id="${property}_${id}_formatRegex" type="text" value="${escapeHtml(field.formatRegex)}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_formatRegex" type="text" value="${escapeHtml(field.formatRegex || '')}" onchange="saveField('${property}')">
                             <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
                         </div>
 
                         <div class="field-group">
                             <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
-                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${escapeHtml(field.invalidFormatMessage)}" onchange="saveField('${property}')">
+                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="${escapeHtml(field.invalidFormatMessage || '')}" onchange="saveField('${property}')">
                             <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
                         </div>
                     </div>`;
+        }
+
+        function changeFieldsText(property) {
+            /*<![CDATA[*/
+            const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
+            /*]]>*/
+            const fields = JSON.parse(document.getElementById(property).value);
+            let resultHtml = "";
+            let id = 0;
+            fields.forEach(field => {
+                if (typeof field.fieldName !== 'undefined'
+                    && typeof field.label !== 'undefined'
+                    && typeof field.type !== 'undefined'
+                    && typeof field.formatRegex !== 'undefined'
+                    && typeof field.invalidFormatMessage !== 'undefined'
+                    && typeof field.values !== 'undefined'
+                    && typeof field.note !== 'undefined'
+                    && typeof field.required !== 'undefined'
+                    && typeof field.permanent !== 'undefined'
+                    && field.fieldName !== ''
+                ) {
+                    resultHtml += fieldCardHtml(property, id, field, elementTypes);
                     ++id;
                 }
             });
@@ -170,141 +174,88 @@
             changeFieldsText(property);
         }
 
+        function getFieldCards(property) {
+            const container = document.getElementById(`field_${property}`);
+            if (container === null) {
+                return null;
+            }
+            return Array.from(container.children).filter(card => card.id.startsWith(`form_${property}_`));
+        }
+
         function addField(property) {
             /*<![CDATA[*/
             const elementTypes = [[${T(hu.bme.sch.cmsch.component.form.FormElementType).values()}]];
             /*]]>*/
             let id = 0;
-            while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
-            && document.getElementById(`${property}_${id}_fieldName`) !== null) {
-                ++id;
-            }
-            const element = document.createElement('div');
-            element.innerHTML = `
-                    <div class="sub-card" id="form_${property}_${id}">
-
-                         <div class="button-group">
-                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id - 1})"><span class="material-symbols-outlined">arrow_drop_up</span><ins>FEL</ins></button>
-                            <button type="button" class="btn btn-small" onclick="swapValues('${property}', ${id}, ${id + 1})"><span class="material-symbols-outlined">arrow_drop_down</span><ins>LE</ins></button>
-                            <button type="button" class="btn btn-danger btn-small" onclick="deleteValues('${property}', ${id})"><span class="material-symbols-outlined">delete</span><ins>TÖRÖL</ins></button>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_fieldName">Mező neve *</label>
-                            <input id="${property}_${id}_fieldName" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">Ez lesz az adat neve, olyasmi mint egy változó név. Az exportban is ez fog látszódni.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_type">Típus *</label>
-                            <div style="clear:both"></div>
-                            <select id="${property}_${id}_type" onchange="saveField('${property}')">
-                                ${elementTypes.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-                            </select><br/>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_label">Cimke *</label>
-                            <input id="${property}_${id}_label" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">Mi jelenjen meg a felhasználóknak.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_defaultValue">Alapértelmezett érték</label>
-                            <input id="${property}_${id}_defaultValue" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">Ezt az értéket veszi fel a mező mielőtt bárki kitöltené.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_values">Értékek</label>
-                            <input id="${property}_${id}_values" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">SELECT esetén ezeket az értékeket veheti fel. Vesszővel elválasztva.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_note">Leírás</label>
-                            <input id="${property}_${id}_note" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">A mező alatt megjelenő szöveg.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_required">Kötelező kitölteni</label>
-                            <div style="clear:both"></div>
-                            <label class="switch">
-                                <input type="checkbox" id="${property}_${id}_required" onchange="saveField('${property}')" />
-                                <span class="slider"></span>
-                            </label><br/>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_permanent">Nem módosítható beadás után</label>
-                            <div style="clear:both"></div>
-                            <label class="switch">
-                                <input type="checkbox" id="${property}_${id}_permanent" onchange="saveField('${property}')" />
-                                <span class="slider"></span>
-                            </label><br/>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_formatRegex">RegEx minta</label>
-                            <input id="${property}_${id}_formatRegex" type="text" value=".*" onchange="saveField('${property}')">
-                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="${property}_${id}_invalidFormatMessage">Hibás tartalom üzenete</label>
-                            <input id="${property}_${id}_invalidFormatMessage" type="text" value="" onchange="saveField('${property}')">
-                            <span class="note">Akkor ejelenik meg ha validációs hiba van.</span>
-                        </div>
-                    </div>`;
-            let target = document.getElementById(`field_${property}_add`);
-            target.parentNode.insertBefore(element, target);
+            getFieldCards(property)?.forEach(card => {
+                const cardId = Number(card.id.substring(`form_${property}_`.length));
+                if (Number.isInteger(cardId)) {
+                    id = Math.max(id, cardId + 1);
+                }
+            });
+            const field = {
+                fieldName: '',
+                label: '',
+                type: '',
+                formatRegex: '.*',
+                invalidFormatMessage: '',
+                values: '',
+                note: '',
+                required: false,
+                permanent: false,
+                defaultValue: ''
+            };
+            document.getElementById(`field_${property}_add`).insertAdjacentHTML('beforebegin', fieldCardHtml(property, id, field, elementTypes));
         }
 
         function saveField(property) {
-            let id = 0;
-            let result = [];
-            while (typeof document.getElementById(`${property}_${id}_fieldName`) !== 'undefined'
-            && document.getElementById(`${property}_${id}_fieldName`) !== null) {
-
-                const fieldName = document.getElementById(`${property}_${id}_fieldName`).value;
-                const label = document.getElementById(`${property}_${id}_label`).value;
-                const type = document.getElementById(`${property}_${id}_type`).value;
-                const formatRegex = document.getElementById(`${property}_${id}_formatRegex`).value;
-                const invalidFormatMessage = document.getElementById(`${property}_${id}_invalidFormatMessage`).value;
-                const defaultValue = document.getElementById(`${property}_${id}_defaultValue`).value;
-                const values = document.getElementById(`${property}_${id}_values`).value;
-                const note = document.getElementById(`${property}_${id}_note`).value;
-                let required = document.getElementById(`${property}_${id}_required`);
-                const permanent = document.getElementById(`${property}_${id}_permanent`).checked;
-
-                if (type.startsWith('INJECT_')) {
-                    required.checked = false;
-                    required.disabled = true;
-                    required.parentElement.parentElement.style.display = 'none';
-                } else {
-                    required.disabled = false;
-                    required.parentElement.parentElement.style.display = 'block';
-                }
-
-                required = required.checked
-
-                if (fieldName !== null && label !== null && type !== null && fieldName !== '') {
-                    result.push({
-                        fieldName : fieldName,
-                        label : label,
-                        type : type,
-                        formatRegex : formatRegex,
-                        invalidFormatMessage : invalidFormatMessage,
-                        values : values,
-                        note : note,
-                        required : required,
-                        permanent : permanent,
-                        defaultValue : defaultValue
-                    });
-                }
-                ++id;
+            const cards = getFieldCards(property);
+            if (cards === null) {
+                return;
             }
+
+            const result = [];
+            cards.forEach(card => {
+                const query = (name) => card.querySelector(`[id$="_${name}"]`);
+                const fieldName = query('fieldName');
+                const label = query('label');
+                const type = query('type');
+                const formatRegex = query('formatRegex');
+                const invalidFormatMessage = query('invalidFormatMessage');
+                const defaultValue = query('defaultValue');
+                const values = query('values');
+                const note = query('note');
+                const required = query('required');
+                const permanent = query('permanent');
+
+                if ([fieldName, label, type, formatRegex, invalidFormatMessage, defaultValue, values, note, required, permanent].some((el) => el === null)) {
+                    return;
+                }
+
+                    if (type.value.startsWith('INJECT_')) {
+                        required.checked = false;
+                        required.disabled = true;
+                        required.parentElement.parentElement.style.display = 'none';
+                    } else {
+                        required.disabled = false;
+                        required.parentElement.parentElement.style.display = 'block';
+                    }
+
+                    if (fieldName.value !== '') {
+                        result.push({
+                            fieldName : fieldName.value,
+                            label : label.value,
+                            type : type.value,
+                            formatRegex : formatRegex.value,
+                            invalidFormatMessage : invalidFormatMessage.value,
+                            values : values.value,
+                            note : note.value,
+                            required : required.checked,
+                            permanent : permanent.checked,
+                            defaultValue : defaultValue.value
+                        });
+                    }
+                });
             document.getElementById(property).value = JSON.stringify(result);
         }
 
@@ -330,12 +281,32 @@
 
         function deleteValues(property, id) {
             const form = document.getElementById(`form_${property}_${id}`);
-            const inputs = form.querySelectorAll('input, textarea');
-
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].value = '';
-                inputs[i].checked = false;
+            if (form === null) {
+                return;
             }
+
+            form.remove();
+            renumberCards(property);
+            saveField(property);
+        }
+
+
+        function renumberCards(property) {
+            getFieldCards(property)?.forEach((card, index) => {
+                card.querySelectorAll('label[for]').forEach(el => {
+                    el.setAttribute('for', el.getAttribute('for').replace(new RegExp(`^${property}_\\d+_`), `${property}_${index}_`));
+                });
+                card.querySelectorAll('input[id], select[id]').forEach(el => {
+                    el.id = el.id.replace(new RegExp(`^${property}_\\d+_`), `${property}_${index}_`);
+                });
+                const buttons = card.querySelectorAll('.button-group button');
+                if (buttons.length >= 3) {
+                    buttons[0].setAttribute('onclick', `swapValues('${property}', ${index}, ${index - 1})`);
+                    buttons[1].setAttribute('onclick', `swapValues('${property}', ${index}, ${index + 1})`);
+                    buttons[2].setAttribute('onclick', `deleteValues('${property}', ${index})`);
+                }
+                card.id = `form_${property}_${index}`;
+            });
         }
 
         function escapeHtml(value) {

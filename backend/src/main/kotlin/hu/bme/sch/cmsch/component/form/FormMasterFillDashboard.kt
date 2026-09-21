@@ -190,6 +190,8 @@ class FormMasterFillDashboard(
 
                 if (field.type == FormElementType.CHECKBOX) {
                     value = (value.equals("on", ignoreCase = true)).toString()
+                } else if (field.type == FormElementType.MULTI_CHECKBOX) {
+                    value = objectMapper.writeValueAsString(parseFormOptions(value))
                 }
 
                 submission[field.fieldName] = value

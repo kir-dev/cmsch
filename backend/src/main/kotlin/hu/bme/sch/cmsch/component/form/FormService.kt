@@ -37,6 +37,7 @@ class FormService(
     private final val gridReader = objectMapper.readerFor(FormGridValue::class.java)
     private final val choiceGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, String>>() {})
     private final val selectionGridReader = objectMapper.readerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
+    private final val multiCheckboxReader = objectMapper.readerFor(object : TypeReference<List<String>>() {})
     private final val choiceGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, String>>() {})
     private final val selectionGridWriter = objectMapper.writerFor(object : TypeReference<MutableMap<String, Boolean>>() {})
 
@@ -233,10 +234,26 @@ class FormService(
                         }
                     }
                     FormElementType.SELECT -> {
-                        if (value !in field.values.split(Regex(", *")).map { it.trim() }) {
+                        if (value !in parseFormOptions(field.values)) {
                             log.info("User {} invalid SELECT value {} = '{}'", user?.id, field.fieldName, value)
                             return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 14)
                         }
+                    }
+                    FormElementType.MULTI_CHECKBOX -> {
+                        val options = parseFormOptions(field.values)
+                        val selected = try {
+                            val parsed = multiCheckboxReader.readValue<List<String>>(value)
+                            if (parsed.size != parsed.toSet().size
+                                || parsed.any { it !in options || !it.matches(Regex(field.formatRegex)) }
+                                || (field.required && parsed.isEmpty())
+                            )
+                                throw IllegalArgumentException()
+                            parsed
+                        } catch (e: Exception) {
+                            log.info("User {} invalid MULTI_CHECKBOX value {} = '{}'", user?.id, field.fieldName, value)
+                            return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 19)
+                        }
+                        value = objectMapper.writeValueAsString(selected)
                     }
                     FormElementType.MUST_AGREE -> {
                         if (value != "true") {
@@ -286,7 +303,7 @@ class FormService(
                     }
                 }
 
-                if (!value.matches(Regex(field.formatRegex))) {
+                if (field.type != FormElementType.MULTI_CHECKBOX && !value.matches(Regex(field.formatRegex))) {
                     log.info("User {} invalid REGEX value {} = {}", user?.id, field.fieldName, value)
                     return FormSubmissionResult(FormSubmissionStatus.INVALID_VALUES, 18)
                 }

@@ -21,6 +21,7 @@ enum class FormElementType(
     EMAIL,
     PHONE,
     CHECKBOX(rendersOnServerSide = true),
+    MULTI_CHECKBOX,
     SELECT(rendersOnServerSide = true),
     MUST_AGREE(rendersOnServerSide = true),
     VOTE, // value = [{"title":"","value":"","img":"","text":""}, {...}]
@@ -96,6 +97,9 @@ enum class FormElementType(
 }
 
 fun shoutingSnakeToKebab(input: String) = input.split('_').joinToString("-") { it.lowercase() }
+
+fun parseFormOptions(values: String): List<String> =
+    values.split(',').map { it.trim() }.filter { it.isNotEmpty() }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FormElement(
