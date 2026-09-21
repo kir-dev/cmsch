@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { useTime } from '@/hooks/useDate.ts'
-import { isCheckbox, isGridField } from '@/util/core-functions.util'
+import { isCheckbox, isGridField, isMultiCheckbox } from '@/util/core-functions.util'
 import { FormFieldVariants, FormStatus, FormSubmitMessage, FormSubmitResult } from '@/util/views/form.view'
 import { Loader2 } from 'lucide-react'
 import { AutoFormField } from './components/autoFormField'
@@ -48,7 +48,7 @@ const FormPage = () => {
     const newValues: Record<string, unknown> = {}
     Object.keys(values).forEach((v) => {
       const formField = form?.formFields.find((ff) => ff.fieldName === v)
-      if (isGridField(formField?.type)) {
+      if (isGridField(formField?.type) || isMultiCheckbox(formField?.type)) {
         newValues[v] = JSON.stringify(values[v])
       } else {
         newValues[v] = values[v]

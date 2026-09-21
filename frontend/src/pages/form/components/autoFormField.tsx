@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { isCheckbox, isGridField } from '@/util/core-functions.util'
+import { isCheckbox, isGridField, isMultiCheckbox } from '@/util/core-functions.util'
 import { type FormField, FormFieldVariants, type VotingFieldOption } from '@/util/views/form.view'
 import { AlertTriangle, Info } from 'lucide-react'
 import { type ReactNode } from 'react'
@@ -20,15 +20,43 @@ interface AutoFormFieldProps {
   submittedValue?: string
 }
 
+const parseMultiCheckboxValue = (value: string | undefined): string[] => {
+  if (!value) return []
+  try {
+    const parsed: unknown = JSON.parse(value)
+    return Array.isArray(parsed) && parsed.every((item): item is string => typeof item === 'string') ? parsed : []
+  } catch {
+    return value
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+  }
+}
+
+const parseGridValue = (value: string): unknown => {
+  try {
+    return JSON.parse(value)
+  } catch (e) {
+    console.error(e)
+    return {}
+  }
+}
+
 export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }: AutoFormFieldProps) => {
-  const selectValues = fieldProps.values.split(',').map((opt) => opt.trim())
-  let defaultValue = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
+  const selectValues = fieldProps.values
+    .split(',')
+    .map((opt) => opt.trim())
+    .filter(Boolean)
+  let defaultValue: unknown = isCheckbox(fieldProps.type) ? fieldProps.defaultValue === 'true' : fieldProps.defaultValue
   let requiredValue = fieldProps.required
 
   if (submittedValue) {
     if (isCheckbox(fieldProps.type)) defaultValue = submittedValue === 'true'
-    else if (isGridField(fieldProps.type)) defaultValue = JSON.parse(submittedValue)
+    else if (isMultiCheckbox(fieldProps.type)) defaultValue = parseMultiCheckboxValue(submittedValue)
+    else if (isGridField(fieldProps.type)) defaultValue = parseGridValue(submittedValue)
     else defaultValue = submittedValue
+  } else if (isMultiCheckbox(fieldProps.type)) {
+    defaultValue = parseMultiCheckboxValue(fieldProps.defaultValue)
   } else if (!defaultValue) {
     if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
     else defaultValue = ''
@@ -38,6 +66,8 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     requiredValue = false
   }
 
+  const formatPattern = new RegExp(fieldProps.formatRegex)
+  const formatMessage = 'A formátum nem megfelelő!'
   const {
     field,
     fieldState: { error }
@@ -50,7 +80,10 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
         value: requiredValue || fieldProps.type === FormFieldVariants.MUST_AGREE,
         message: 'Ez a mező kötelező!'
       },
-      pattern: { value: new RegExp(fieldProps.formatRegex), message: 'Ellenőrizze a formátumot!' }
+      pattern: isMultiCheckbox(fieldProps.type) ? undefined : { value: formatPattern, message: formatMessage },
+      validate: isMultiCheckbox(fieldProps.type)
+        ? (value: unknown) => !Array.isArray(value) || value.every((item) => formatPattern.test(item)) || formatMessage
+        : undefined
     }
   })
   let component: ReactNode = null
@@ -65,6 +98,33 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
         </div>
       )
       break
+    case FormFieldVariants.MULTI_CHECKBOX: {
+      const selected = Array.isArray(field.value) ? field.value : []
+      component = (
+        <fieldset className="space-y-3">
+          <legend className="sr-only">{fieldProps.label}</legend>
+          {selectValues.map((option, index) => {
+            const id = `${fieldProps.fieldName}-${index}`
+            return (
+              <div key={id} className="flex items-center space-x-3">
+                <Checkbox
+                  id={id}
+                  checked={selected.includes(option)}
+                  onCheckedChange={(value) => {
+                    field.onChange(value ? [...selected, option] : selected.filter((item: string) => item !== option))
+                  }}
+                  disabled={disabled}
+                />
+                <Label htmlFor={id} className="font-normal cursor-pointer">
+                  {option}
+                </Label>
+              </div>
+            )
+          })}
+        </fieldset>
+      )
+      break
+    }
     case FormFieldVariants.EMAIL:
       component = <Input type="email" {...field} disabled={disabled} className={error ? 'border-destructive' : ''} />
       break
