@@ -167,7 +167,8 @@ const friendlyLanguageData = {
   'login-status-invalid-token': 'Érvénytelen vagy lejárt token!',
   'login-status-token-expired': 'A token lejárt!',
   'login-status-weak-password': 'A jelszónak legalább 8 karakter hosszúnak kell lennie!',
-  'gallery-empty-message': 'Nincs kép a galériában'
+  'gallery-empty-message': 'Nincs kép a galériában',
+  'qr-reader-camera-error': 'A kamera megnyitása sikertelen. Engedélyezd a kamerát, és töltsd újra az oldalt.'
 }
 
 const parameters: Partial<Record<keyof typeof friendlyLanguageData, Record<string, string | undefined>>> = {

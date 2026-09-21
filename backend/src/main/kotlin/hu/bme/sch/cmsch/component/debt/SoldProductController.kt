@@ -50,7 +50,7 @@ class SoldProductController(
     createEnabled = false,
     editEnabled   = true,
     deleteEnabled = true,
-    importEnabled = true,
+    importEnabled = false,
     exportEnabled = true,
 
     adminMenuIcon = "sync_alt",
