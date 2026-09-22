@@ -19,6 +19,7 @@ export const CmschPage = ({ children, className, loginRequired, minRole, title, 
     if (!isLoggedIn) return <LoginRequired />
   }
   if (minRole && minRole > 0) {
+    if (authInfoLoading) return <LoadingPage />
     if (!authInfo?.role || RoleType[authInfo?.role] < minRole) {
       return <Navigate to="/" replace />
     }
