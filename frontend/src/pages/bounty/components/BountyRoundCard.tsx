@@ -216,11 +216,14 @@ const ActiveRoundContent = ({
           {isDeadlineReached ? (
             <span>Lejárt az idő!</span>
           ) : isGameEndCloserThanDeadline ? (
-            <span>Ennyi idő maradt a körből: </span>
+            <span>
+              Ennyi idő maradt a körből: <b>{formatRemaining(killDeadline - now)}</b>
+            </span>
           ) : (
-            <span>Ölnöd kell ennyi időn belül: </span>
+            <span>
+              Ölnöd kell ennyi időn belül: <b>{formatRemaining(killDeadline - now)}</b>
+            </span>
           )}
-          <b>{formatRemaining(killDeadline - now)}</b>
         </p>
       )}
 
