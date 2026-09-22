@@ -13,6 +13,7 @@ export default defineConfig({
     }
   },
   build: {
+    sourcemap: true,
     rolldownOptions: {
       optimization: { inlineConst: true, pifeForModuleWrappers: true },
       output: { codeSplitting: false }
