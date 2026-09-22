@@ -143,6 +143,7 @@ class BountyService(
         val secretsVisible =
             team.eliminatedAt == null && round.initialized && !round.finalized && team.targetGroupId != null
         val targetGroupId = team.targetGroupId
+        val kills = bountyKillRepository.findAllByRoundIdAndKillerGroupId(round.id, team.groupId).size
         return BountyTeamView(
             groupName = team.groupName,
             aliveCount = aliveCount,
@@ -153,9 +154,7 @@ class BountyService(
             weapon = if (secretsVisible) team.weapon else null,
             winner = team.winner,
             rank = team.rank,
-            killPoints = bountyKillRepository.findAllByRoundIdAndKillerGroupId(round.id, team.groupId)
-                .sumOf { it.points },
-            survivalPoints = team.survivalPoints,
+            kills = kills,
         )
     }
 
@@ -220,9 +219,9 @@ class BountyService(
 
         log.info("User '{}' killed '{}' in bounty round '{}'", killer.userName, victim.userName, round.name)
 
-        var message = "Sikeres gyilkosság! +${points} pont"
+        var message = "Sikeres gyilkosság!"
         handleTeamElimination(round, victim.groupId, now)?.let { message += "\n$it" }
-        return BountyKillResponse(true, message, points)
+        return BountyKillResponse(true, message)
     }
 
     private fun expireRegistration(round: BountyRoundEntity, registration: BountyRegistrationEntity, now: Long) {
@@ -257,10 +256,11 @@ class BountyService(
         val hunter = remaining.firstOrNull { it.targetGroupId == victimTeam.groupId }
         val inheritedTarget = victimTeam.targetGroupId
         if (hunter != null && inheritedTarget != null) {
+            val newTargetName = bountyTeamRepository.findByRoundIdAndGroupId(round.id, inheritedTarget)?.groupName
             hunter.targetGroupId = inheritedTarget
+            hunter.targetGroupName = newTargetName ?: ""
             hunter.weapon = victimTeam.weapon
             bountyTeamRepository.save(hunter)
-            val newTargetName = bountyTeamRepository.findByRoundIdAndGroupId(round.id, inheritedTarget)?.groupName
             return "A csapatod új célpontja: ${newTargetName ?: "?"}, új fegyver: ${hunter.weapon}"
         }
         return null
@@ -354,12 +354,14 @@ class BountyService(
         val order = registrationsByGroup.keys.shuffled(Random(round.id.toLong()))
         val weapons = weaponsFor(round.difficulty, order.size)
         val teams = order.mapIndexed { index, groupId ->
+            val targetGroupId = order[(index + 1) % order.size]
             BountyTeamEntity(
                 roundId = round.id,
                 roundName = round.name,
                 groupId = groupId,
                 groupName = registrationsByGroup.getValue(groupId).first().groupName,
-                targetGroupId = order[(index + 1) % order.size],
+                targetGroupId = targetGroupId,
+                targetGroupName = registrationsByGroup.getValue(targetGroupId).first().groupName,
                 weapon = weapons[index],
             )
         }

@@ -29,7 +29,7 @@ export const KillDialog = ({ onClose }: { onClose: () => void }) => {
           <DialogTitle>Gyilkolás</DialogTitle>
         </DialogHeader>
 
-        {mutation.isPending && <Loader2 className="h-12 w-12 animate-spin mb-5 text-primary" />}
+        {mutation.isPending && <Loader2 className="h-12 w-12 m-auto animate-spin p-5 text-primary" />}
 
         {!mutation.isPending && !hasOutcome && <QrReader onScan={handleScan} />}
 

@@ -69,15 +69,23 @@ data class BountyTeamEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
-    @property:GenerateInput(maxLength = 128, order = 6, label = "Fegyver",
+    @property:GenerateInput(maxLength = 128, order = 6, label = "Ellenséges csapat",
         note = "Ezt a rendszer tartja karban, ne módosítsd!")
+    @property:GenerateOverview(columnName = "Ellenség", order = 5)
+    @property:ImportFormat
+    var targetGroupName: String = "",
+
+    @Column(nullable = false)
+    @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
+    @property:GenerateInput(maxLength = 128, order = 7, label = "Fegyver",
+        note = "Ezt a rendszer tartja karban, felül lehet írni, de amikor a csapat kiejti az ellenséget, akkor változni fog a fegyver az ellenséges csapatéra.")
     @property:GenerateOverview(columnName = "Fegyver", order = 6)
     @property:ImportFormat
     var weapon: String = "",
 
     @Column
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.DATE, order = 7, label = "Kiesés időpontja",
+    @property:GenerateInput(type = InputType.DATE, order = 8, label = "Kiesés időpontja",
         note = "Ezt a rendszer tartja karban, ne módosítsd!")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -85,7 +93,7 @@ data class BountyTeamEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.SWITCH, order = 8, label = "Győztes",
+    @property:GenerateInput(type = InputType.SWITCH, order = 9, label = "Győztes",
         note = "Ezt a rendszer tartja karban, ne módosítsd!")
     @property:GenerateOverview(columnName = "Győztes", order = 7, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat
@@ -93,7 +101,7 @@ data class BountyTeamEntity(
 
     @Column
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.NUMBER, order = 9, label = "Helyezés",
+    @property:GenerateInput(type = InputType.NUMBER, order = 10, label = "Helyezés",
         note = "Ezt a rendszer tartja karban, ne módosítsd!")
     @property:GenerateOverview(columnName = "Helyezés", order = 8)
     @property:ImportFormat
@@ -101,7 +109,7 @@ data class BountyTeamEntity(
 
     @Column
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.NUMBER, order = 10, label = "Túlélési pontok",
+    @property:GenerateInput(type = InputType.NUMBER, order = 11, label = "Túlélési pontok",
         note = "Ezt a rendszer tartja karban, ne módosítsd!")
     @property:GenerateOverview(columnName = "Túlélési pont", order = 9)
     @property:ImportFormat

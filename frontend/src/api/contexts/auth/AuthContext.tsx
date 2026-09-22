@@ -37,19 +37,24 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setShouldLogout(true)
   }, [])
 
-  const { mutate } = useTokenRefresh()
+  const { mutate, reset, isPending: tokenRefreshLoading, isError: tokenRefreshError, isSuccess: tokenRefreshSuccess } = useTokenRefresh()
   const authState = authInfo?.authState
   useEffect(() => {
     if (authState === AuthState.EXPIRED) {
       mutate()
+    } else {
+      reset()
     }
-  }, [authState, mutate])
+  }, [authState, mutate, reset])
+
+  const identityLoading =
+    authInfoLoading || tokenRefreshLoading || (authState === AuthState.EXPIRED && !tokenRefreshError && !tokenRefreshSuccess)
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn: authInfo?.authState === AuthState.LOGGED_IN,
-        authInfoLoading,
+        authInfoLoading: identityLoading,
         authInfo,
         authInfoError,
         onLogout,
