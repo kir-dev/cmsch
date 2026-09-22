@@ -1,4 +1,6 @@
 import { useConfigContext } from '@/api/contexts/config/ConfigContext'
+import kirDevLogoDark from '@/assets/img/kirdev-white.svg'
+import kirDevLogoLight from '@/assets/img/kirdev.svg'
 import { useDate } from '@/hooks/useDate.ts'
 import { HIDE_KIR_DEV_IN_FOOTER } from '@/util/configs/environment.config'
 import { useColorModeValue } from '@/util/core-functions.util'
@@ -28,7 +30,7 @@ export const Footer = () => {
     config?.components?.style?.lightFooterShadowColor,
     config?.components?.style?.darkFooterShadowColor
   )
-  const kirDevLogo = useColorModeValue('/img/kirdev.svg', '/img/kirdev-white.svg')
+  const kirDevLogo = useColorModeValue(kirDevLogoLight, kirDevLogoDark)
   if (!component) return null
 
   const partnersVisible =
