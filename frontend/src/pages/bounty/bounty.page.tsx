@@ -59,7 +59,7 @@ export default function BountyPage() {
       </Dialog>
 
       {data.rounds.map((round) => (
-        <BountyRoundCard round={round} key={round.id} />
+        <BountyRoundCard round={round} key={round.id} component={component} />
       ))}
     </CmschPage>
   )

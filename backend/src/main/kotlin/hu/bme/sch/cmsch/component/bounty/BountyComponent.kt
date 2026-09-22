@@ -87,8 +87,20 @@ class BountyComponent(
     var registrationInfo by StringSettingRef(
         defaultValue = "A regisztráció az **infópultnál** történik.\n\nJelentkezz most, még nyitva a regisztráció!",
         type = SettingType.LONG_TEXT_MARKDOWN,
-        fieldName = "Regisztrációs szöveg",
-        description = "Amikor a játékos még nincs regisztrálva a körbe, ez a szöveg jelenik meg a kör kártyáján")
+        fieldName = "Regisztrációs szöveg (nyitva)",
+        description = "Amikor a regisztráció nyitva van és a játékos még nincs regisztrálva a körbe, ez a szöveg jelenik meg a kör kártyáján")
+
+    var registrationUpcomingMessage by StringSettingRef(
+        defaultValue = "Regisztráció hamarosan...",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Regisztrációs szöveg (nyitás előtt)",
+        description = "Amikor a regisztráció még nem kezdődött el, ez a szöveg jelenik meg a kör kártyáján")
+
+    var registrationClosedMessage by StringSettingRef(
+        defaultValue = "A regisztráció ebben a körben lezárult.",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Regisztrációs szöveg (lezárás után)",
+        description = "Amikor a regisztráció már lezárult és a játékos nem regisztrált, ez jelenik meg. Ha üres, nem jelenik meg.")
 
     var killedMessage by StringSettingRef("Meghaltál ebben a körben.", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Kiesés üzenet",

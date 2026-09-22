@@ -143,6 +143,7 @@ class BountyService(
         val secretsVisible =
             team.eliminatedAt == null && round.initialized && !round.finalized && team.targetGroupId != null
         val targetGroupId = team.targetGroupId
+        val kills = bountyKillRepository.findAllByRoundIdAndKillerGroupId(round.id, team.groupId).size
         return BountyTeamView(
             groupName = team.groupName,
             aliveCount = aliveCount,
@@ -153,9 +154,7 @@ class BountyService(
             weapon = if (secretsVisible) team.weapon else null,
             winner = team.winner,
             rank = team.rank,
-            killPoints = bountyKillRepository.findAllByRoundIdAndKillerGroupId(round.id, team.groupId)
-                .sumOf { it.points },
-            survivalPoints = team.survivalPoints,
+            kills = kills,
         )
     }
 
@@ -220,9 +219,9 @@ class BountyService(
 
         log.info("User '{}' killed '{}' in bounty round '{}'", killer.userName, victim.userName, round.name)
 
-        var message = "Sikeres gyilkosság! +${points} pont"
+        var message = "Sikeres gyilkosság!"
         handleTeamElimination(round, victim.groupId, now)?.let { message += "\n$it" }
-        return BountyKillResponse(true, message, points)
+        return BountyKillResponse(true, message)
     }
 
     private fun expireRegistration(round: BountyRoundEntity, registration: BountyRegistrationEntity, now: Long) {

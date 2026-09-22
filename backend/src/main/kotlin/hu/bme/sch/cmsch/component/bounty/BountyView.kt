@@ -41,8 +41,7 @@ data class BountyTeamView(
     val weapon: String?,
     val winner: Boolean,
     val rank: Int?,
-    val killPoints: Long,
-    val survivalPoints: Long?,
+    val kills: Int,
 )
 
 data class BountyKillRequest(
@@ -52,7 +51,6 @@ data class BountyKillRequest(
 data class BountyKillResponse(
     val success: Boolean,
     val message: String,
-    val points: Long? = null,
 )
 
 data class BountyRegistrationResponse(

@@ -396,6 +396,8 @@ export interface Bounty {
   mediumRoundLabel: string
   hardRoundLabel: string
   registrationInfo: string
+  registrationUpcomingMessage: string
+  registrationClosedMessage: string
   killedMessage: string
   eliminatedByInactivityMessage: string
   teamEliminatedMessage: string

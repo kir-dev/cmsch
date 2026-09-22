@@ -37,12 +37,10 @@ export type BountyTeamView = {
   weapon: string | null
   winner: boolean
   rank: number | null
-  killPoints: number
-  survivalPoints: number | null
+  kills: number
 }
 
 export type BountyKillResponse = {
   success: boolean
   message: string
-  points: number | null
 }
