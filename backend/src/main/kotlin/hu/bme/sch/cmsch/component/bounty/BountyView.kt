@@ -59,4 +59,5 @@ data class BountyRegistrationResponse(
     val userName: String = "",
     val groupName: String = "",
     val roundName: String = "",
+    val newTeam: Boolean = false,
 )

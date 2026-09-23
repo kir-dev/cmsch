@@ -23,6 +23,51 @@
         #flash-toggle {
             display: none;
         }
+
+        #registration-review {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            width: min(90vw, 420px);
+            padding: 24px;
+            background: #fff;
+            color: #111;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+            font-size: 18px;
+            letter-spacing: normal;
+            text-align: center;
+        }
+
+        #registration-review h2 {
+            margin-bottom: 16px;
+            color: #111;
+            text-shadow: none;
+        }
+
+        #registration-review p {
+            margin: 8px 0;
+        }
+
+        #registration-review button {
+            margin: 20px 6px 0;
+            padding: 10px 16px;
+            border-radius: 4px;
+            background: #176b35;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        #registration-review button.secondary {
+            background: #555;
+        }
+
+        #registration-review button:disabled {
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -53,137 +98,207 @@
         <span id="debug"></span>
     </div>
 
-    <!-- Igen, tudom, hogy ez egy fos! De ha nem tetszik lehet feladni pull requestet! :P -->
-<script type="module" th:inline="javascript">
+    <section id="registration-review" role="dialog" aria-modal="true" aria-labelledby="review-title">
+        <h2 id="review-title">Jelentkezés ellenőrzése</h2>
+        <p><strong>Név:</strong> <span id="review-name"></span></p>
+        <p><strong>Csapat:</strong> <span id="review-team"></span></p>
+        <p><strong>Kör:</strong> <span id="review-round"></span></p>
+        <p id="review-new-team" style="display: none;"><strong>Új csapat ebben a körben</strong></p>
+        <button id="review-confirm" type="button">Elfogadás</button>
+        <button id="review-cancel" class="secondary" type="button">Mégsem</button>
+    </section>
+    <div id="registration-message" role="status" aria-live="polite" style="display: none;"></div>
 
-    import QrScanner from "/js/qr-scanner.min.js";
-    QrScanner.WORKER_PATH = '/js/qr-scanner-worker.min.js';
+    <script type="module" th:inline="javascript">
 
-    const codePrefix = /*[[${prefix}]]*/ "G7_";
-    const bountyPrefix = /*[[${bountyPrefix}]]*/ "bounty:";
-    const parentUrl = "/admin/control";
-    const baseUrl = /*[[@{/admin/bounty-registration}]]*/ "https://192.168.0.60:8080/scan";
-    const resolveUrl = /*[[${resolveUrl}]]*/ "/resolve";
+        import QrScanner from "/js/qr-scanner.min.js";
+        QrScanner.WORKER_PATH = '/js/qr-scanner-worker.min.js';
 
-    let lastReading = "n/a";
-    let lastSuccessful = 0;
-    let scanning = true;
+        const codePrefix = /*[[${prefix}]]*/ "G7_";
+        const bountyPrefix = /*[[${bountyPrefix}]]*/ "bounty:";
+        const parentUrl = "/admin/control";
+        const baseUrl = /*[[@{/admin/bounty-registration}]]*/ "https://192.168.0.60:8080/scan";
+        const resolveUrl = /*[[${resolveUrl}]]*/ "/resolve";
+        const registerUrl = /*[[${registerUrl}]]*/ "/register";
 
-    const video = document.getElementById('qr-video');
-    const camHasCamera = document.getElementById('cam-has-camera');
-    const camHasFlash = document.getElementById('cam-has-flash');
-    const flashToggle = document.getElementById('flash-toggle');
-    const flashState = document.getElementById('flash-state');
-    const camQrResult = document.getElementById('cam-qr-result');
-    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+        let lastReading = "n/a";
+        let lastSuccessful = 0;
+        let scanning = true;
+        let requestPending = false;
+        let pendingCmschId = null;
 
-    function validatePrompt(cmschId) {
-        setTimeout(async () => {
-            const raw = await httpFetchData('POST', baseUrl + resolveUrl, {
-                "cmschId": cmschId
+        const video = document.getElementById('qr-video');
+        const camHasCamera = document.getElementById('cam-has-camera');
+        const camHasFlash = document.getElementById('cam-has-flash');
+        const flashToggle = document.getElementById('flash-toggle');
+        const flashState = document.getElementById('flash-state');
+        const camQrResult = document.getElementById('cam-qr-result');
+        const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+        const review = document.getElementById('registration-review');
+        const confirmButton = document.getElementById('review-confirm');
+        const cancelButton = document.getElementById('review-cancel');
+        const message = document.getElementById('registration-message');
+
+        function showMessage(text) {
+            message.textContent = text;
+            message.style.display = 'block';
+            message.style.position = 'fixed';
+            message.style.top = '20px';
+            message.style.left = '50%';
+            message.style.transform = 'translateX(-50%)';
+            message.style.zIndex = '15';
+            message.style.padding = '12px 18px';
+            message.style.background = 'rgba(0, 0, 0, 0.8)';
+            message.style.color = '#fff';
+            message.style.fontSize = '16px';
+            message.style.letterSpacing = 'normal';
+            message.style.textAlign = 'center';
+            setTimeout(() => message.style.display = 'none', 4000);
+        }
+
+        async function post(url, cmschId) {
+            const response = await fetch(baseUrl + url, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+                body: JSON.stringify({ cmschId })
             });
-            try {
-                const result = JSON.parse(raw);
+            return response.json();
+        }
 
+        async function previewRegistration(cmschId) {
+            requestPending = true;
+            try {
+                const result = await post(resolveUrl, cmschId);
+                if (!result.ok) {
+                    showMessage(result.message || 'Sikertelen ellenőrzés');
+                    lastSuccessful = Date.now();
+                    return;
+                }
+
+                pendingCmschId = cmschId;
+                document.getElementById('review-name').textContent = result.userName;
+                document.getElementById('review-team').textContent = result.groupName;
+                document.getElementById('review-round').textContent = result.roundName;
+                document.getElementById('review-new-team').style.display = result.newTeam ? 'block' : 'none';
+                review.style.display = 'block';
+                scanner.stop();
+                scanning = false;
+            } catch (e) {
+                showMessage('Lekérés sikertelen! Lehet, hogy lejárt a bejelentkezés.');
+            } finally {
+                requestPending = false;
+            }
+        }
+
+        async function confirmRegistration() {
+            if (!pendingCmschId || requestPending) return;
+            requestPending = true;
+            confirmButton.disabled = true;
+            cancelButton.disabled = true;
+            try {
+                const result = await post(registerUrl, pendingCmschId);
                 if (result.ok) {
-                    alert(`-------------------\nREGISZTRÁLVA\n-------------------\n\nNév: ${result.userName}\nCsapat: ${result.groupName}\nKör: ${result.roundName}`)
+                    showMessage(`REGISZTRÁLVA — ${result.userName}, ${result.groupName} (${result.roundName})`);
                 } else {
-                    alert(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nSIKERTELEN REGISZTRÁCIÓ\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n${result.message}`)
+                    showMessage(result.message || 'Sikertelen regisztráció');
                 }
                 lastSuccessful = Date.now();
             } catch (e) {
-                alert('Lekérés sikertelen!\nLehet, hogy lejárt a bejelentkezés!')
+                showMessage('Regisztráció sikertelen! Lehet, hogy lejárt a bejelentkezés.');
+            } finally {
+                pendingCmschId = null;
+                review.style.display = 'none';
+                confirmButton.disabled = false;
+                cancelButton.disabled = false;
+                requestPending = false;
+                scanning = true;
+                scanner.start();
             }
-        }, 0)
-    }
-
-    function setResult(label, result) {
-        if (!result.startsWith(codePrefix) && !result.startsWith(bountyPrefix)) {
-            document.getElementById('debug').innerText = "Nem VALID QR kód!";
-            return;
         }
 
-        if (result === lastReading && (Date.now() - lastSuccessful) < 5000) {
-            document.getElementById('debug').innerText = "Cooldown nem járt le!";
-            return;
+        function cancelReview() {
+            if (requestPending) return;
+            pendingCmschId = null;
+            review.style.display = 'none';
+            scanning = true;
+            scanner.start();
         }
 
-        document.getElementById('debug').innerText = "Feloldás";
-        lastReading = result;
-        lastSuccessful = Date.now();
-
-        validatePrompt(result);
-
-        label.textContent = result;
-        camQrResultTimestamp.textContent = new Date().toString();
-        label.style.color = '#00FF00';
-        clearTimeout(label.highlightTimeout);
-        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
-    }
-
-    QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
-
-    const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
-        camQrResult.textContent = error;
-        camQrResult.style.color = 'inherit';
-    });
-    scanner.start().then(() => {
-
-        scanner.hasFlash().then(hasFlash => {
-            camHasFlash.textContent = hasFlash;
-            if (hasFlash) {
-                flashToggle.style.display = 'inline-block';
-                flashToggle.addEventListener('click', () => {
-                    scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'flashlight_on' : 'flashlight_off');
-                });
+        function setResult(label, result) {
+            if (!result.startsWith(codePrefix) && !result.startsWith(bountyPrefix)) {
+                document.getElementById('debug').innerText = "Nem VALID QR kód!";
+                return;
             }
+
+            if (requestPending || pendingCmschId) return;
+            if (result === lastReading && (Date.now() - lastSuccessful) < 5000) {
+                document.getElementById('debug').innerText = "Cooldown nem járt le!";
+                return;
+            }
+
+            document.getElementById('debug').innerText = "Feloldás";
+            lastReading = result;
+            lastSuccessful = Date.now();
+            void previewRegistration(result);
+
+            label.textContent = result;
+            camQrResultTimestamp.textContent = new Date().toString();
+            label.style.color = '#00FF00';
+            clearTimeout(label.highlightTimeout);
+            label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
+        }
+
+        QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+        const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
+            camQrResult.textContent = error;
+            camQrResult.style.color = 'inherit';
         });
-    });
-    document.getElementById('item-name').innerText = "";
-    document.getElementById('item-price').innerText = "";
-    document.getElementById('stop-button').style.display = 'inline-block';
-    document.getElementById('start-button').style.display = 'none';
+        scanner.start().then(() => {
+            scanner.hasFlash().then(hasFlash => {
+                camHasFlash.textContent = hasFlash;
+                if (hasFlash) {
+                    flashToggle.style.display = 'inline-block';
+                    flashToggle.addEventListener('click', () => {
+                        scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'flashlight_on' : 'flashlight_off');
+                    });
+                }
+            });
+        });
 
-    window.scanner = scanner;
-
-    document.getElementById('start-button').addEventListener('click', () => {
-        scanner.start();
+        document.getElementById('item-name').innerText = "";
+        document.getElementById('item-price').innerText = "";
         document.getElementById('stop-button').style.display = 'inline-block';
         document.getElementById('start-button').style.display = 'none';
-        scanning = true;
-    });
+        window.scanner = scanner;
+        confirmButton.addEventListener('click', confirmRegistration);
+        cancelButton.addEventListener('click', cancelReview);
 
-    document.getElementById('stop-button').addEventListener('click', () => {
-        scanner.stop();
-        document.getElementById('start-button').style.display = 'inline-block';
-        document.getElementById('stop-button').style.display = 'none';
-        scanning = false;
-    });
-
-    document.getElementById('exit').addEventListener('click', () => {
-        document.location.href = document.referrer;
-    });
-
-    async function httpFetchData(method = 'POST', url = '', data = {}) {
-        const response = await fetch(url, {
-            method: method,
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
-            body: JSON.stringify(data)
+        document.getElementById('start-button').addEventListener('click', () => {
+            scanner.start();
+            document.getElementById('stop-button').style.display = 'inline-block';
+            document.getElementById('start-button').style.display = 'none';
+            scanning = true;
         });
-        return response.text();
-    }
 
-    window.addEventListener("orientationchange", function() {
-        if (scanning) {
+        document.getElementById('stop-button').addEventListener('click', () => {
             scanner.stop();
-            setTimeout(() => scanner.start(), 200);
-        }
-    }, false);
+            document.getElementById('start-button').style.display = 'inline-block';
+            document.getElementById('stop-button').style.display = 'none';
+            scanning = false;
+        });
 
-</script>
+        document.getElementById('exit').addEventListener('click', () => {
+            document.location.href = document.referrer || parentUrl;
+        });
+
+        window.addEventListener("orientationchange", function() {
+            if (scanning && !pendingCmschId) {
+                scanner.stop();
+                setTimeout(() => scanner.start(), 200);
+            }
+        }, false);
+    </script>
 </body>
 </html>

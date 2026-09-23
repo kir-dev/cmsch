@@ -2,6 +2,8 @@ package hu.bme.sch.cmsch.component.bounty
 
 import hu.bme.sch.cmsch.component.login.CmschUser
 import hu.bme.sch.cmsch.config.StartupPropertyConfig
+import hu.bme.sch.cmsch.model.GroupEntity
+import hu.bme.sch.cmsch.model.UserEntity
 import hu.bme.sch.cmsch.service.TimeService
 import hu.bme.sch.cmsch.service.UserService
 import org.slf4j.LoggerFactory
@@ -33,47 +35,86 @@ class BountyService(
     private val log = LoggerFactory.getLogger(javaClass)
 
 
+    @Transactional(readOnly = true)
+    fun previewRegistrationByCmschId(rawCmschId: String): BountyRegistrationResponse {
+        val candidate = findRegistrationCandidate(rawCmschId)
+            ?: return registrationError(rawCmschId)
+        if (bountyRegistrationRepository.findByRoundIdAndUserId(candidate.round.id, candidate.user.id) != null) {
+            return BountyRegistrationResponse(
+                false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
+                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam
+            )
+        }
+        return BountyRegistrationResponse(
+            true, "Ellenőrzés sikeres", candidate.user.fullName, candidate.group.name,
+            candidate.round.name, candidate.isNewTeam
+        )
+    }
+
     @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     fun registerByCmschId(rawCmschId: String): BountyRegistrationResponse {
+        val candidate = findRegistrationCandidate(rawCmschId)
+            ?: return registrationError(rawCmschId)
+
+        if (bountyRegistrationRepository.findByRoundIdAndUserId(candidate.round.id, candidate.user.id) != null) {
+            return BountyRegistrationResponse(
+                false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
+                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam
+            )
+        }
+
+        bountyRegistrationRepository.save(BountyRegistrationEntity(
+            roundId = candidate.round.id,
+            roundName = candidate.round.name,
+            userId = candidate.user.id,
+            userName = candidate.user.fullName,
+            groupId = candidate.group.id,
+            groupName = candidate.group.name,
+            code = Uuid.generateV7().toString(),
+            alive = true,
+            deadline = 0,
+        ))
+        log.info("User '{}' (group: '{}') registered for bounty round '{}'", candidate.user.fullName, candidate.group.name, candidate.round.name)
+        return BountyRegistrationResponse(
+            true, "Sikeres regisztráció", candidate.user.fullName, candidate.group.name,
+            candidate.round.name, candidate.isNewTeam
+        )
+    }
+
+    private fun findRegistrationCandidate(rawCmschId: String): RegistrationCandidate? {
         // Accept both the plain profile QR and the bounty page's prefixed QR ("bounty:<cmschId>")
+        val cmschId = rawCmschId.removePrefix(BOUNTY_QR_PREFIX)
+        if (!cmschId.startsWith(startupPropertyConfig.profileQrPrefix)) return null
+
+        val user = userService.searchByCmschId(cmschId).orElse(null) ?: return null
+        val group = user.group ?: return null
+        val now = clock.getTimeInSeconds()
+        val round = bountyRoundRepository.findAllByOrderByGameStartAsc()
+            .filter { clock.inRange(it.registrationStart, it.registrationEnd, now) && !it.finalized }
+            .minByOrNull { it.registrationStart } ?: return null
+        val isNewTeam = bountyRegistrationRepository.findAllByRoundId(round.id)
+            .none { it.groupId == group.id }
+        return RegistrationCandidate(user, group, round, isNewTeam)
+    }
+
+    private fun registrationError(rawCmschId: String): BountyRegistrationResponse {
         val cmschId = rawCmschId.removePrefix(BOUNTY_QR_PREFIX)
         if (!cmschId.startsWith(startupPropertyConfig.profileQrPrefix))
             return BountyRegistrationResponse(false, "Érvénytelen QR kód")
 
         val user = userService.searchByCmschId(cmschId).orElse(null)
             ?: return BountyRegistrationResponse(false, "Nincs ilyen felhasználó")
-
-        val group = user.group ?: return BountyRegistrationResponse(false, "A felhasználónak nincs csapata")
-
-        val now = clock.getTimeInSeconds()
-        val round = bountyRoundRepository.findAllByOrderByGameStartAsc()
-            .filter { clock.inRange(it.registrationStart, it.registrationEnd, now) && !it.finalized }
-            .minByOrNull { it.registrationStart }
-            ?: return BountyRegistrationResponse(false, "Jelenleg nincs nyitott regisztrációs időszak")
-
-        if (bountyRegistrationRepository.findByRoundIdAndUserId(round.id, user.id) != null) {
-            return BountyRegistrationResponse(
-                false, "A játékos már regisztrálva van a(z) ${round.name} körre",
-                user.fullName, group.name, round.name
-            )
-        }
-
-        bountyRegistrationRepository.save(BountyRegistrationEntity(
-            roundId = round.id,
-            roundName = round.name,
-            userId = user.id,
-            userName = user.fullName,
-            groupId = group.id,
-            groupName = group.name,
-            code = Uuid.generateV7().toString(),
-            alive = true,
-            deadline = 0,
-        ))
-        log.info("User '{}' (group: '{}') registered for bounty round '{}'", user.fullName, group.name, round.name)
-        return BountyRegistrationResponse(true, "Sikeres regisztráció", user.fullName, group.name, round.name)
+        if (user.group == null) return BountyRegistrationResponse(false, "A felhasználónak nincs csapata")
+        return BountyRegistrationResponse(false, "Jelenleg nincs nyitott regisztrációs időszak")
     }
 
+    private data class RegistrationCandidate(
+        val user: UserEntity,
+        val group: GroupEntity,
+        val round: BountyRoundEntity,
+        val isNewTeam: Boolean,
+    )
 
     @Transactional(readOnly = true)
     fun getState(user: CmschUser?): BountyView {

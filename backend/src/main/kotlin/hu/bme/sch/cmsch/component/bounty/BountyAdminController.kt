@@ -45,6 +45,7 @@ class BountyAdminController(
         model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
         model.addAttribute("bountyPrefix", BOUNTY_QR_PREFIX)
         model.addAttribute("resolveUrl", "/resolve")
+        model.addAttribute("registerUrl", "/register")
         return "bounty-registration"
     }
 
@@ -55,7 +56,18 @@ class BountyAdminController(
         if (!StaffPermissions.PERMISSION_REGISTER_BOUNTY.validate(user)) {
             throw IllegalStateException("Insufficient permissions")
         }
-        log.info("Resolving bounty registration for: {}", resolve.cmschId)
+        log.info("Previewing bounty registration for: {}", resolve.cmschId)
+        return bountyService.previewRegistrationByCmschId(resolve.cmschId)
+    }
+
+    @ResponseBody
+    @PostMapping("/register")
+    fun register(@RequestBody resolve: ResolveRequest, auth: Authentication): BountyRegistrationResponse {
+        val user = auth.getUser()
+        if (!StaffPermissions.PERMISSION_REGISTER_BOUNTY.validate(user)) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        log.info("Registering bounty participant: {}", resolve.cmschId)
         return bountyService.registerByCmschId(resolve.cmschId)
     }
 
