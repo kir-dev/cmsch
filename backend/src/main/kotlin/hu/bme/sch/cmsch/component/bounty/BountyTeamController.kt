@@ -40,13 +40,13 @@ class BountyTeamController(
     env,
 
     showPermission = StaffPermissions.PERMISSION_SHOW_BOUNTY_TEAMS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
+    createPermission = StaffPermissions.PERMISSION_CREATE_BOUNTY_TEAMS,
+    editPermission = StaffPermissions.PERMISSION_EDIT_BOUNTY_TEAMS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_BOUNTY_TEAMS,
 
-    createEnabled = false,
-    editEnabled = false,
-    deleteEnabled = false,
+    createEnabled = true,
+    editEnabled = true,
+    deleteEnabled = true,
     importEnabled = false,
     exportEnabled = true,
 

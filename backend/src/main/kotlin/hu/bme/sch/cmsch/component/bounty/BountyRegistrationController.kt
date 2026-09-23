@@ -40,11 +40,11 @@ class BountyRegistrationController(
     env,
 
     showPermission = StaffPermissions.PERMISSION_SHOW_BOUNTY_REGISTRATIONS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
+    createPermission = StaffPermissions.PERMISSION_CREATE_BOUNTY_REGISTRATIONS,
     editPermission = StaffPermissions.PERMISSION_EDIT_BOUNTY_REGISTRATIONS,
     deletePermission = StaffPermissions.PERMISSION_DELETE_BOUNTY_REGISTRATIONS,
 
-    createEnabled = false,
+    createEnabled = true,
     editEnabled = true,
     deleteEnabled = true,
     importEnabled = false,

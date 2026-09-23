@@ -40,13 +40,13 @@ class BountyKillController(
     env,
 
     showPermission = StaffPermissions.PERMISSION_SHOW_BOUNTY_KILLS,
-    createPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    editPermission = ImplicitPermissions.PERMISSION_NOBODY,
-    deletePermission = ImplicitPermissions.PERMISSION_NOBODY,
+    createPermission = StaffPermissions.PERMISSION_CREATE_BOUNTY_KILLS,
+    editPermission = StaffPermissions.PERMISSION_EDIT_BOUNTY_KILLS,
+    deletePermission = StaffPermissions.PERMISSION_DELETE_BOUNTY_KILLS,
 
-    createEnabled = false,
-    editEnabled = false,
-    deleteEnabled = false,
+    createEnabled = true,
+    editEnabled = true,
+    deleteEnabled = true,
     importEnabled = false,
     exportEnabled = true,
 

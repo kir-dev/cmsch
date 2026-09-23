@@ -1438,6 +1438,13 @@ object StaffPermissions : PermissionGroup {
         component = BountyComponent::class
     )
 
+    val PERMISSION_CREATE_BOUNTY_REGISTRATIONS = PermissionValidator(
+        "BOUNTY_REGISTRATIONS_CREATE",
+        "Fejvadászat regisztrációk létrehozása",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
     val PERMISSION_DELETE_BOUNTY_REGISTRATIONS = PermissionValidator(
         "BOUNTY_REGISTRATIONS_DELETE",
         "Fejvadászat regisztrációk törlése",
@@ -1452,10 +1459,52 @@ object StaffPermissions : PermissionGroup {
         component = BountyComponent::class
     )
 
+    val PERMISSION_EDIT_BOUNTY_TEAMS = PermissionValidator(
+        "BOUNTY_TEAMS_EDIT",
+        "Fejvadászat csapatok szerkesztése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_CREATE_BOUNTY_TEAMS = PermissionValidator(
+        "BOUNTY_TEAMS_CREATE",
+        "Fejvadászat csapatok létrehozása",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_DELETE_BOUNTY_TEAMS = PermissionValidator(
+        "BOUNTY_TEAMS_DELETE",
+        "Fejvadászat csapatok törlése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
     val PERMISSION_SHOW_BOUNTY_KILLS = PermissionValidator(
         "BOUNTY_KILLS_SHOW",
         "Fejvadászat gyilkosságok megtekintése",
         readOnly = true,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_EDIT_BOUNTY_KILLS = PermissionValidator(
+        "BOUNTY_KILLS_EDIT",
+        "Fejvadászat gyilkosságok szerkesztése",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_CREATE_BOUNTY_KILLS = PermissionValidator(
+        "BOUNTY_KILLS_CREATE",
+        "Fejvadászat gyilkosságok létrehozása",
+        readOnly = false,
+        component = BountyComponent::class
+    )
+
+    val PERMISSION_DELETE_BOUNTY_KILLS = PermissionValidator(
+        "BOUNTY_KILLS_DELETE",
+        "Fejvadászat gyilkosságok törlése",
+        readOnly = false,
         component = BountyComponent::class
     )
 
@@ -1916,9 +1965,16 @@ object StaffPermissions : PermissionGroup {
         PERMISSION_DELETE_BOUNTY_ROUNDS,
         PERMISSION_SHOW_BOUNTY_REGISTRATIONS,
         PERMISSION_EDIT_BOUNTY_REGISTRATIONS,
+        PERMISSION_CREATE_BOUNTY_REGISTRATIONS,
         PERMISSION_DELETE_BOUNTY_REGISTRATIONS,
         PERMISSION_SHOW_BOUNTY_TEAMS,
+        PERMISSION_EDIT_BOUNTY_TEAMS,
+        PERMISSION_CREATE_BOUNTY_TEAMS,
+        PERMISSION_DELETE_BOUNTY_TEAMS,
         PERMISSION_SHOW_BOUNTY_KILLS,
+        PERMISSION_EDIT_BOUNTY_KILLS,
+        PERMISSION_CREATE_BOUNTY_KILLS,
+        PERMISSION_DELETE_BOUNTY_KILLS,
 
         PERMISSION_SHOW_COMMUNITIES,
         PERMISSION_EDIT_COMMUNITIES,
