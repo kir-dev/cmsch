@@ -102,6 +102,12 @@ class BountyComponent(
         fieldName = "Regisztrációs szöveg (lezárás után)",
         description = "Amikor a regisztráció már lezárult és a játékos nem regisztrált, ez jelenik meg. Ha üres, nem jelenik meg.")
 
+    var registrationFullMessage by StringSettingRef(
+        defaultValue = "A regisztráció betelt, nincs több szabad hely.",
+        type = SettingType.LONG_TEXT_MARKDOWN,
+        fieldName = "Regisztrációs szöveg (betelt)",
+        description = "Amikor a regisztrációs limit betelt, ez a szöveg jelenik meg a kör kártyáján. Ha üres, nem jelenik meg.")
+
     var killedMessage by StringSettingRef("Meghaltál ebben a körben.", type = SettingType.LONG_TEXT_MARKDOWN,
         fieldName = "Kiesés üzenet",
         description = "Ez jelenik meg, ha a játékost megölték")

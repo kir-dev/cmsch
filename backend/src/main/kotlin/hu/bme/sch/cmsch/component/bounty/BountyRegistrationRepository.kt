@@ -12,6 +12,7 @@ interface BountyRegistrationRepository : CrudRepository<BountyRegistrationEntity
 
     override fun findAll(): MutableIterable<BountyRegistrationEntity>
     fun findAllByRoundId(roundId: Int): List<BountyRegistrationEntity>
+    fun countByRoundId(roundId: Int): Int
     fun findAllByRoundIdAndAliveTrue(roundId: Int): List<BountyRegistrationEntity>
     fun findByRoundIdAndUserId(roundId: Int, userId: Int): BountyRegistrationEntity?
     fun findByCode(code: String): BountyRegistrationEntity?

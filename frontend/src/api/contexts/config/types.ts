@@ -398,6 +398,7 @@ export interface Bounty {
   registrationInfo: string
   registrationUpcomingMessage: string
   registrationClosedMessage: string
+  registrationFullMessage: string
   killedMessage: string
   eliminatedByInactivityMessage: string
   teamEliminatedMessage: string

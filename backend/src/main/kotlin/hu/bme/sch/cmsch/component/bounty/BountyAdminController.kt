@@ -8,6 +8,8 @@ import hu.bme.sch.cmsch.service.StaffPermissions
 import hu.bme.sch.cmsch.util.getUser
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -44,6 +46,8 @@ class BountyAdminController(
 
         model.addAttribute("prefix", startupPropertyConfig.profileQrPrefix)
         model.addAttribute("bountyPrefix", BOUNTY_QR_PREFIX)
+        model.addAttribute("registrationCapacity", bountyService.getRegistrationCapacity())
+        model.addAttribute("capacityUrl", "/capacity")
         model.addAttribute("resolveUrl", "/resolve")
         model.addAttribute("registerUrl", "/register")
         return "bounty-registration"
@@ -69,6 +73,18 @@ class BountyAdminController(
         }
         log.info("Registering bounty participant: {}", resolve.cmschId)
         return bountyService.registerByCmschId(resolve.cmschId)
+    }
+
+    @ResponseBody
+    @GetMapping("/capacity")
+    fun capacity(auth: Authentication): ResponseEntity<BountyRegistrationCapacity> {
+        val user = auth.getUser()
+        if (!StaffPermissions.PERMISSION_REGISTER_BOUNTY.validate(user)) {
+            throw IllegalStateException("Insufficient permissions")
+        }
+        val capacity = bountyService.getRegistrationCapacity()
+            ?: return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        return ResponseEntity.ok(capacity)
     }
 
 }

@@ -11,6 +11,7 @@ import hu.bme.sch.cmsch.model.ManagedEntity
 import hu.bme.sch.cmsch.service.StaffPermissions
 import jakarta.persistence.*
 import org.hibernate.Hibernate
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -51,15 +52,24 @@ data class BountyRoundEntity(
     var registrationEnd: Long = 0,
 
     @Column(nullable = false)
+    @ColumnDefault("-1")
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 4, label = "Játék kezdete")
+    @property:GenerateInput(type = InputType.NUMBER, defaultValue = "-1", order = 4, label = "Férőhely",
+        note = "A regisztrálható játékosok maximális száma. -1 esetén korlátlan.")
+    @property:GenerateOverview(columnName = "Férőhely", order = 5, renderer = OverviewType.NUMBER)
+    @property:ImportFormat
+    var registrationLimit: Int = -1,
+
+    @Column(nullable = false)
+    @field:JsonView(value = [Edit::class])
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Játék kezdete")
     @property:GenerateOverview(columnName = "Játék kezdete", order = 6, renderer = OverviewType.DATE, useForSearch = false)
     @property:ImportFormat
     var gameStart: Long = 0,
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 5, label = "Játék vége")
+    @property:GenerateInput(type = InputType.DATE, defaultValue = "0", order = 6, label = "Játék vége")
     @property:GenerateOverview(columnName = "Játék vége", order = 7, renderer = OverviewType.DATE, useForSearch = false)
     @property:ImportFormat
     var gameEnd: Long = 0,
@@ -68,7 +78,7 @@ data class BountyRoundEntity(
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @field:JsonView(value = [Edit::class, Preview::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 6, label = "Nehézség",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7, label = "Nehézség",
         note = "A fegyverek az ehhez tartozó poolból sorsolódnak, a gyilkosságért kapott pont is ettől függ.",
         source = ["EASY", "MEDIUM", "HARD"])
     @property:GenerateOverview(columnName = "Nehézség", order = 2)
@@ -77,7 +87,7 @@ data class BountyRoundEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = InputType.NUMBER, defaultValue = "48", order = 7, label = "Inaktivitási idő (óra)",
+    @property:GenerateInput(type = InputType.NUMBER, defaultValue = "48", order = 8, label = "Inaktivitási idő (óra)",
         note = "Ennyi óra gyilkolás nélkül kiesik a játékos a körből.")
     @property:GenerateOverview(columnName = "Inaktivitási idő (óra)", order = 8, renderer = OverviewType.NUMBER)
     @property:ImportFormat
@@ -85,7 +95,7 @@ data class BountyRoundEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = InputType.SWITCH, order = 8, label = "Inicializálva",
+    @property:GenerateInput(type = InputType.SWITCH, order = 9, label = "Inicializálva",
         note = "Ezt a rendszer tartja karban, ne módosítsd! A regisztráció lezárultával igazra állítódik.")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
@@ -93,7 +103,7 @@ data class BountyRoundEntity(
 
     @Column(nullable = false)
     @field:JsonView(value = [Edit::class, FullDetails::class])
-    @property:GenerateInput(type = InputType.SWITCH, order = 9, label = "Lezárva",
+    @property:GenerateInput(type = InputType.SWITCH, order = 10, label = "Lezárva",
         note = "Ezt a rendszer tartja karban, ne módosítsd! A kör végeztével igazra állítódik.")
     @property:GenerateOverview(columnName = "Lezárva", order = 3, centered = true, renderer = OverviewType.BOOLEAN)
     @property:ImportFormat

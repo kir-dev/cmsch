@@ -42,12 +42,16 @@ class BountyService(
         if (bountyRegistrationRepository.findByRoundIdAndUserId(candidate.round.id, candidate.user.id) != null) {
             return BountyRegistrationResponse(
                 false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
-                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam
+                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam,
+                seatsRemaining(candidate.round)
             )
+        }
+        if (isRegistrationFull(candidate.round)) {
+            return registrationFullResponse(candidate)
         }
         return BountyRegistrationResponse(
             true, "Ellenőrzés sikeres", candidate.user.fullName, candidate.group.name,
-            candidate.round.name, candidate.isNewTeam
+            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round)
         )
     }
 
@@ -60,8 +64,12 @@ class BountyService(
         if (bountyRegistrationRepository.findByRoundIdAndUserId(candidate.round.id, candidate.user.id) != null) {
             return BountyRegistrationResponse(
                 false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
-                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam
+                candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam,
+                seatsRemaining(candidate.round)
             )
+        }
+        if (isRegistrationFull(candidate.round)) {
+            return registrationFullResponse(candidate)
         }
 
         bountyRegistrationRepository.save(BountyRegistrationEntity(
@@ -78,7 +86,7 @@ class BountyService(
         log.info("User '{}' (group: '{}') registered for bounty round '{}'", candidate.user.fullName, candidate.group.name, candidate.round.name)
         return BountyRegistrationResponse(
             true, "Sikeres regisztráció", candidate.user.fullName, candidate.group.name,
-            candidate.round.name, candidate.isNewTeam
+            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round)
         )
     }
 
@@ -90,13 +98,33 @@ class BountyService(
         val user = userService.searchByCmschId(cmschId).orElse(null) ?: return null
         val group = user.group ?: return null
         val now = clock.getTimeInSeconds()
-        val round = bountyRoundRepository.findAllByOrderByGameStartAsc()
-            .filter { clock.inRange(it.registrationStart, it.registrationEnd, now) && !it.finalized }
-            .minByOrNull { it.registrationStart } ?: return null
+        val round = findOpenRegistrationRound(now) ?: return null
         val isNewTeam = bountyRegistrationRepository.findAllByRoundId(round.id)
             .none { it.groupId == group.id }
         return RegistrationCandidate(user, group, round, isNewTeam)
     }
+
+    private fun isRegistrationFull(round: BountyRoundEntity): Boolean =
+        round.registrationLimit != -1 && seatsRemaining(round) == 0
+
+    private fun seatsRemaining(round: BountyRoundEntity): Int? =
+        if (round.registrationLimit == -1) null
+        else (round.registrationLimit - bountyRegistrationRepository.countByRoundId(round.id)).coerceAtLeast(0)
+
+    private fun findOpenRegistrationRound(now: Long): BountyRoundEntity? = bountyRoundRepository.findAllByOrderByGameStartAsc()
+        .filter { clock.inRange(it.registrationStart, it.registrationEnd, now) && !it.finalized }
+        .minByOrNull { it.registrationStart }
+
+    @Transactional(readOnly = true)
+    fun getRegistrationCapacity(): BountyRegistrationCapacity? {
+        val round = findOpenRegistrationRound(clock.getTimeInSeconds()) ?: return null
+        return BountyRegistrationCapacity(round.name, seatsRemaining(round))
+    }
+
+    private fun registrationFullResponse(candidate: RegistrationCandidate) = BountyRegistrationResponse(
+        false, bountyComponent.registrationFullMessage,
+        candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam, 0
+    )
 
     private fun registrationError(rawCmschId: String): BountyRegistrationResponse {
         val cmschId = rawCmschId.removePrefix(BOUNTY_QR_PREFIX)
@@ -169,6 +197,7 @@ class BountyService(
             difficulty = round.difficulty.name,
             registrationStart = round.registrationStart,
             registrationEnd = round.registrationEnd,
+            registrationFull = isRegistrationFull(round),
             gameStart = round.gameStart,
             gameEnd = round.gameEnd,
             phase = phase,
