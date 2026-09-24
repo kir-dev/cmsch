@@ -15,11 +15,20 @@ const partnerLogos = {
   vik: { light: vikLight, dark: vikDark }
 } as const
 
-interface PartnerLogoProps {
-  name: 'bme' | 'schonherz' | 'schdesign' | 'vik'
-}
+export type PartnerLogoName = keyof typeof partnerLogos
 
-export function PartnerLogo({ name }: PartnerLogoProps) {
+export function PartnerLogo({ name }: { name: PartnerLogoName }) {
   const fileVariant = useColorModeValue('light', 'dark')
-  return <img className="m-5 max-h-20 max-w-32 object-contain" src={partnerLogos[name][fileVariant]} alt={name} />
+  const alt = {
+    bme: 'BME',
+    schonherz: 'Schönherz',
+    schdesign: 'schdesign',
+    vik: 'BME VIK'
+  }[name]
+
+  return (
+    <div className="m-5 flex h-20 w-32 shrink-0 items-center justify-center">
+      <img className="max-h-full max-w-full object-contain" src={partnerLogos[name][fileVariant]} alt={alt} loading="lazy" />
+    </div>
+  )
 }

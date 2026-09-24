@@ -8,13 +8,17 @@ import { Heart } from 'lucide-react'
 import { useMemo } from 'react'
 import Markdown from '../Markdown'
 import { OrganizerLogo } from './OrganizerLogo'
-import { PartnerLogo } from './PartnerLogo'
+import { PartnerLogo, type PartnerLogoName } from './PartnerLogo'
 import parseSponsors from './utils/parseSponsors'
 
 export const Footer = () => {
   const now = useDate()
   const config = useConfigContext()
   const component = config?.components?.footer
+  const mainSupporters = useMemo(
+    () => parseSponsors(component?.mainSupporterLogoUrls, component?.mainSupporterAlts, component?.mainSupporterWebsiteUrls),
+    [component?.mainSupporterAlts, component?.mainSupporterLogoUrls, component?.mainSupporterWebsiteUrls]
+  )
   const sponsors = useMemo(
     () => parseSponsors(component?.sponsorLogoUrls, component?.sponsorAlts, component?.sponsorWebsiteUrls),
     [component?.sponsorAlts, component?.sponsorLogoUrls, component?.sponsorWebsiteUrls]
@@ -33,42 +37,48 @@ export const Footer = () => {
   const kirDevLogo = useColorModeValue(kirDevLogoLight, kirDevLogoDark)
   if (!component) return null
 
-  const partnersVisible =
-    component?.bmeEnabled ||
-    component?.vikEnabled ||
-    component?.schonherzEnabled ||
-    component?.schdesignEnabled ||
-    component?.partnerLogoUrls?.length > 0
-  const topBarVisible = (component?.sponsorsEnabled || partnersVisible) && !component.minimalisticFooter
+  const supporterGroups = [
+    {
+      title: component.mainSupporterTitle,
+      builtInLogos: getSelectedPartnerLogos(
+        component.mainBmeEnabled,
+        component.mainVikEnabled,
+        component.mainSchonherzEnabled,
+        component.mainSchdesignEnabled
+      ),
+      linkedLogos: mainSupporters
+    },
+    {
+      title: component.sponsorTitle,
+      builtInLogos: getSelectedPartnerLogos(
+        component.featuredBmeEnabled,
+        component.featuredVikEnabled,
+        component.featuredSchonherzEnabled,
+        component.featuredSchdesignEnabled
+      ),
+      linkedLogos: sponsors
+    },
+    {
+      title: component.partnerTitle,
+      builtInLogos: getSelectedPartnerLogos(
+        component.bmeEnabled,
+        component.vikEnabled,
+        component.schonherzEnabled,
+        component.schdesignEnabled
+      ),
+      linkedLogos: partners
+    }
+  ].filter((group) => group.builtInLogos.length > 0 || group.linkedLogos.length > 0)
+  const topBarVisible = supporterGroups.length > 0 && !component.minimalisticFooter
+
   return (
     <footer className="flex flex-col items-center w-full" style={{ backdropFilter, backgroundColor: background }}>
       {topBarVisible && (
         <div className="flex justify-center w-full p-5" style={{ backgroundColor: bgShadowColor }}>
-          <div className="flex flex-col md:flex-row w-full max-w-full md:max-w-5xl justify-start md:justify-evenly">
-            {component?.sponsorsEnabled && sponsors.length > 0 && (
-              <div className="w-full">
-                <h2 className="text-center font-bold text-xl mb-3 mt-0">{component.sponsorTitle}</h2>
-                <div className="flex justify-center items-center flex-wrap">
-                  {sponsors.map((sponsor) => (
-                    <SponsorImage key={sponsor?.url} {...sponsor} />
-                  ))}
-                </div>
-              </div>
-            )}
-            {partnersVisible && (
-              <div className="w-full">
-                <h2 className="text-center font-bold text-xl mb-3 mt-10 md:mt-0">{component.partnerTitle}</h2>
-                <div className="flex justify-center items-center flex-wrap">
-                  {component.bmeEnabled && <PartnerLogo name="bme" />}
-                  {component.vikEnabled && <PartnerLogo name="vik" />}
-                  {component.schonherzEnabled && <PartnerLogo name="schonherz" />}
-                  {component.schdesignEnabled && <PartnerLogo name="schdesign" />}
-                  {partners.map((partner, idx) => (
-                    <SponsorImage key={idx} {...partner} />
-                  ))}
-                </div>
-              </div>
-            )}
+          <div className="flex w-full max-w-full flex-col justify-center gap-4 md:max-w-5xl md:flex-row">
+            {supporterGroups.map((group, index) => (
+              <SupporterColumn key={index} {...group} />
+            ))}
           </div>
         </div>
       )}
@@ -101,11 +111,44 @@ export const Footer = () => {
   )
 }
 
+function getSelectedPartnerLogos(bme: boolean, vik: boolean, schonherz: boolean, schdesign: boolean): PartnerLogoName[] {
+  const logos: PartnerLogoName[] = []
+  if (bme) logos.push('bme')
+  if (vik) logos.push('vik')
+  if (schonherz) logos.push('schonherz')
+  if (schdesign) logos.push('schdesign')
+  return logos
+}
+
+function SupporterColumn({
+  title,
+  builtInLogos,
+  linkedLogos
+}: {
+  title: string
+  builtInLogos: PartnerLogoName[]
+  linkedLogos: ReturnType<typeof parseSponsors>
+}) {
+  return (
+    <div className="w-full min-w-0 md:flex-1">
+      {title && <h2 className="mb-3 mt-0 text-center text-xl font-bold">{title}</h2>}
+      <div className="flex flex-wrap items-center justify-center">
+        {builtInLogos.map((name) => (
+          <PartnerLogo key={name} name={name} />
+        ))}
+        {linkedLogos.map((logo, index) => (
+          <SponsorImage key={`${logo.image}-${index}`} {...logo} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function SponsorImage({ image, alt, url }: { image: string; alt: string; url: string }) {
-  const img = <img key={image} className="m-5 max-h-24 max-w-52 object-contain" src={image} alt={alt} loading="lazy" />
+  const img = <img className="m-5 max-h-24 max-w-52 object-contain" src={image} alt={alt} loading="lazy" />
   if (url) {
     return (
-      <a href={url} key={url} target="_blank" rel="noreferrer" referrerPolicy="origin">
+      <a href={url} target="_blank" rel="noreferrer" referrerPolicy="origin">
         {img}
       </a>
     )

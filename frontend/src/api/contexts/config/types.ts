@@ -62,6 +62,18 @@ export interface Footer {
   hostWebsiteUrl: string
   instagramUrl: string
   minimalisticFooter: boolean
+  mainBmeEnabled: boolean
+  mainSchonherzEnabled: boolean
+  mainSchdesignEnabled: boolean
+  mainSupporterAlts: string
+  mainSupporterLogoUrls: string
+  mainSupporterTitle: string
+  mainSupporterWebsiteUrls: string
+  mainVikEnabled: boolean
+  featuredBmeEnabled: boolean
+  featuredSchonherzEnabled: boolean
+  featuredSchdesignEnabled: boolean
+  featuredVikEnabled: boolean
   partnerAlts: string
   partnerLogoUrls: string
   partnerTitle: string
@@ -69,12 +81,11 @@ export interface Footer {
   schdesignEnabled: boolean
   schonherzEnabled: boolean
   vikEnabled: boolean
-  bmeEnabled: true
+  bmeEnabled: boolean
   sponsorAlts: string
   sponsorLogoUrls: string
   sponsorTitle: string
   sponsorWebsiteUrls: string
-  sponsorsEnabled: boolean
 }
 
 export interface Countdown {
@@ -398,6 +409,7 @@ export interface Bounty {
   registrationInfo: string
   registrationUpcomingMessage: string
   registrationClosedMessage: string
+  registrationFullMessage: string
   killedMessage: string
   eliminatedByInactivityMessage: string
   teamEliminatedMessage: string

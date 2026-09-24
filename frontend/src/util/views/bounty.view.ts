@@ -12,6 +12,7 @@ export type BountyRoundView = {
   difficulty: 'EASY' | 'MEDIUM' | 'HARD'
   registrationStart: number
   registrationEnd: number
+  registrationFull: boolean
   gameStart: number
   gameEnd: number
   phase: BountyPhase

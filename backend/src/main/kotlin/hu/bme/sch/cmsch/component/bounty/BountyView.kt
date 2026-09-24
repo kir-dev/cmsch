@@ -16,6 +16,7 @@ data class BountyRoundView(
     val difficulty: String,
     val registrationStart: Long,
     val registrationEnd: Long,
+    val registrationFull: Boolean,
     val gameStart: Long,
     val gameEnd: Long,
     val phase: BountyPhase,
@@ -60,4 +61,10 @@ data class BountyRegistrationResponse(
     val groupName: String = "",
     val roundName: String = "",
     val newTeam: Boolean = false,
+    val seatsRemaining: Int? = null,
+)
+
+data class BountyRegistrationCapacity(
+    val roundName: String,
+    val seatsRemaining: Int?,
 )

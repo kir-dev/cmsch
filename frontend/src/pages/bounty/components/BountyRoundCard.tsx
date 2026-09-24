@@ -95,8 +95,10 @@ const BountyRoundStatus = ({
 }
 
 const RegistrationRoundDetails = ({ round, component }: { round: BountyRoundView; component: Bounty }) => {
-  const registrationMessage =
-    round.phase === 'BEFORE_REGISTRATION'
+  const fullRegistrationMessage = round.phase === 'REGISTRATION' && round.registrationFull ? component?.registrationFullMessage : ''
+  const registrationMessage = fullRegistrationMessage
+    ? fullRegistrationMessage
+    : round.phase === 'BEFORE_REGISTRATION'
       ? component?.registrationUpcomingMessage
       : round.phase === 'REGISTRATION'
         ? component?.registrationInfo

@@ -77,7 +77,9 @@
     </div>
     <div class="info">
         <h1 id="item-name" ondblclick="document.getElementById('debug-box').style.display = 'none'"></h1>
-        <h2 id="item-price" ondblclick="document.getElementById('debug-box').style.display = 'block'"></h2>
+        <h2 id="item-price" ondblclick="document.getElementById('debug-box').style.display = 'block'"
+            th:text="${registrationCapacity == null ? '' : (registrationCapacity.seatsRemaining == null ? 'Korlátlan férőhely' : 'Szabad helyek: ' + registrationCapacity.seatsRemaining)}"></h2>
+        <span id="registration-round-name" th:text="${registrationCapacity == null ? '' : registrationCapacity.roundName}" hidden></span>
     </div>
     <div class="controls">
         <button id="exit"><span class="material-icons">arrow_back</span></button>
@@ -118,6 +120,7 @@
         const bountyPrefix = /*[[${bountyPrefix}]]*/ "bounty:";
         const parentUrl = "/admin/control";
         const baseUrl = /*[[@{/admin/bounty-registration}]]*/ "https://192.168.0.60:8080/scan";
+        const capacityUrl = /*[[${capacityUrl}]]*/ "/capacity";
         const resolveUrl = /*[[${resolveUrl}]]*/ "/resolve";
         const registerUrl = /*[[${registerUrl}]]*/ "/register";
 
@@ -126,6 +129,8 @@
         let scanning = true;
         let requestPending = false;
         let pendingCmschId = null;
+        let capacityRefreshPending = false;
+        let capacityRefreshRequested = false;
 
         const video = document.getElementById('qr-video');
         const camHasCamera = document.getElementById('cam-has-camera');
@@ -138,6 +143,40 @@
         const confirmButton = document.getElementById('review-confirm');
         const cancelButton = document.getElementById('review-cancel');
         const message = document.getElementById('registration-message');
+        const itemName = document.getElementById('item-name');
+        const itemPrice = document.getElementById('item-price');
+
+        function updateCapacity(roundName, seatsRemaining) {
+            if (!roundName) return;
+            itemName.textContent = roundName;
+            itemPrice.textContent = seatsRemaining == null ? 'Korlátlan férőhely' : `Szabad helyek: ${seatsRemaining}`;
+        }
+
+        async function refreshRegistrationCapacity() {
+            if (capacityRefreshPending) {
+                capacityRefreshRequested = true;
+                return;
+            }
+            capacityRefreshPending = true;
+            try {
+                const response = await fetch(baseUrl + capacityUrl, { cache: 'no-store' });
+                if (response.status === 204) {
+                    itemName.textContent = '';
+                    itemPrice.textContent = '';
+                } else if (response.ok) {
+                    const capacity = await response.json();
+                    updateCapacity(capacity.roundName, capacity.seatsRemaining);
+                }
+            } catch (e) {
+                // Keep showing the last known capacity if a refresh temporarily fails.
+            } finally {
+                capacityRefreshPending = false;
+                if (capacityRefreshRequested) {
+                    capacityRefreshRequested = false;
+                    void refreshRegistrationCapacity();
+                }
+            }
+        }
 
         function showMessage(text) {
             message.textContent = text;
@@ -171,6 +210,7 @@
             requestPending = true;
             try {
                 const result = await post(resolveUrl, cmschId);
+                updateCapacity(result.roundName, result.seatsRemaining);
                 if (!result.ok) {
                     showMessage(result.message || 'Sikertelen ellenőrzés');
                     lastSuccessful = Date.now();
@@ -199,8 +239,10 @@
             cancelButton.disabled = true;
             try {
                 const result = await post(registerUrl, pendingCmschId);
+                updateCapacity(result.roundName, result.seatsRemaining);
                 if (result.ok) {
                     showMessage(`REGISZTRÁLVA — ${result.userName}, ${result.groupName} (${result.roundName})`);
+                    void refreshRegistrationCapacity();
                 } else {
                     showMessage(result.message || 'Sikertelen regisztráció');
                 }
@@ -267,8 +309,9 @@
             });
         });
 
-        document.getElementById('item-name').innerText = "";
-        document.getElementById('item-price').innerText = "";
+        itemName.textContent = document.getElementById('registration-round-name').textContent;
+        void refreshRegistrationCapacity();
+        setInterval(() => void refreshRegistrationCapacity(), 5000);
         document.getElementById('stop-button').style.display = 'inline-block';
         document.getElementById('start-button').style.display = 'none';
         window.scanner = scanner;
