@@ -79,7 +79,7 @@ export function getColorShadesForColor(color: string) {
 }
 
 export function joinPath(...parts: (string | number | undefined)[]) {
-  return parts.filter(Boolean).join('/')
+  return parts.filter((part) => part !== undefined && part !== null && part !== '').join('/')
 }
 
 export function isCheckbox(type: FormFieldVariants) {
