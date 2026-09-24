@@ -62,48 +62,76 @@ class FooterComponent(
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val sponsorGroup by SettingGroup(fieldName = "Támogatók",
-        description = "Az esemény támogatóinak logói (A lábléc felett jelenik meg)")
+    val mainSupportersGroup by SettingGroup(fieldName = "Fő Támogatóink",
+        description = "A fő támogatók logói a láblécben")
 
-    var sponsorTitle by StringSettingRef(defaultValue = "Támogatóink", fieldName = "Szponzorok fejléc",
-        description = "Ez a szöveg jelenik meg a szponzorok felett")
+    var mainSupporterTitle by StringSettingRef(defaultValue = "Fő Támogatóink", fieldName = "Oszlop címe")
 
-    var sponsorsEnabled by BooleanSettingRef(fieldName = "Sponsorok láthatóak")
+    var mainBmeEnabled by BooleanSettingRef(fieldName = "BME logó")
 
-    var sponsorLogoUrls by StringSettingRef(defaultValue = "url1,url2", type = SettingType.LONG_TEXT,
-        fieldName = "Sponsor logók", description = "URL-ek vesszővel (,) elválasztva")
+    var mainVikEnabled by BooleanSettingRef(fieldName = "BME VIK logó")
 
-    var sponsorAlts by StringSettingRef(defaultValue = "alt1,alt2", type = SettingType.LONG_TEXT,
-        fieldName = "Sponsor alt üzenetek", description = "Szövegek vesszővel (,) elválasztva")
+    var mainSchonherzEnabled by BooleanSettingRef(fieldName = "Schönherz logó")
 
-    var sponsorWebsiteUrls by StringSettingRef(defaultValue = "url1,url2", type = SettingType.LONG_TEXT,
-        fieldName = "Sponsor weblapok", description = "URL-ek vesszővel (,) elválasztva")
+    var mainSchdesignEnabled by BooleanSettingRef(fieldName = "schdesign logó")
+
+    var mainSupporterLogoUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "További fő támogatói logók", description = "Kép URL-ek vesszővel (,) elválasztva; például MOL és PTC")
+
+    var mainSupporterAlts by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Fő támogatói logók alt szövegei", description = "Szövegek vesszővel (,) elválasztva")
+
+    var mainSupporterWebsiteUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Fő támogatók weboldalai", description = "URL-ek vesszővel (,) elválasztva")
 
     /// -------------------------------------------------------------------------------------------------------------------
 
-    val partnerGroup by SettingGroup(fieldName = "Partnerek",
-        description = "Az esemény partnerei (A lábléc felett jelenik meg)")
+    val sponsorGroup by SettingGroup(fieldName = "Kiemelt Támogatóink",
+        description = "A kiemelt támogatók logói a láblécben")
 
-    var partnerTitle by StringSettingRef(defaultValue = "Partnereink", fieldName = "Szponzorok fejléc",
-        description = "Ez a szöveg jelenik meg a szponzorok felett")
+    var sponsorTitle by StringSettingRef(defaultValue = "Kiemelt Támogatóink", fieldName = "Oszlop címe",
+        description = "Ez a szöveg jelenik meg a logók felett")
 
-    var vikEnabled by BooleanSettingRef(fieldName = "BME VIK logó", description = "Legyen-e BME VIK logó a footerben")
+    var featuredBmeEnabled by BooleanSettingRef(fieldName = "BME logó")
 
-    var bmeEnabled by BooleanSettingRef(fieldName = "BME logó", description = "Legyen-e BME logó a footerben")
+    var featuredVikEnabled by BooleanSettingRef(fieldName = "BME VIK logó")
 
-    var schonherzEnabled by BooleanSettingRef(fieldName = "Schönherz logó",
-        description = "Legyen-e Schönherz logó a footerben")
+    var featuredSchonherzEnabled by BooleanSettingRef(fieldName = "Schönherz logó")
 
-    var schdesignEnabled by BooleanSettingRef(fieldName = "schdesign logó",
-        description = "Legyen-e schdesign logó a footerben")
+    var featuredSchdesignEnabled by BooleanSettingRef(fieldName = "schdesign logó")
 
-    var partnerLogoUrls by StringSettingRef(defaultValue = "url1,url2", type = SettingType.LONG_TEXT,
-        fieldName = "Partner logók", description = "URL-ek vesszővel (,) elválasztva")
+    var sponsorLogoUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "További kiemelt támogatói logók", description = "Kép URL-ek vesszővel (,) elválasztva")
 
-    var partnerAlts by StringSettingRef(defaultValue = "alt1,alt2", type = SettingType.LONG_TEXT,
-        fieldName = "Partner alt üzenetek", description = "Szövegek vesszővel (,) elválasztva")
+    var sponsorAlts by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Kiemelt támogatói logók alt szövegei", description = "Szövegek vesszővel (,) elválasztva")
 
-    var partnerWebsiteUrls by StringSettingRef(defaultValue = "url1,url2", type = SettingType.LONG_TEXT,
-        fieldName = "Partner weblapok", description = "URL-ek vesszővel (,) elválasztva")
+    var sponsorWebsiteUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Kiemelt támogatók weboldalai", description = "URL-ek vesszővel (,) elválasztva")
+
+    /// -------------------------------------------------------------------------------------------------------------------
+
+    val partnerGroup by SettingGroup(fieldName = "Többi Támogatónk",
+        description = "A további támogatók logói a láblécben")
+
+    var partnerTitle by StringSettingRef(defaultValue = "Többi Támogatónk", fieldName = "Oszlop címe",
+        description = "Ez a szöveg jelenik meg a logók felett")
+
+    var vikEnabled by BooleanSettingRef(fieldName = "BME VIK logó")
+
+    var bmeEnabled by BooleanSettingRef(fieldName = "BME logó")
+
+    var schonherzEnabled by BooleanSettingRef(fieldName = "Schönherz logó")
+
+    var schdesignEnabled by BooleanSettingRef(fieldName = "schdesign logó")
+
+    var partnerLogoUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "További támogatói logók", description = "Kép URL-ek vesszővel (,) elválasztva")
+
+    var partnerAlts by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Támogatói logók alt szövegei", description = "Szövegek vesszővel (,) elválasztva")
+
+    var partnerWebsiteUrls by StringSettingRef(defaultValue = "", type = SettingType.LONG_TEXT,
+        fieldName = "Támogatók weboldalai", description = "URL-ek vesszővel (,) elválasztva")
 
 }
