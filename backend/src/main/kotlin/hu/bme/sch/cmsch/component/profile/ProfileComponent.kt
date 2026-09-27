@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.component.profile
 
 import hu.bme.sch.cmsch.component.ComponentBase
+import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
@@ -30,7 +31,7 @@ class ProfileComponent(
     final override var menuDisplayName by StringSettingRef("Profil", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(setOf(), fieldName = "Jogosultságok",
+    final override var minRole by MinRoleSettingRef(setOf(RoleType.BASIC), fieldName = "Jogosultságok",
         description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
