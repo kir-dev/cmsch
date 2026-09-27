@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.bounty
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty
@@ -31,7 +30,7 @@ class BountyComponent(
     final override var menuDisplayName by StringSettingRef("Fejvadászat", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Mely szerepkörökkel nyitható meg az oldal")
 
     var topMessage by StringSettingRef(type = SettingType.LONG_TEXT_MARKDOWN,
