@@ -29,6 +29,7 @@ export const BountyRoundCard = ({ round, component }: { round: BountyRoundView; 
   return (
     <Card className="flex flex-col space-y-4 p-5 mt-5 rounded-xl">
       <BountyRoundHeader round={round} difficultyLabels={component} />
+      {!round.finalized && round.myTeam && round.myTeam.kills > 0 && <p>Gyilkosságok: {round.myTeam.kills} db</p>}
       <BountyRoundStatus
         round={round}
         component={component}
@@ -36,7 +37,6 @@ export const BountyRoundCard = ({ round, component }: { round: BountyRoundView; 
         onKill={() => setKillDialogOpen(true)}
         onShowQr={() => setQrOpen(true)}
       />
-      {!round.finalized && round.myTeam && round.myTeam.kills > 0 && <p>Gyilkosságok: {round.myTeam.kills} db</p>}
       <BountyRoundDialogs
         roundName={round.name}
         registration={round.myRegistration}
