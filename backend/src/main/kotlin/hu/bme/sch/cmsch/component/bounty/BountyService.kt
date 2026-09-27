@@ -289,9 +289,7 @@ class BountyService(
 
         log.info("User '{}' killed '{}' in bounty round '{}'", killer.userName, victim.userName, round.name)
 
-        var message = "Sikeres gyilkosság!"
-        handleTeamElimination(round, victim.groupId, now)?.let { message += "\n$it" }
-        return BountyKillResponse(true, message)
+        return BountyKillResponse(true, handleTeamElimination(round, victim.groupId, now) ?: "")
     }
 
     private fun expireRegistration(round: BountyRoundEntity, registration: BountyRegistrationEntity, now: Long) {
@@ -422,7 +420,7 @@ class BountyService(
         bountyRoundRepository.save(round)
 
         val order = registrationsByGroup.keys.shuffled(Random(round.id.toLong()))
-        val weapons = weaponsFor(round.difficulty, order.size)
+        val weapons = distributeWeaponsFor(round.difficulty, order.size, round.id.toLong())
         val teams = order.mapIndexed { index, groupId ->
             val targetGroupId = order[(index + 1) % order.size]
             BountyTeamEntity(
@@ -443,22 +441,24 @@ class BountyService(
         log.info("Bounty round '{}' initialized with {} teams", round.name, teams.size)
     }
 
+    private fun distributeWeaponsFor(difficulty: BountyDifficulty, count: Int, seed: Long): List<String> {
+        val distinctPool = weaponPool(difficulty).map { it.trim() }.filter { it.isNotBlank() }.distinct()
+        if (distinctPool.isEmpty()) return List(count) { "Ismeretlen fegyver" }
+
+        val shuffled = distinctPool.shuffled(Random(seed))
+        return List(count) { shuffled[it % shuffled.size] }
+    }
+
     private fun killPointsFor(difficulty: BountyDifficulty): Long = when (difficulty) {
         BountyDifficulty.EASY -> bountyComponent.easyKillPoints
         BountyDifficulty.MEDIUM -> bountyComponent.mediumKillPoints
         BountyDifficulty.HARD -> bountyComponent.hardKillPoints
     }
 
-    private fun weaponsFor(difficulty: BountyDifficulty, count: Int): List<String> {
-        val pool = when (difficulty) {
-            BountyDifficulty.EASY -> bountyComponent.easyWeapons
-            BountyDifficulty.MEDIUM -> bountyComponent.mediumWeapons
-            BountyDifficulty.HARD -> bountyComponent.hardWeapons
-        }.split(",").map { it.trim() }.filter { it.isNotBlank() }
-        if (pool.isEmpty())
-            return List(count) { "Ismeretlen fegyver" }
-        val random = Random(System.currentTimeMillis())
-        return List(count) { pool[random.nextInt(pool.size)] }
-    }
+    private fun weaponPool(difficulty: BountyDifficulty): List<String> = when (difficulty) {
+        BountyDifficulty.EASY -> bountyComponent.easyWeapons
+        BountyDifficulty.MEDIUM -> bountyComponent.mediumWeapons
+        BountyDifficulty.HARD -> bountyComponent.hardWeapons
+    }.split(",")
 
 }
