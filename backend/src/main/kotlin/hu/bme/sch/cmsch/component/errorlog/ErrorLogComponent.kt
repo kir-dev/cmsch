@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.errorlog
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.ControlPermissions
 import hu.bme.sch.cmsch.setting.BooleanSettingRef
 import hu.bme.sch.cmsch.setting.ComponentSettingService
@@ -30,7 +29,7 @@ class ErrorLogComponent(
 
     final override val menuDisplayName = null
 
-    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES, minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(MinRoleSettingRef.ALL_ROLES,
         fieldName = "Jogosultságok", description = "Melyik roleok küldhetnek hibajelentéseket")
 
     var receiveReports by BooleanSettingRef(true, fieldName = "Kliens hibajelentések fogadása", serverSideOnly = true)

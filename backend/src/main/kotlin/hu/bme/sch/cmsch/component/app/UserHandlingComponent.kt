@@ -1,7 +1,6 @@
 package hu.bme.sch.cmsch.component.app
 
 import hu.bme.sch.cmsch.component.ComponentBase
-import hu.bme.sch.cmsch.model.RoleType
 import hu.bme.sch.cmsch.service.AdminMenuCategory
 import hu.bme.sch.cmsch.service.AdminMenuService
 import hu.bme.sch.cmsch.service.ControlPermissions
@@ -28,7 +27,7 @@ class UserHandlingComponent(
 
     final override val menuDisplayName = null
 
-    final override var minRole by MinRoleSettingRef(setOf(), minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(setOf(),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     @PostConstruct

@@ -32,7 +32,7 @@ class LoginComponent(
     final override var menuDisplayName by StringSettingRef("Belépés", serverSideOnly = true,
         fieldName = "Menü neve", description = "Ez lesz a neve a menünek")
 
-    final override var minRole by MinRoleSettingRef(setOf(RoleType.GUEST), minRoleToEdit = RoleType.SUPERUSER,
+    final override var minRole by MinRoleSettingRef(setOf(RoleType.GUEST),
         fieldName = "Jogosultságok", description = "Melyik roleokkal nyitható meg az oldal")
 
     /// -------------------------------------------------------------------------------------------------------------------
