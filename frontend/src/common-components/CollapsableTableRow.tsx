@@ -46,16 +46,16 @@ export const CollapsableTableRow = ({
             }}
             className={cn('font-bold transition-colors', bgClass, actualCollapsable ? 'cursor-pointer' : 'cursor-default')}
           >
-            {!categorized && <TableCell className="w-[40px]">{data.position}.</TableCell>}
+            {!categorized && <TableCell className="w-10">{data.position}.</TableCell>}
             <TableCell>
               <div className="flex flex-col md:flex-row md:items-center gap-1">
                 <span>{data.name}</span>
                 {data.label && <TeamLabel name={data.label} color={data.labelColor} />}
               </div>
             </TableCell>
-            {showGroup && data.groupName && (
+            {showGroup && (
               <TableCell>
-                {isGroupLink ? (
+                {isGroupLink && !!data.groupName ? (
                   <Link to={joinPath(AbsolutePaths.TEAMS, 'details', data.groupId)} className="underline">
                     {data.groupName}
                   </Link>
@@ -67,7 +67,7 @@ export const CollapsableTableRow = ({
             <TableCell className="text-right whitespace-nowrap">
               {data.score || data.total ? `${new Intl.NumberFormat('hu-HU').format(data.score || data.total || 0)} ${suffix || ''}` : ''}
             </TableCell>
-            <TableCell className="w-[28px]">
+            <TableCell className="w-7">
               {actualCollapsable && (isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />)}
             </TableCell>
           </TableRow>
@@ -88,14 +88,14 @@ export const CollapsableTableRow = ({
               .map((item, itemIndex) => (
                 <Fragment key={item.name}>
                   <TableRow className={cn(bgClass, 'font-normal')}>
-                    {categorized && <TableCell className="w-[40px]">{itemIndex + 1}.</TableCell>}
+                    {categorized && <TableCell className="w-10">{itemIndex + 1}.</TableCell>}
                     <TableCell colSpan={categorized ? 1 : 2} className="pl-8">
                       {item.name}
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap">
                       {`${new Intl.NumberFormat('hu-HU').format(item.value)} ${suffix || ''}`}
                     </TableCell>
-                    {!categorized && <TableCell className="w-[28px]" />}
+                    {!categorized && <TableCell className="w-7" />}
                   </TableRow>
                   {item.name === 'QR kódok' && data.tokenRarities && (
                     <TableRow className={bgClass}>
