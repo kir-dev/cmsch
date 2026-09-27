@@ -127,6 +127,12 @@ abstract class ComponentApiBase(
         }
         val newValues = StringBuilder("component-edit new value: ")
         component.allSettings.forEach { setting ->
+            if (user.role.value < setting.minRoleToEdit.value) {
+                log.warn("Ignoring setting {}.{}: role {} is below the role required to edit it ({})",
+                    setting.component, setting.property, user.role, setting.minRoleToEdit)
+                return@forEach
+            }
+
             when (setting.type) {
                 SettingType.BOOLEAN -> {
                     val property = allRequestParams[setting.property]
