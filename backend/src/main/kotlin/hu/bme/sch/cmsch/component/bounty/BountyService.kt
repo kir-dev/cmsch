@@ -289,9 +289,7 @@ class BountyService(
 
         log.info("User '{}' killed '{}' in bounty round '{}'", killer.userName, victim.userName, round.name)
 
-        var message = "Sikeres gyilkosság!"
-        handleTeamElimination(round, victim.groupId, now)?.let { message += "\n$it" }
-        return BountyKillResponse(true, message)
+        return BountyKillResponse(true, handleTeamElimination(round, victim.groupId, now) ?: "")
     }
 
     private fun expireRegistration(round: BountyRoundEntity, registration: BountyRegistrationEntity, now: Long) {

@@ -36,7 +36,7 @@ export const KillDialog = ({ onClose }: { onClose: () => void }) => {
         {result && (
           <Alert variant={result.success ? 'default' : 'destructive'}>
             <AlertTitle>{result.success ? 'Sikeres gyilkosság!' : 'Sikertelen gyilkosság'}</AlertTitle>
-            <AlertDescription className="whitespace-pre-line">{result.message}</AlertDescription>
+            {result.message && <AlertDescription className="whitespace-pre-line">{result.message}</AlertDescription>}
           </Alert>
         )}
 
