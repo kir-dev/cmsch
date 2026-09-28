@@ -24,7 +24,7 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
   return (
     <ChartContainer config={chartConfig} className="w-full h-75">
       <BarChart data={data} barCategoryGap="20%">
-        <XAxis dataKey="team" axisLine={false} tickLine={false} />
+        <XAxis dataKey="team" axisLine={false} tickLine={false} tick={{ style: { fill: 'var(--foreground)' } }} />
         <Bar dataKey="value" fill="var(--primary)" radius={8} />
       </BarChart>
     </ChartContainer>
