@@ -1,6 +1,7 @@
 package hu.bme.sch.cmsch.config
 
 import hu.bme.sch.cmsch.component.login.LoginComponent
+import hu.bme.sch.cmsch.component.login.authsch.Scope
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
@@ -54,24 +55,25 @@ class CustomAuthorizationRequestResolver(
     }
 
     private fun customizeAuthorizationRequest(request: OAuth2AuthorizationRequest, clientRegistrationId: String): OAuth2AuthorizationRequest? {
+        val authschScopes = loginComponent.getAuthschScopes()
         return when(clientRegistrationId) {
             AUTHSCH -> {
                 if (loginComponent.onlyBmeProvider) {
                     val target = OAuth2AuthorizationRequest
                         .from(request)
-                        .scopes(loginComponent.authschScopes.map { it.scope }.toSet())
+                        .scopes(authschScopes)
                         .build()
                     OAuth2AuthorizationRequest.from(request)
                         .authorizationUri("https://auth.sch.bme.hu/Shibboleth.sso/Login")
                         .parameters {
                             it["target"] = target.authorizationRequestUri
                         }
-                        .scopes(loginComponent.authschScopes.map { it.scope }.toSet())
+                        .scopes(authschScopes)
                         .build()
                 } else {
                     OAuth2AuthorizationRequest
                         .from(request)
-                        .scopes(loginComponent.authschScopes.map { it.scope }.toSet())
+                        .scopes(authschScopes)
                         .build()
                 }
             }

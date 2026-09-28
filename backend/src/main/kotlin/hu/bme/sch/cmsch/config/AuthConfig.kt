@@ -1,11 +1,13 @@
 package hu.bme.sch.cmsch.config
 
+import hu.bme.sch.cmsch.component.login.authsch.Scope
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.oauth2.client.registration.ClientRegistrations
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
 import org.springframework.security.oauth2.core.AuthenticationMethod
 import org.springframework.security.oauth2.core.AuthorizationGrantType
@@ -16,8 +18,7 @@ class AuthConfig(
     @param:Value("\${spring.security.oauth2.client.registration.authsch.client-id:}") private val authschId: String,
     @param:Value("\${spring.security.oauth2.client.registration.authsch.client-secret:}") private val authschSecret: String,
     @param:Value("\${spring.security.oauth2.client.registration.authsch.redirect-uri:}") private val authschRedirectUrl: String,
-    @param:Value("\${spring.security.oauth2.client.provider.authsch.authorization-uri:}") private val authschAuthorizationUrl: String,
-    @param:Value("\${spring.security.oauth2.client.provider.authsch.token-uri:}") private val authschTokenUri: String,
+    @param:Value("\${authsch.issuer:https://auth.sch.bme.hu}") private val authschIssuer: String,
 
     @param:Value("\${spring.security.oauth2.client.registration.google.client-id:}") private val googleId: String,
     @param:Value("\${spring.security.oauth2.client.registration.google.client-secret:}") private val googleSecret: String,
@@ -34,8 +35,6 @@ class AuthConfig(
     @param:Value("\${spring.security.oauth2.client.provider.keycloak.jwk-set-uri:http://localhost:8081/auth/realms/master/protocol/openid-connect/certs}") private val keycloakJwkSet: String,
     @param:Value("\${spring.security.oauth2.client.provider.keycloak.user-name-attribute:}") private val keycloakUserAttributeName: String,
     @param:Value("\${custom.keycloak.issuer:http://localhost:8081/auth/realms/master}") private val keycloakIssuer: String,
-
-    @param:Value("\${authsch.config.user-info-uri:https://auth.sch.bme.hu/api/profile}") private val userInfoUri: String,
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -43,16 +42,16 @@ class AuthConfig(
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
         val authProviders = mutableListOf<ClientRegistration>()
-        log.info("Using oauth2 sso: authsch")
+        log.info("Using openid sso: authsch")
         authProviders.add(authschClientRegistration())
 
         if (googleId.isNotBlank() && googleId != "no") {
-            log.info("Using oauth2 sso: google")
+            log.info("Using openid sso: google")
             authProviders.add(googleClientRegistration())
         }
 
         if (keycloakId.isNotBlank() && keycloakId != "no") {
-            log.info("Using oauth2 sso: keycloak")
+            log.info("Using openid sso: keycloak")
             authProviders.add(keycloakClientRegistration())
         }
 
@@ -60,20 +59,35 @@ class AuthConfig(
     }
 
     private fun authschClientRegistration(): ClientRegistration {
-        return ClientRegistration.withRegistrationId("authsch")
+        val builder = authschDiscoveryOrDefaults()
+            .registrationId("authsch")
             .clientId(authschId)
             .clientSecret(authschSecret)
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .redirectUri(authschRedirectUrl)
-            .scope("basic", "displayName", "sn", "givenName", "mail")
-            .authorizationUri(authschAuthorizationUrl)
-            .tokenUri(authschTokenUri)
-            .userInfoUri(userInfoUri)
-            .userInfoAuthenticationMethod(AuthenticationMethod.QUERY)
-            .userNameAttributeName("internal_id")
+            .scope(*Scope.entries.map { it.scope }.toTypedArray())
+            .userNameAttributeName("sub")
+            .userInfoAuthenticationMethod(AuthenticationMethod.HEADER)
             .clientName("AuthSch")
-            .build()
+        return builder.build()
+    }
+
+
+    private fun authschDiscoveryOrDefaults(): ClientRegistration.Builder {
+        return try {
+            ClientRegistrations.fromIssuerLocation(authschIssuer)
+        } catch (e: Exception) {
+            log.error("Could not read the OIDC discovery document of $authschIssuer, " +
+                    "falling back to the well known AuthSCH endpoints. Logins will not work until " +
+                    "AuthSCH is reachable again.", e)
+            ClientRegistration.withRegistrationId("authsch")
+                .issuerUri(authschIssuer)
+                .authorizationUri("$authschIssuer/site/login")
+                .tokenUri("$authschIssuer/oauth2/token")
+                .userInfoUri("$authschIssuer/oidc/userinfo")
+                .jwkSetUri("$authschIssuer/oidc/jwks")
+        }
     }
 
     private fun googleClientRegistration(): ClientRegistration {
