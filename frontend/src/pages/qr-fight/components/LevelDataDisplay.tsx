@@ -1,6 +1,6 @@
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { useMemo } from 'react'
-import { Bar, BarChart, XAxis } from 'recharts'
+import { Bar, BarChart, LabelList, XAxis } from 'recharts'
 
 interface LevelDataDisplayProps {
   teams: Record<string, number>
@@ -23,9 +23,11 @@ export function LevelDataDisplay({ teams }: LevelDataDisplayProps) {
 
   return (
     <ChartContainer config={chartConfig} className="w-full h-75">
-      <BarChart data={data} barCategoryGap="20%">
+      <BarChart data={data} barCategoryGap="20%" margin={{ top: 24 }}>
         <XAxis dataKey="team" axisLine={false} tickLine={false} tick={{ style: { fill: 'var(--foreground)' } }} />
-        <Bar dataKey="value" fill="var(--primary)" radius={8} />
+        <Bar dataKey="value" fill="var(--primary)" radius={8}>
+          <LabelList dataKey="value" position="top" offset={8} fill="var(--foreground)" style={{ fontSize: 14 }} />
+        </Bar>
       </BarChart>
     </ChartContainer>
   )
