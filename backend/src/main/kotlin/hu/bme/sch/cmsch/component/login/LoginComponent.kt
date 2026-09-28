@@ -40,28 +40,17 @@ class LoginComponent(
     val authschGroup by SettingGroup(fieldName = "AuthSCH",
         description = "Csak akkor írd át ha tudod mit csinálsz! Ha elrontod nem fog beengedni, szóval óvatosan!")
 
-    var authschScopesRaw by StringSettingRef(
-        listOf(Scope.BASIC, Scope.SURNAME, Scope.GIVEN_NAME, Scope.EDU_PERSON_ENTILEMENT, Scope.MAIL).joinToString(","),
+    var authschScopes by StringSettingRef(
+        listOf(Scope.OPEN_ID, Scope.PROFILE, Scope.EMAIL, Scope.SAM_ACCOUNT_NAME, Scope.BME_UNIT_SCOPE, Scope.PEK_PROFILE).joinToString(","),
         serverSideOnly = true, fieldName = "Oauth scopeok",
         description = "Ezek lesznek elkérve a providertől; ezek vannak: " + Scope.entries.joinToString(", ") { it.name })
 
-    val authschScopes = mutableListOf<Scope>()
-
-    override fun onInit() {
-        onPersist()
-    }
-
-    override fun onPersist() {
-        authschScopes.clear()
-        val scopes = authschScopesRaw.replace(" ", "").split(",")
+    fun getAuthschScopes(): Set<String> {
+        val scopes = authschScopes.split(",")
             .filter { it.isNotBlank() }
-            .mapNotNull { Scope.byNameOrNull(it) }
+            .mapNotNull { Scope.byNameOrNull(it.trim())?.scope }
             .distinct()
-        authschScopes.addAll(scopes)
-        authschScopesRaw = scopes.joinToString(",") { it.name }
-        log.info("Authsch scopes changed to '{}' and saved to the db as: '{}'",
-            authschScopes.map { it.name },
-            authschScopesRaw)
+        return setOf(*scopes.toTypedArray(), Scope.OPEN_ID.scope)
     }
 
     var onlyBmeProvider by BooleanSettingRef(false, serverSideOnly = false,

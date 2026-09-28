@@ -1,6 +1,6 @@
 package hu.bme.sch.cmsch.component.login
 
-import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
+import hu.bme.sch.cmsch.component.login.authsch.AuthschProfile
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
 import hu.bme.sch.cmsch.component.team.TeamService
@@ -43,7 +43,7 @@ class LoginService(
     private val log = LoggerFactory.getLogger(javaClass)
     private val userLocks = InternalIdLocks()
 
-    fun fetchUserEntity(profile: ProfileResponse): UserEntity {
+    fun fetchUserEntity(profile: AuthschProfile): UserEntity {
         val lock = userLocks.lockForKey(profile.internalId)
         try {
             var user: UserEntity
@@ -64,7 +64,7 @@ class LoginService(
                         profile.internalId,
                         profile.neptun ?: "N/A",
                         "",
-                        (profile.surname ?: "") + " " + (profile.givenName ?: ""),
+                        profile.fullName,
                         "",
                         profile.email ?: "",
                         RoleType.BASIC,
@@ -164,7 +164,7 @@ class LoginService(
             user.groupName = user.group?.name ?: ""
     }
 
-    private fun updateFieldsForAuthsch(user: UserEntity, profile: ProfileResponse) {
+    private fun updateFieldsForAuthsch(user: UserEntity, profile: AuthschProfile) {
         // Generate CMSch id if not present
         if (user.cmschId.isBlank()) {
             profileService.generateProfileIdForUser(user)
@@ -206,7 +206,7 @@ class LoginService(
         }
 
         // Assign groups and roles
-        if (profile.eduPersonEntitlement != null && user.role.value < RoleType.ADMIN.value) {
+        if (profile.activeMemberships.isNotEmpty() && user.role.value < RoleType.ADMIN.value) {
             assignStaffRole(profile, user)
             assignAdminRole(profile, user)
             assignOrganizerGroup(profile, user)
@@ -219,8 +219,8 @@ class LoginService(
         }
 
         // Assign using unit-scope
-        val bmeUnitScopes = profile.bmeunitscope
-        if (unitScopeComponent.unitScopeGrantsEnabled && bmeUnitScopes != null) {
+        val bmeUnitScopes = profile.unitScopes
+        if (unitScopeComponent.unitScopeGrantsEnabled && !bmeUnitScopes.isNullOrEmpty()) {
             if (bmeUnitScopes.any { it.bme }) {
                 processUnitScopeStatus(user,
                     unitScopeComponent.bmeGrantRoleAttendee,
@@ -264,6 +264,7 @@ class LoginService(
                     unitScopeComponent.vbkNewbieGrantGroupName)
             }
         }
+        // Assigned only when the claim is actually present
         if (bmeUnitScopes != null) {
             user.unitScopes = bmeUnitScopes.joinToString(", ")
         }
@@ -347,7 +348,7 @@ class LoginService(
     }
 
     private fun assignStaffRole(
-        profile: ProfileResponse,
+        profile: AuthschProfile,
         user: UserEntity
     ) {
         val staffGroups = loginComponent.staffGroups
@@ -357,10 +358,7 @@ class LoginService(
         if (staffGroups.isEmpty())
             return
 
-        val grantStaffRole = profile.eduPersonEntitlement
-            ?.filter { it.end == null }
-            ?.any { staffGroups.contains(it.id) }
-            ?: false
+        val grantStaffRole = profile.activeMemberships.any { staffGroups.contains(it.id) }
 
         if (grantStaffRole) {
             log.info("Granting STAFF for ${user.fullName}")
@@ -376,7 +374,7 @@ class LoginService(
     }
 
     private fun assignAdminRole(
-        profile: ProfileResponse,
+        profile: AuthschProfile,
         user: UserEntity
     ) {
         val adminGroups = loginComponent.adminGroups
@@ -386,10 +384,7 @@ class LoginService(
         if (adminGroups.isEmpty())
             return
 
-        val grantAdminRole = profile.eduPersonEntitlement
-            ?.filter { it.end == null }
-            ?.any { adminGroups.contains(it.id) }
-            ?: false
+        val grantAdminRole = profile.activeMemberships.any { adminGroups.contains(it.id) }
 
         if (grantAdminRole) {
             log.info("Granting ADMIN for ${user.fullName}")
@@ -398,7 +393,7 @@ class LoginService(
     }
 
     private fun assignOrganizerGroup(
-        profile: ProfileResponse,
+        profile: AuthschProfile,
         user: UserEntity
     ) {
         val organizerGroups = loginComponent.organizerGroups
@@ -408,10 +403,7 @@ class LoginService(
         if (organizerGroups.isEmpty())
             return
 
-        val memberOfAnyOrganizerGroups = profile.eduPersonEntitlement
-            ?.filter { it.end == null }
-            ?.any { organizerGroups.contains(it.id) }
-            ?: false
+        val memberOfAnyOrganizerGroups = profile.activeMemberships.any { organizerGroups.contains(it.id) }
 
         if (memberOfAnyOrganizerGroups && user.role.value < RoleType.STAFF.value) {
             groups.findByName(loginComponent.organizerGroupName).ifPresent {
