@@ -28,7 +28,7 @@ export default function QrLevelsPage() {
       </div>
       <Markdown text={component.topMessage} />
       <Tabs defaultValue="main" className="mt-10 w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="main">Fő szintek</TabsTrigger>
           <TabsTrigger value="extra">Extra szintek</TabsTrigger>
           {/*<TabsTrigger value="tour">Tour de QR</TabsTrigger>*/}
