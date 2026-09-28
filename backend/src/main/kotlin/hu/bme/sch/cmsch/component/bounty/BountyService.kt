@@ -43,15 +43,15 @@ class BountyService(
             return BountyRegistrationResponse(
                 false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
                 candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam,
-                seatsRemaining(candidate.round)
+                seatsRemaining(candidate.round, candidate.group.id)
             )
         }
-        if (isRegistrationFull(candidate.round)) {
+        if (isRegistrationFull(candidate.round, candidate.group.id)) {
             return registrationFullResponse(candidate)
         }
         return BountyRegistrationResponse(
             true, "Ellenőrzés sikeres", candidate.user.fullName, candidate.group.name,
-            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round)
+            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round, candidate.group.id)
         )
     }
 
@@ -65,10 +65,10 @@ class BountyService(
             return BountyRegistrationResponse(
                 false, "A játékos már regisztrálva van a(z) ${candidate.round.name} körre",
                 candidate.user.fullName, candidate.group.name, candidate.round.name, candidate.isNewTeam,
-                seatsRemaining(candidate.round)
+                seatsRemaining(candidate.round, candidate.group.id)
             )
         }
-        if (isRegistrationFull(candidate.round)) {
+        if (isRegistrationFull(candidate.round, candidate.group.id)) {
             return registrationFullResponse(candidate)
         }
 
@@ -86,7 +86,7 @@ class BountyService(
         log.info("User '{}' (group: '{}') registered for bounty round '{}'", candidate.user.fullName, candidate.group.name, candidate.round.name)
         return BountyRegistrationResponse(
             true, "Sikeres regisztráció", candidate.user.fullName, candidate.group.name,
-            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round)
+            candidate.round.name, candidate.isNewTeam, seatsRemaining(candidate.round, candidate.group.id)
         )
     }
 
@@ -99,17 +99,17 @@ class BountyService(
         val group = user.group ?: return null
         val now = clock.getTimeInSeconds()
         val round = findOpenRegistrationRound(now) ?: return null
-        val isNewTeam = bountyRegistrationRepository.findAllByRoundId(round.id)
-            .none { it.groupId == group.id }
+        val isNewTeam = !bountyRegistrationRepository.existsByRoundIdAndGroupId(round.id, group.id)
         return RegistrationCandidate(user, group, round, isNewTeam)
     }
 
-    private fun isRegistrationFull(round: BountyRoundEntity): Boolean =
-        round.registrationLimit != -1 && seatsRemaining(round) == 0
+    private fun isRegistrationFull(round: BountyRoundEntity, groupId: Int): Boolean =
+        round.registrationLimit != -1 && seatsRemaining(round, groupId) == 0
 
-    private fun seatsRemaining(round: BountyRoundEntity): Int? =
+    private fun seatsRemaining(round: BountyRoundEntity, groupId: Int): Int? =
         if (round.registrationLimit == -1) null
-        else (round.registrationLimit - bountyRegistrationRepository.countByRoundId(round.id)).coerceAtLeast(0)
+        else (round.registrationLimit - bountyRegistrationRepository.countByRoundIdAndGroupId(round.id, groupId))
+            .coerceAtLeast(0)
 
     private fun findOpenRegistrationRound(now: Long): BountyRoundEntity? = bountyRoundRepository.findAllByOrderByGameStartAsc()
         .filter { clock.inRange(it.registrationStart, it.registrationEnd, now) && !it.finalized }
@@ -118,7 +118,9 @@ class BountyService(
     @Transactional(readOnly = true)
     fun getRegistrationCapacity(): BountyRegistrationCapacity? {
         val round = findOpenRegistrationRound(clock.getTimeInSeconds()) ?: return null
-        return BountyRegistrationCapacity(round.name, seatsRemaining(round))
+        return BountyRegistrationCapacity(
+            round.name, round.registrationLimit, bountyRegistrationRepository.countByRoundId(round.id)
+        )
     }
 
     private fun registrationFullResponse(candidate: RegistrationCandidate) = BountyRegistrationResponse(
@@ -197,7 +199,7 @@ class BountyService(
             difficulty = round.difficulty.name,
             registrationStart = round.registrationStart,
             registrationEnd = round.registrationEnd,
-            registrationFull = isRegistrationFull(round),
+            registrationFull = user?.groupId?.let { isRegistrationFull(round, it) } ?: false,
             gameStart = round.gameStart,
             gameEnd = round.gameEnd,
             phase = phase,

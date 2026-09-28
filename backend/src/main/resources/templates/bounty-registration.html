@@ -78,7 +78,7 @@
     <div class="info">
         <h1 id="item-name" ondblclick="document.getElementById('debug-box').style.display = 'none'"></h1>
         <h2 id="item-price" ondblclick="document.getElementById('debug-box').style.display = 'block'"
-            th:text="${registrationCapacity == null ? '' : (registrationCapacity.seatsRemaining == null ? 'Korlátlan férőhely' : 'Szabad helyek: ' + registrationCapacity.seatsRemaining)}"></h2>
+            th:text="${registrationCapacity == null ? '' : (registrationCapacity.registrationLimit == -1 ? 'Korlátlan férőhely csapatonként' : 'Regisztrált: ' + registrationCapacity.registeredCount + ' · csapatonként max. ' + registrationCapacity.registrationLimit + ' fő')}"></h2>
         <span id="registration-round-name" th:text="${registrationCapacity == null ? '' : registrationCapacity.roundName}" hidden></span>
     </div>
     <div class="controls">
@@ -105,6 +105,7 @@
         <p><strong>Név:</strong> <span id="review-name"></span></p>
         <p><strong>Csapat:</strong> <span id="review-team"></span></p>
         <p><strong>Kör:</strong> <span id="review-round"></span></p>
+        <p><strong>Szabad helyek a csapatban:</strong> <span id="review-seats-value"></span></p>
         <p id="review-new-team" style="display: none;"><strong>Új csapat ebben a körben</strong></p>
         <button id="review-confirm" type="button">Elfogadás</button>
         <button id="review-cancel" class="secondary" type="button">Mégsem</button>
@@ -146,10 +147,12 @@
         const itemName = document.getElementById('item-name');
         const itemPrice = document.getElementById('item-price');
 
-        function updateCapacity(roundName, seatsRemaining) {
+        function updateCapacity(roundName, registrationLimit, registeredCount) {
             if (!roundName) return;
             itemName.textContent = roundName;
-            itemPrice.textContent = seatsRemaining == null ? 'Korlátlan férőhely' : `Szabad helyek: ${seatsRemaining}`;
+            itemPrice.textContent = registrationLimit === -1
+                ? 'Korlátlan férőhely csapatonként'
+                : `Regisztrált: ${registeredCount} · csapatonként max. ${registrationLimit} fő`;
         }
 
         async function refreshRegistrationCapacity() {
@@ -165,7 +168,7 @@
                     itemPrice.textContent = '';
                 } else if (response.ok) {
                     const capacity = await response.json();
-                    updateCapacity(capacity.roundName, capacity.seatsRemaining);
+                    updateCapacity(capacity.roundName, capacity.registrationLimit, capacity.registeredCount);
                 }
             } catch (e) {
                 // Keep showing the last known capacity if a refresh temporarily fails.
@@ -210,7 +213,6 @@
             requestPending = true;
             try {
                 const result = await post(resolveUrl, cmschId);
-                updateCapacity(result.roundName, result.seatsRemaining);
                 if (!result.ok) {
                     showMessage(result.message || 'Sikertelen ellenőrzés');
                     lastSuccessful = Date.now();
@@ -221,6 +223,8 @@
                 document.getElementById('review-name').textContent = result.userName;
                 document.getElementById('review-team').textContent = result.groupName;
                 document.getElementById('review-round').textContent = result.roundName;
+                document.getElementById('review-seats-value').textContent =
+                    result.seatsRemaining == null ? 'Korlátlan' : `${result.seatsRemaining} db`;
                 document.getElementById('review-new-team').style.display = result.newTeam ? 'block' : 'none';
                 review.style.display = 'block';
                 scanner.stop();
@@ -239,7 +243,6 @@
             cancelButton.disabled = true;
             try {
                 const result = await post(registerUrl, pendingCmschId);
-                updateCapacity(result.roundName, result.seatsRemaining);
                 if (result.ok) {
                     showMessage(`REGISZTRÁLVA — ${result.userName}, ${result.groupName} (${result.roundName})`);
                     void refreshRegistrationCapacity();
@@ -311,7 +314,7 @@
 
         itemName.textContent = document.getElementById('registration-round-name').textContent;
         void refreshRegistrationCapacity();
-        setInterval(() => void refreshRegistrationCapacity(), 5000);
+        setInterval(() => void refreshRegistrationCapacity(), 1000);
         document.getElementById('stop-button').style.display = 'inline-block';
         document.getElementById('start-button').style.display = 'none';
         window.scanner = scanner;

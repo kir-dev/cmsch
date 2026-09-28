@@ -16,6 +16,8 @@ interface BountyRegistrationRepository : CrudRepository<BountyRegistrationEntity
     fun findAllByRoundIdAndAliveTrue(roundId: Int): List<BountyRegistrationEntity>
     fun findByRoundIdAndUserId(roundId: Int, userId: Int): BountyRegistrationEntity?
     fun findByCode(code: String): BountyRegistrationEntity?
+    fun countByRoundIdAndGroupId(roundId: Int, groupId: Int): Int
+    fun existsByRoundIdAndGroupId(roundId: Int, groupId: Int): Boolean
     fun countByRoundIdAndGroupIdAndAliveTrue(roundId: Int, groupId: Int): Int
     fun findAllByRoundIdAndAliveTrueAndGroupId(roundId: Int, groupId: Int): List<BountyRegistrationEntity>
 }

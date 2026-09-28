@@ -54,9 +54,9 @@ data class BountyRoundEntity(
     @Column(nullable = false)
     @ColumnDefault("-1")
     @field:JsonView(value = [Edit::class])
-    @property:GenerateInput(type = InputType.NUMBER, defaultValue = "-1", order = 4, label = "Férőhely",
-        min = -1, note = "A regisztrálható játékosok maximális száma. -1 esetén korlátlan.")
-    @property:GenerateOverview(columnName = "Férőhely", order = 5, renderer = OverviewType.NUMBER)
+    @property:GenerateInput(type = InputType.NUMBER, defaultValue = "-1", order = 4, label = "Férőhely (csapatonként)",
+        min = -1, note = "Egy csapatból regisztrálható játékosok maximális száma. -1 esetén korlátlan.")
+    @property:GenerateOverview(columnName = "Férőhely / csapat", order = 5, renderer = OverviewType.NUMBER)
     @property:ImportFormat
     var registrationLimit: Int = -1,
 
