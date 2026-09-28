@@ -66,5 +66,6 @@ data class BountyRegistrationResponse(
 
 data class BountyRegistrationCapacity(
     val roundName: String,
-    val seatsRemaining: Int?,
+    val registrationLimit: Int,
+    val registeredCount: Int,
 )
