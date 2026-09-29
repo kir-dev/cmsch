@@ -67,7 +67,8 @@ class LoginService(
                         profile.fullName,
                         "",
                         profile.email,
-                        RoleType.BASIC,
+                        role = RoleType.BASIC,
+                        secondaryEmail = profile.secondaryEmail,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
                         provider = AUTHSCH
@@ -116,7 +117,7 @@ class LoginService(
                         "${profile.familyName} ${profile.givenName}".take(254),
                         "",
                         profile.email.take(254).ifBlank { null },
-                        RoleType.BASIC,
+                        role = RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
                         provider = GOOGLE,
@@ -174,8 +175,12 @@ class LoginService(
         if (profile.neptun != null) {
             user.neptun = profile.neptun ?: user.neptun
         }
-        if (profile.email != null && profile.email?.isNotBlank() == true) {
+        if (profile.email != null && profile.email.isNotBlank() == true) {
             user.email = profile.email ?: user.email
+        }
+
+        if (!profile.secondaryEmail.isNullOrBlank()) {
+            user.secondaryEmail = profile.secondaryEmail
         }
 
         grantGuildAndGroup(user)
@@ -446,7 +451,7 @@ class LoginService(
                         "${profile.familyName} ${profile.givenName}",
                         profile.preferredUsername,
                         profile.email.ifBlank { null },
-                        RoleType.BASIC,
+                        role = RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
                         provider = KEYCLOAK,

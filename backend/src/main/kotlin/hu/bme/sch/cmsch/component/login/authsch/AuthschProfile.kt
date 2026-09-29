@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser
 class AuthschProfile private constructor(
     val internalId: String,
     val email: String?,
+    val secondaryEmail: String?,
     val fullName: String,
     val neptun: String?,
     val activeMemberships: List<ActiveMembership>,
@@ -30,9 +31,12 @@ class AuthschProfile private constructor(
                 oidcUser.getClaim<Any>("given_name") as? String
             ).joinToString(" ").ifBlank { oidcUser.getClaim<Any>("name") as? String ?: "" }
 
+            val (email, secondaryEmail) = readEmails(oidcUser)
+
             return AuthschProfile(
                 internalId = internalId,
-                email = readEmail(oidcUser),
+                email = email,
+                secondaryEmail = secondaryEmail,
                 fullName = fullName,
                 neptun = oidcUser.getClaim<Any>(NEPTUN) as? String,
                 activeMemberships = parseActiveMemberships(oidcUser),
@@ -41,19 +45,19 @@ class AuthschProfile private constructor(
         }
 
 
-        private fun readEmail(oidcUser: OidcUser): String? {
-            val samAccountName = oidcUser.getClaim<Any>(SAM_ACCOUNT_NAME) as? String
-            if (!samAccountName.isNullOrBlank())
-                return "$samAccountName@sch.bme.hu"
+        private fun readEmails(oidcUser: OidcUser): Pair<String?, String?> {
+            val samAccountName = (oidcUser.getClaim<Any>(SAM_ACCOUNT_NAME) as? String)?.takeIf { it.isNotBlank() }
+            val fallback = (oidcUser.getClaim<Any>(EMAIL) as? String)?.takeIf { it.isNotBlank() }
 
-            val fallback = oidcUser.getClaim<Any>(EMAIL) as? String
-            if (fallback.isNullOrBlank()) {
-                log.warn("Neither the {} nor the {} claim is present, so the user is saved without an email",
-                    SAM_ACCOUNT_NAME, EMAIL)
-                return null
+            if (samAccountName != null)
+                return "$samAccountName@sch.bme.hu" to fallback
+
+            if (fallback == null) {
+                log.warn("Neither the {} nor the {} claim is present for user {}, so the user is saved without an email", SAM_ACCOUNT_NAME, EMAIL, oidcUser.subject)
+                return null to null
             }
-            log.info("The {} claim is missing, using the {} claim as the email address", SAM_ACCOUNT_NAME, EMAIL)
-            return fallback
+            log.info("The {} claim is missing for user {}, saving the {} claim as the secondary email address", SAM_ACCOUNT_NAME, oidcUser.subject, EMAIL)
+            return null to fallback
         }
 
         private fun parseActiveMemberships(oidcUser: OidcUser): List<ActiveMembership> {

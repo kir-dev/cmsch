@@ -298,7 +298,7 @@ class PasswordLoginService(
             log.error("EmailService is not available, cannot send password reset email to {}", user.email)
             return
         }
-        val recipient = user.email
+        val recipient = user.deliveryEmail
         if (recipient.isNullOrBlank()) {
             log.error("User {} has no email address, cannot send password reset email", user.internalId)
             return

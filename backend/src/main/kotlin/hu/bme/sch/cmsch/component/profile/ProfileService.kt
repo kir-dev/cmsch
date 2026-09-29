@@ -76,7 +76,7 @@ class ProfileService(
             alias = profileComponent.showAlias.mapIfTrue { user.alias },
 
             guild = profileComponent.showGuild.mapIfTrue { user.guild },
-            email = profileComponent.showEmail.mapIfTrue { user.email },
+            email = profileComponent.showEmail.mapIfTrue { user.deliveryEmail },
             neptun = profileComponent.showNeptun.mapIfTrue { user.neptun },
             cmschId = mapQr(user),
             major = profileComponent.showMajor.mapIfTrue { user.major },
