@@ -152,7 +152,7 @@ class AdminMenuService(
 
         val userEntity = userService.getById(user.internalId)
         val config = userService.resolveConfig(userEntity.config)
-        val email = userEntity.email
+        val email = userEntity.deliveryEmail
         val result = UserSiteContext(
             userName = user.userName,
             email = email ?: "",

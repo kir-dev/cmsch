@@ -32,6 +32,7 @@ open class UserService(
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
         if (user.email.isNullOrBlank()) user.email = null
+        if (user.secondaryEmail.isNullOrBlank()) user.secondaryEmail = null
         users.save(user)
     }
 

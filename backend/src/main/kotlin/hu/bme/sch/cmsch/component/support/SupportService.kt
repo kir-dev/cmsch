@@ -441,7 +441,7 @@ class SupportService(
         }
 
         val supportUser = userRepository.findByInternalId(userId).orElse(null)
-        val supportUserEmail = supportUser?.email ?: run {
+        val supportUserEmail = supportUser?.deliveryEmail ?: run {
             log.warn("Could not find email for support user '{}', skipping assignment notification", userId)
             return
         }
@@ -476,7 +476,7 @@ class SupportService(
         if (selector.isBlank() || thread.solverInternalId.isBlank()) return
 
         val solverUser = userRepository.findByInternalId(thread.solverInternalId).orElse(null)
-        val solverEmail = solverUser?.email ?: run {
+        val solverEmail = solverUser?.deliveryEmail ?: run {
             log.warn("Could not find email for thread solver '{}', skipping reply notification", thread.solverInternalId)
             return
         }
