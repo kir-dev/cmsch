@@ -138,7 +138,7 @@ class PermissionGroupAssignPage(
                         name = it.fullName,
                         group = it.groupName,
                         neptun = it.neptun,
-                        email = it.email,
+                        email = it.email ?: "",
                     )
                 }
         }

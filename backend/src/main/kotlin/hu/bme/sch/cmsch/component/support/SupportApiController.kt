@@ -220,6 +220,6 @@ class SupportApiController(
     }
 
     private fun getEmail(user: CmschUser): String {
-        return user.asUserEntity(userRepository).email
+        return user.asUserEntity(userRepository).email ?: ""
     }
 }

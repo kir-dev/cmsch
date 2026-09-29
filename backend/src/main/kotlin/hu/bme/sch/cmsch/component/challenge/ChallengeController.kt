@@ -142,4 +142,4 @@ class ChallengeController(
 }
 
 private fun mapUsername(it: UserEntity) =
-    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email}"
+    "${it.fullNameWithAlias} | ${it.id} | [${it.provider.firstOrNull() ?: 'n'}] ${it.email ?: ""}"
