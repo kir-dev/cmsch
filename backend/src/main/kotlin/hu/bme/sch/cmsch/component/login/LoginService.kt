@@ -66,7 +66,7 @@ class LoginService(
                         "",
                         profile.fullName,
                         "",
-                        profile.email ?: "",
+                        profile.email,
                         RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
@@ -115,7 +115,7 @@ class LoginService(
                         "",
                         "${profile.familyName} ${profile.givenName}".take(254),
                         "",
-                        profile.email.take(254),
+                        profile.email.take(254).ifBlank { null },
                         RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,
@@ -294,8 +294,8 @@ class LoginService(
             }
         }
 
-        if (user.email.isNotBlank() && !alreadySetGroupAndGuild) {
-            groupToUserMapping.findByEmailIgnoreCase(user.email).ifPresent {
+        if (!user.email.isNullOrBlank() && !alreadySetGroupAndGuild) {
+            groupToUserMapping.findByEmailIgnoreCase(user.email!!).ifPresent {
                 user.major = it.major
                 addUserToGroup(user, it)
                 user.detailsImported = true
@@ -312,8 +312,8 @@ class LoginService(
                 applied = true
             }
         }
-        if (!applied && user.email.isNotBlank()) {
-            roleToUserMapping.findByEmailIgnoreCase(user.email).ifPresent {
+        if (!applied && !user.email.isNullOrBlank()) {
+            roleToUserMapping.findByEmailIgnoreCase(user.email!!).ifPresent {
                 user.role = it.role
             }
         }
@@ -445,7 +445,7 @@ class LoginService(
                         "",
                         "${profile.familyName} ${profile.givenName}",
                         profile.preferredUsername,
-                        profile.email,
+                        profile.email.ifBlank { null },
                         RoleType.BASIC,
                         groupName = "", group = null,
                         guild = GuildType.UNKNOWN, major = MajorType.UNKNOWN,

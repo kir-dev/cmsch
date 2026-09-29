@@ -152,10 +152,11 @@ class AdminMenuService(
 
         val userEntity = userService.getById(user.internalId)
         val config = userService.resolveConfig(userEntity.config)
+        val email = userEntity.email
         val result = UserSiteContext(
             userName = user.userName,
-            email = userEntity.email,
-            emailHash = if (userEntity.email.isEmpty()) userEntity.fullName.md5() else userEntity.email.md5(),
+            email = email ?: "",
+            emailHash = if (email.isNullOrBlank()) userEntity.fullName.md5() else email.md5(),
             profilePicture = userEntity.profilePicture,
             role = user.role,
             group = userEntity.groupName,

@@ -129,11 +129,11 @@ data class UserEntity(
     var alias: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = true)
     @property:GenerateInput(order = 6, label = "Email cím")
     @property:GenerateOverview(columnName = "Email", order = 4, useForSearch = true)
     @property:ImportFormat
-    var email: String = "",
+    var email: String? = null,
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)

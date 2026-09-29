@@ -107,9 +107,12 @@ class AdmissionService(
             return ticketRepository.findTop1ByQrCodeAndUseCmschIdTrue(cmschId).firstOrNull()
 
         } else {
-            val ticketByEmail = ticketRepository.findTop1ByEmailAndUseCmschIdFalse(user.email).firstOrNull()
-            if (user.email.isNotEmpty() && ticketByEmail != null) {
-                return ticketByEmail
+            val email = user.email
+            if (!email.isNullOrEmpty()) {
+                val ticketByEmail = ticketRepository.findTop1ByEmailAndUseCmschIdFalse(email).firstOrNull()
+                if (ticketByEmail != null) {
+                    return ticketByEmail
+                }
             }
 
             return ticketRepository.findTop1ByQrCodeAndUseCmschIdTrue(cmschId).firstOrNull()

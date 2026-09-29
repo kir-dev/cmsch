@@ -46,10 +46,10 @@ interface UserRepository : CrudRepository<UserEntity, Int>,
     fun findAllByRoleOrRoleOrPermissionsNot(role1: RoleType, role2: RoleType, emptyString: String): MutableList<UserEntity>
     fun findAllByRoleOrRole(role1: RoleType, role2: RoleType): MutableList<UserEntity>
 
-    @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserSelectorView(e.id, e.fullName, e.alias, e.provider, e.email) FROM UserEntity e")
+    @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserSelectorView(e.id, e.fullName, e.alias, e.provider, coalesce(e.email, '')) FROM UserEntity e")
     fun findAllSelectorView(): List<UserSelectorView>
 
-    @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserHandlerView(e.id, e.fullName, e.alias, e.neptun, e.guild, e.groupName, e.email) FROM UserEntity e")
+    @Query("SELECT NEW hu.bme.sch.cmsch.repository.UserHandlerView(e.id, e.fullName, e.alias, e.neptun, e.guild, e.groupName, coalesce(e.email, '')) FROM UserEntity e")
     fun findAllUserHandlerView(): List<UserHandlerView>
 
     fun findAllByPermissionGroupsNot(emptyString: String): List<UserEntity>
