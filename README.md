@@ -130,6 +130,7 @@ spring.security.oauth2.client.registration.google.client-secret=<google client-s
 hu.bme.sch.cmsch.startup.sysadmins=<your pekId>
 cmsch.website-default-url=http://<your ip>:8080/
 hu.bme.sch.cmsch.login.googleAdminAddresses=<your email address>
+hu.bme.sch.cmsch.login.authschAdminAddresses=<your sAMAccountName>@sch.bme.hu
 logging.level.web=DEBUG
 ```
 
