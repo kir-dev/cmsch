@@ -183,6 +183,14 @@ class LoginService(
             user.secondaryEmail = profile.secondaryEmail
         }
 
+        // Grant admin by BME directory address
+        val authschAdminAddresses = loginComponent.authschAdminAddresses.split(Regex(", *")).filter { it.isNotBlank() }
+        if (profile.email != null && authschAdminAddresses.any { it.equals(profile.email, ignoreCase = true) }) {
+            log.info("Granting ADMIN for ${user.fullName}")
+            user.role = RoleType.ADMIN
+            user.detailsImported = true
+        }
+
         grantGuildAndGroup(user)
         grantRole(user)
 

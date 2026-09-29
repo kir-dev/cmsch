@@ -62,6 +62,10 @@ class LoginComponent(
     var authschPromotedFrontend by BooleanSettingRef(true, fieldName = "Authsch opció látszik (frontend)",
         description = "Ha ez be van kapcsolva, akkor a felhasználói felület /login oldalán látszik az AuthSCH SSO")
 
+    var authschAdminAddresses by StringSettingRef(serverSideOnly = true, fieldName = "ADMIN jogú emailcímek",
+        description = "Csak AuthSCH esetén! Ezeknek a felhasználóknak ADMIN joga lesz belépésnél. " +
+                "A sch-acc@sch.bme.hu emailcímek vesszővel felsorolva.")
+
     /// -------------------------------------------------------------------------------------------------------------------
 
     val ssoSecurityGroup by SettingGroup(fieldName = "SSO biztonság",
