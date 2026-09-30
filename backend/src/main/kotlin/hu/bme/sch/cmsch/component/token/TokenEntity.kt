@@ -73,7 +73,7 @@ data class TokenEntity(
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 6, label = "Pont", type = InputType.NUMBER, defaultValue = "0",
+    @property:GenerateInput(order = 6, label = "Pont", type = InputType.NUMBER, min = Integer.MIN_VALUE, defaultValue = "0",
         note = "Egész szám, hány pontot ér a megszerzése")
     @property:GenerateOverview(columnName = "Pont", renderer = OverviewType.NUMBER, order = 5, centered = true)
     @property:ImportFormat
