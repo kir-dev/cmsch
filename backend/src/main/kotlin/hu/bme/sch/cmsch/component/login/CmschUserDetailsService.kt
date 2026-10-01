@@ -22,7 +22,7 @@ class CmschUserDetails(
 
     override fun getPassword(): String? = userEntity.password
 
-    override fun getUsername(): String = userEntity.email
+    override fun getUsername(): String = userEntity.email ?: userEntity.internalId
 
     override fun isAccountNonExpired(): Boolean = true
 
@@ -48,6 +48,7 @@ class CmschUserDetailsService(
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     override fun loadUserByUsername(username: String): UserDetails {
         val user = userRepository.findByEmailIgnoreCase(username)
+            .or { userRepository.findByInternalId(username) }
             .orElseThrow { UsernameNotFoundException("User not found with email: $username") }
         return CmschUserDetails(user, loginComponent)
     }

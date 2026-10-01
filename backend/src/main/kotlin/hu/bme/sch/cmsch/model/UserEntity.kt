@@ -77,6 +77,7 @@ enum class MajorType {
     Index(name = "idx_userentity_neptun", columnList = "neptun"),
     Index(name = "idx_userentity_groupname", columnList = "groupName"),
     Index(name = "idx_userentity_email", columnList = "email", unique = true),
+    Index(name = "idx_userentity_secondaryemail", columnList = "secondaryEmail"),
     Index(name = "idx_userentity_confirmationtoken", columnList = "confirmationToken"),
     Index(name = "idx_userentity_passwordresettoken", columnList = "passwordResetToken"),
     Index(name = "idx_userentity_group", columnList = "group_id")
@@ -129,16 +130,24 @@ data class UserEntity(
     var alias: String = "",
 
     @field:JsonView(value = [ Edit::class ])
-    @Column(nullable = false)
+    @Column(nullable = true)
     @property:GenerateInput(order = 6, label = "Email cím")
     @property:GenerateOverview(columnName = "Email", order = 4, useForSearch = true)
     @property:ImportFormat
-    var email: String = "",
+    var email: String? = null,
+
+    @field:JsonView(value = [ Edit::class ])
+    @Column(nullable = true)
+    @property:GenerateInput(order = 7, label = "Másodlagos email",
+        note = "Authsch-ből jövő email, ha nincs sAMAccountName. Innen megy a kiküldés, ha az elsődleges üres.")
+    @property:GenerateOverview(columnName = "Másodlagos email", order = 5, useForSearch = true)
+    @property:ImportFormat
+    var secondaryEmail: String? = null,
 
     @field:JsonView(value = [ Edit::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 7, label = "Jogkör",
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 8, label = "Jogkör",
         source = [ "GUEST", "BASIC", "ATTENDEE", "PRIVILEGED", "STAFF", "ADMIN", "SUPERUSER" ], minimumRole = RoleType.ADMIN,
         note = "BASIC = belépett, STAFF = rendező, ADMIN = minden jog")
     @property:GenerateOverview(visible = false)
@@ -147,7 +156,7 @@ data class UserEntity(
 
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Column(nullable = false)
-    @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 8, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
+    @property:GenerateInput(type = InputType.ENTITY_SELECT, order = 9, label = "Csoport", entitySource = "GroupEntity", minimumRole = RoleType.STAFF)
     @property:GenerateOverview(columnName = "Csoport", centered = true, order = 3, useForSearch = true)
     @property:ImportFormat
     override var groupName: String = "",
@@ -159,7 +168,7 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 9, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 10, label = "Gárda", source = [ "UNKNOWN", "BLACK", "BLUE", "RED", "WHITE", "YELLOW", "PURPLE" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var guild: GuildType = GuildType.UNKNOWN,
@@ -167,27 +176,27 @@ data class UserEntity(
     @field:JsonView(value = [ Edit::class, Preview::class, FullDetails::class ])
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 10, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BIS", "BPROF" ])
+    @property:GenerateInput(type = InputType.BLOCK_SELECT, order = 11, label = "Szak", source = [ "UNKNOWN", "IT", "EE", "BIS", "BPROF" ])
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var major: MajorType = MajorType.UNKNOWN,
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 11, label = "Forrás", note = "Honnan jön az adat (authsch, google, keycloak)")
+    @property:GenerateInput(order = 12, label = "Forrás", note = "Honnan jön az adat (authsch, google, keycloak)")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var provider: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 12, label = "Profilkép", enabled = true)
+    @property:GenerateInput(order = 13, label = "Profilkép", enabled = true)
     @property:ImportFormat
     var profilePicture: String = "",
 
     @field:JsonView(value = [ Edit::class ])
     @Column(nullable = false)
-    @property:GenerateInput(order = 13, label = "Jogviszonyok", note = "Melyik kar, milyen szak, aktív-e és gólya-e?")
+    @property:GenerateInput(order = 14, label = "Jogviszonyok", note = "Melyik kar, milyen szak, aktív-e és gólya-e?")
     @property:GenerateOverview(visible = false)
     @property:ImportFormat
     var unitScopes: String = "",
@@ -293,6 +302,10 @@ data class UserEntity(
 
     val fullNameWithAlias: String
         get() = if (alias != "") "$fullName ($alias)" else fullName
+
+    @get:Transient
+    val deliveryEmail: String?
+        get() = email?.takeIf { it.isNotBlank() } ?: secondaryEmail?.takeIf { it.isNotBlank() }
 
     override var permissionsAsList
         get() = permissions.split(",") + permissionGroupsResolved.split(",")

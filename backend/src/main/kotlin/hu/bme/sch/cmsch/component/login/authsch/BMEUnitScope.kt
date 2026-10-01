@@ -15,5 +15,9 @@ enum class BMEUnitScope(
     BME_VIK_NEWBIE(true, true, false,true, true),
     BME_VBK(true, false, true,false, false),
     BME_VBK_ACTIVE(true, false, true,true, false),
-    BME_VBK_NEWBIE(true, false, true,true, true)
+    BME_VBK_NEWBIE(true, false, true,true, true);
+
+    companion object {
+        fun byNameOrNull(name: String): BMEUnitScope? = entries.find { it.name == name }
+    }
 }
