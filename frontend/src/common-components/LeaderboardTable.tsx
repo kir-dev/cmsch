@@ -13,6 +13,7 @@ type LeaderboardTableProps = {
   suffix?: string
   detailed?: boolean
   categorized?: boolean
+  tagsShown?: string[] | null
 }
 
 export const LeaderBoardTable = ({
@@ -22,7 +23,8 @@ export const LeaderBoardTable = ({
   detailed = false,
   categorized = false,
   showDescription = false,
-  searchEnabled = false
+  searchEnabled = false,
+  tagsShown = null
 }: LeaderboardTableProps) => {
   const dataWithPosition = useMemo(() => data.map((item, index) => ({ ...item, position: index + 1 })), [data])
 
@@ -66,6 +68,7 @@ export const LeaderBoardTable = ({
               suffix={suffix}
               categorized={categorized}
               showDescription={showDescription}
+              tagsShown={tagsShown}
             />
           ))}
         </TableBody>
