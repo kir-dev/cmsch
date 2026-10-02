@@ -18,6 +18,7 @@ type CollapsableTableRowProps = {
   suffix?: string
   categorized?: boolean
   showDescription: boolean
+  tagsShown?: string[] | null
 }
 
 export const CollapsableTableRow = ({
@@ -27,7 +28,8 @@ export const CollapsableTableRow = ({
   suffix,
   showGroup,
   categorized = false,
-  showDescription
+  showDescription,
+  tagsShown = null
 }: CollapsableTableRowProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const isGroupLink = typeof data.groupId !== 'undefined'
@@ -50,7 +52,7 @@ export const CollapsableTableRow = ({
             <TableCell>
               <div className="flex flex-col md:flex-row md:items-center gap-1">
                 <span>{data.name}</span>
-                {data.label && <TeamLabel name={data.label} color={data.labelColor} />}
+                {data.label && (tagsShown?.includes(data.label) || !tagsShown) && <TeamLabel name={data.label} color={data.labelColor} />}
               </div>
             </TableCell>
             {showGroup && (

@@ -140,6 +140,7 @@ export interface News {
 export interface Race {
   title: string
   visible: boolean
+  leaderboardTags: string
   defaultCategoryDescription: string
   freestyleCategoryName: string
   extraCategoriesVisible: boolean

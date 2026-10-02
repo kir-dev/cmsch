@@ -46,6 +46,8 @@ class RaceComponent(
 
     var visible by BooleanSettingRef(fieldName = "Látható", description = "Bekapcsolt állapotban a toplista megjelenik a felhasználók számára")
 
+    var leaderboardTags by StringSettingRef(fieldName = "Toplista címkék", description = "A toplista címkéi, vesszővel elválasztva. Csak a megadott címkékkel rendelkező kategóriák jelennek meg a toplistában.")
+
     var extraCategoriesVisible by BooleanSettingRef(fieldName = "Extra kategóriák láthatóak",
         description = "Bekapcsolt állapotban az extra kategóriás toplisták is megjelennek")
 

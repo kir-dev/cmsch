@@ -22,6 +22,8 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
   if (!component || !component.visible) return <ComponentUnavailable />
   if (isError || isLoading || !data) return <PageStatus isLoading={isLoading} isError={isError} title={component.title} />
 
+  const tagsShown = component.leaderboardTags.split(',').map((tag) => tag.trim())
+
   return (
     <CmschPage title={data.categoryName}>
       <h1 className="text-3xl font-bold font-heading mb-3">{data.categoryName}</h1>
@@ -37,6 +39,7 @@ const RaceBoard = ({ data, component, isError, isLoading }: Props) => {
         showGroup={true}
         suffix="mp"
         showDescription={showDescription}
+        tagsShown={tagsShown.length > 0 ? tagsShown : null}
       />
     </CmschPage>
   )
