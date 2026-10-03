@@ -87,6 +87,7 @@ enum class FormElementType(
     HTML_INFO_BOX(rendersOnServerSide = true),
     SEARCHABLE_SELECT(rendersOnServerSide = true),
     CUSTOM_BACKEND_ONLY(rendersOnServerSide = true),
+    SELECTED_TEXT(rendersOnServerSide = true),
     ;
 
     val templateName = shoutingSnakeToKebab(name)
@@ -132,6 +133,9 @@ data class FormElement(
 
     @field:JsonView(FullDetails::class)
     var defaultValue: String = "",
+
+    @field:JsonView(FullDetails::class)
+    var sourceFieldName: String = "",
 
     @field:JsonIgnore
     var customType: String? = null,
