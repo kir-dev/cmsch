@@ -1,0 +1,60 @@
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <div class="field-group">
+        <label th:for="|input${index}|"
+               th:text="${input.label}">
+        </label>
+        <div style="clear: both"></div>
+
+        <p th:id="|input${index}|"
+           class="selected-text"
+           th:attr="data-values=${input.values}"
+           th:text="${input.defaultValue}"
+           style="color: #6f7478">
+        </p>
+
+        <span class="note"
+              th:text="${input.note}"
+              th:if="${input.note != ''}">
+        </span>
+    </div>
+
+    <script>
+        (function () {
+            const field = document.getElementById('input[[${index}]]');
+            const form = field.closest('form');
+            const task = form.querySelector('select[name="task"]');
+
+            const valuesByTask = new Map();
+
+            field.dataset.values.split(',').forEach(entry => {
+                const separator = entry.lastIndexOf(':');
+
+                if (separator === -1) {
+                    return;
+                }
+
+                const taskValue = entry.substring(0, separator);
+                const fieldValue = entry.substring(separator + 1);
+
+                valuesByTask.set(taskValue, fieldValue);
+            });
+
+            function updateValue() {
+                field.textContent = valuesByTask.get(task.value) || '';
+            }
+
+            task.addEventListener('change', updateValue);
+            updateValue();
+        })();
+    </script>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+</object>

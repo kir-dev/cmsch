@@ -85,7 +85,7 @@ class TasksService(
     fun getAllTasks() = taskRepository.findAllByVisibleTrue()
 
     @Transactional(readOnly = true)
-    fun getAllTasksNameView() = taskRepository.findAllTaskNameView()
+    fun getAllTasksNameMaxPointView() = taskRepository.findAllTaskNameMaxPointView()
 
     @Transactional(readOnly = true)
     fun getAllTasksForGuests(): List<TaskEntityWrapperDto> {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 data class TaskCountByCategory(val categoryId: Int, val count: Long)
 
-data class TaskNameView(val id: Int, val title: String)
+data class TaskNameMaxPointView(val id: Int, val title: String, val maxScore: Int)
 
 @Repository
 @ConditionalOnBean(TaskComponent::class)
@@ -18,8 +18,8 @@ interface TaskEntityRepository : CrudRepository<TaskEntity, Int>,
     fun findAllByHighlightedTrueAndVisibleTrue(): List<TaskEntity>
     fun findAllByVisibleTrue(): List<TaskEntity>
 
-    @Query("SELECT NEW hu.bme.sch.cmsch.component.task.TaskNameView(e.id, e.title) FROM TaskEntity e")
-    fun findAllTaskNameView(): List<TaskNameView>
+    @Query("SELECT NEW hu.bme.sch.cmsch.component.task.TaskNameMaxPointView(e.id, e.title, e.maxScore) FROM TaskEntity e")
+    fun findAllTaskNameMaxPointView(): List<TaskNameMaxPointView>
 
     fun findAllByVisibleTrueAndAvailableFromLessThanAndAvailableToGreaterThan(availableFrom: Long, availableTo: Long): List<TaskEntity>
     fun countAllByVisibleTrue(): Int

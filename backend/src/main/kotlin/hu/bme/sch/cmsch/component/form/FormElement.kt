@@ -87,6 +87,7 @@ enum class FormElementType(
     HTML_INFO_BOX(rendersOnServerSide = true),
     SEARCHABLE_SELECT(rendersOnServerSide = true),
     CUSTOM_BACKEND_ONLY(rendersOnServerSide = true),
+    SELECTED_TEXT(rendersOnServerSide = true),
     ;
 
     val templateName = shoutingSnakeToKebab(name)
