@@ -95,7 +95,7 @@ class SubmittedTaskReviewDashboard(
                     "maxScore", "Maximális pontszám", FormElementType.SELECTED_TEXT,
                     ".*", "", taskList.entries.joinToString(",") { "${it.key}:${it.value}" },
                     "A feladat maximális pontszáma (automatikusan frissül miután a feladatot kiválasztottad)",
-
+                    sourceFieldName = "task"
                 ),
                 FormElement(
                     "score", "Pontszám", FormElementType.NUMBER,

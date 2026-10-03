@@ -134,6 +134,9 @@ data class FormElement(
     @field:JsonView(FullDetails::class)
     var defaultValue: String = "",
 
+    @field:JsonView(FullDetails::class)
+    var sourceFieldName: String = "",
+
     @field:JsonIgnore
     var customType: String? = null,
 )
