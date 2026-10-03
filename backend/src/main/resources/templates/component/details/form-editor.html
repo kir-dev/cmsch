@@ -110,7 +110,7 @@
                         <div class="field-group">
                             <label for="${property}_${id}_formatRegex">RegEx minta</label>
                             <input id="${property}_${id}_formatRegex" type="text" value="${escapeHtml(field.formatRegex || '')}" onchange="saveField('${property}')">
-                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^(.|\\n|\\r)*$' mintát.</span>
+                            <span class="note">Egy soros szöveghez jó a '.*', de ha több sorosat is szeretnél elfogadni, használd a '^[\\s\\S]*$' mintát.</span>
                         </div>
 
                         <div class="field-group">
