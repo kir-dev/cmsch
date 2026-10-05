@@ -67,6 +67,7 @@ class SubmittedTaskReviewDashboard(
     }
 
     fun getForm(): DashboardFormCard {
+        val taskList = getTaskMaxPointList()
         return DashboardFormCard(
             2,
             false,
@@ -81,7 +82,7 @@ class SubmittedTaskReviewDashboard(
                 ),
                 FormElement(
                     "task", "Feladat", FormElementType.SEARCHABLE_SELECT,
-                    ".*", "", getTaskList(),
+                    ".*", "", taskList.keys.joinToString(","),
                     "Az értékelendő feladat (automatikusan frissül miután a ${if (isUserOwnership) "felhasználót" else "csoportot"} kiválasztottad)",
                     required = true
                 ),
@@ -89,6 +90,12 @@ class SubmittedTaskReviewDashboard(
                     "response", "Megjegyzés", FormElementType.TEXT,
                     ".*", "", "",
                     "Megjegyzés az értékeléshez"
+                ),
+                FormElement(
+                    "maxScore", "Maximális pontszám", FormElementType.SELECTED_TEXT,
+                    ".*", "", taskList.entries.joinToString(",") { "${it.key}:${it.value}" },
+                    "A feladat maximális pontszáma (automatikusan frissül miután a feladatot kiválasztottad)",
+                    sourceFieldName = "task"
                 ),
                 FormElement(
                     "score", "Pontszám", FormElementType.NUMBER,
@@ -164,10 +171,9 @@ class SubmittedTaskReviewDashboard(
                 }
         }
 
-    fun getTaskList(): String =
-        tasksService.getAllTasksNameView()
+    fun getTaskMaxPointList(): Map<String, Int> =
+        tasksService.getAllTasksNameMaxPointView()
             .sortedBy { it.title }
-            .joinToString(",") {
-                "${it.id}: ${it.title.replace(',', ' ')}"
-            }
+            .associate { "${it.id}: ${it.title.replace(',', ' ')}" to it.maxScore }
+
 }

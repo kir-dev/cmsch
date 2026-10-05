@@ -1,0 +1,72 @@
+<!--@thymesVar id="input" type="hu.bme.sch.cmsch.component.form.FormElement"-->
+<!--@thymesVar id="index" type="int"-->
+<!--@thymesVar id="component" type="hu.bme.sch.cmsch.admin.dashboard.DashboardCard"-->
+<!--@thymesVar id="view" type="String"-->
+
+<object th:fragment="dashboardFormInput (input, index, component, view)" th:remove="tag">
+
+    <div class="field-group">
+        <label th:for="|input${index}|"
+               th:text="${input.label}">
+        </label>
+        <div style="clear: both"></div>
+
+        <p th:id="|input${index}|"
+           class="selected-text"
+           th:attr="data-values=${input.values},data-source-field=${input.sourceFieldName}"
+           th:text="${input.defaultValue}"
+           style="color: #6f7478">
+        </p>
+
+        <span class="note"
+              th:text="${input.note}"
+              th:if="${input.note != ''}">
+        </span>
+    </div>
+
+    <script>
+        (function () {
+            const field = document.getElementById('input[[${index}]]');
+            const sourceFieldName = field.dataset.sourceField;
+
+            if (!sourceFieldName) {
+                return;
+            }
+
+            const form = field.closest('form');
+            const sourceField = form.elements.namedItem(sourceFieldName);
+
+            if (!sourceField) {
+                throw new Error(
+                    `Selected text source field "${sourceFieldName}" was not found`
+                );
+            }
+
+            const valuesByKey = new Map();
+
+            field.dataset.values.split(',').forEach(entry => {
+                const separator = entry.lastIndexOf(':');
+
+                if (separator === -1) {
+                    return;
+                }
+
+                const key = entry.substring(0, separator);
+                const value = entry.substring(separator + 1);
+
+                valuesByKey.set(key, value);
+            });
+
+            function updateValue() {
+                field.textContent = valuesByKey.get(sourceField.value) || '';
+            }
+
+            sourceField.addEventListener('change', updateValue);
+            updateValue();
+        })();
+    </script>
+
+</object>
+
+<object th:fragment="dashboardFormScript (components)" th:remove="tag">
+</object>
