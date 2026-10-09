@@ -12,6 +12,7 @@ data:
   BACKEND_URL: "{{ .Values.apiHostProtocol }}://{{ .Values.apiHost }}/"
   SYSADMINS: {{ .Values.superusers.pekIds | quote }}
   GOOGLE_ADMIN_ADDRESSES: {{ .Values.superusers.googleEmails | quote }}
+  AUTHSCH_ADMIN_ADDRESSES: {{ .Values.superusers.authschEmails | quote }}
   SESSION_DURATION_SECONDS: {{ .Values.sessionDurationSeconds | quote}}
 
   {{ if .Values.s3.enabled }}

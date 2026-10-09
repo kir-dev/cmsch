@@ -298,6 +298,11 @@ class PasswordLoginService(
             log.error("EmailService is not available, cannot send password reset email to {}", user.email)
             return
         }
+        val recipient = user.deliveryEmail
+        if (recipient.isNullOrBlank()) {
+            log.error("User {} has no email address, cannot send password reset email", user.internalId)
+            return
+        }
         val templateName = loginComponent.passwordResetTemplate
         val template = service.getTemplateBySelector(templateName)
         if (template == null && templateName.isNotBlank()) {
@@ -307,7 +312,7 @@ class PasswordLoginService(
             "name" to user.fullName,
             "link" to "${appComponent.siteUrl}reset-password?token=$token"
         )
-        service.sendTemplatedEmail(null, template ?: getDefaultPasswordResetTemplate(), values, listOf(user.email))
+        service.sendTemplatedEmail(null, template ?: getDefaultPasswordResetTemplate(), values, listOf(recipient))
     }
 
     private fun getDefaultPasswordResetTemplate() = EmailTemplateEntity(

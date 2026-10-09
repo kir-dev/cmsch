@@ -216,7 +216,7 @@ open class RaceService(
             .groupBy { it.userId }
             .map { submission ->
                 val email = if (fetchEmail) userRepository.findById(submission.key ?: 0)
-                    .map { it.email }
+                    .map { it.email ?: "n/a" }
                     .orElse("n/a") else ""
                 RaceEntryDto(
                     submission.key ?: 0,
@@ -234,7 +234,7 @@ open class RaceService(
             .groupBy { it.userId }
             .map { submission ->
                 val email = if (fetchEmail) userRepository.findById(submission.key ?: 0)
-                    .map { it.email }
+                    .map { it.email ?: "n/a" }
                     .orElse("n/a") else ""
                 RaceEntryDto(
                     submission.key ?: 0,

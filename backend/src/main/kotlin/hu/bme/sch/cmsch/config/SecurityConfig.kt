@@ -6,8 +6,8 @@ import hu.bme.sch.cmsch.component.login.LoginComponent
 import hu.bme.sch.cmsch.component.login.LoginRejectedException
 import hu.bme.sch.cmsch.component.login.LoginService
 import hu.bme.sch.cmsch.component.login.SessionFilterConfigurer
+import hu.bme.sch.cmsch.component.login.authsch.AuthschProfile
 import hu.bme.sch.cmsch.component.login.authsch.CmschAuthschUser
-import hu.bme.sch.cmsch.component.login.authsch.ProfileResponse
 import hu.bme.sch.cmsch.component.login.google.CmschGoogleUser
 import hu.bme.sch.cmsch.component.login.google.GoogleUserInfoResponse
 import hu.bme.sch.cmsch.component.login.keycloak.KeycloakUserInfoResponse
@@ -34,10 +34,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
@@ -84,17 +84,13 @@ class SecurityConfig(
         return config.authenticationManager
     }
 
-    var authschUserServiceClient = WebClient.builder()
-        .baseUrl("https://auth.sch.bme.hu/api")
-        .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-        .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
-        .build()
-
     var googleUserServiceClient = WebClient.builder()
         .baseUrl("https://www.googleapis.com/oauth2/v3")
         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .defaultHeader(HttpHeaders.USER_AGENT, "AuthSchKotlinAPI")
         .build()
+
+    private val oidcUserService = OidcUserService()
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -178,14 +174,17 @@ class SecurityConfig(
                     )
                 }.userInfoEndpoint { userInfo ->
                     userInfo
-                        .oidcUserService {
-                            if (it.clientRegistration.clientId.contains("google")) {
-                                resolveGoogleUser(it)
-                            } else {
-                                resolveKeycloakUser(it)
+                        .oidcUserService { request ->
+                            val user: OidcUser = when (request.clientRegistration.registrationId) {
+                                AUTHSCH -> resolveAuthschUser(request)
+                                GOOGLE -> resolveGoogleUser(request)
+                                KEYCLOAK -> resolveKeycloakUser(request)
+                                else -> throw IllegalStateException(
+                                    "No OIDC user handler is registered for '${request.clientRegistration.registrationId}'"
+                                )
                             }
+                            user
                         }
-                        .userService { resolveAuthschUser(it) }
                 }.defaultSuccessUrl("/control/post-login")
                 .failureHandler { request, response, exception ->
                     val message = if (exception is LoginRejectedException)
@@ -213,31 +212,20 @@ class SecurityConfig(
         return http.build()
     }
 
-    private fun resolveAuthschUser(request: OAuth2UserRequest): DefaultOAuth2User {
-        // The API returns `test/json` which is an invalid mime type
-        val authschProfileJson: String? = authschUserServiceClient.get()
-            .uri { uriBuilder ->
-                uriBuilder.path("/profile/")
-                    .queryParam("access_token", request.accessToken.tokenValue)
-                    .build()
-            }
-            .retrieve()
-            .bodyToMono<String>()
-            .block()
-
-        val profile = objectMapper.readerFor(ProfileResponse::class.java)
-            .readValue<ProfileResponse>(authschProfileJson)!!
+    private fun resolveAuthschUser(request: OidcUserRequest): CmschAuthschUser {
+        val oidcUser = oidcUserService.loadUser(request)
+        val profile = AuthschProfile.from(oidcUser)
         val userEntity = authschLoginService.fetchUserEntity(profile)
 
         auditLogService.login(userEntity, "authsch user login g:${userEntity.group} r:${userEntity.role}")
 
         return CmschAuthschUser(
+            oidcUser = oidcUser,
             id = userEntity.id,
             internalId = userEntity.internalId,
             role = userEntity.role,
             permissionsAsList = userEntity.permissionsAsList,
             userName = userEntity.fullName,
-            authorities = mutableListOf(SimpleGrantedAuthority("ROLE_${userEntity.role.name}")),
             groupId = userEntity.groupId,
             groupName = userEntity.groupName
         )

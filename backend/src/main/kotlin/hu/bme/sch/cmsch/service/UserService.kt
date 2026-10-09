@@ -31,6 +31,8 @@ open class UserService(
     @Retryable(value = [SQLException::class], maxRetries = 5, delay = 500L, multiplier = 1.5)
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE)
     open fun save(user: UserEntity) {
+        if (user.email.isNullOrBlank()) user.email = null
+        if (user.secondaryEmail.isNullOrBlank()) user.secondaryEmail = null
         users.save(user)
     }
 
