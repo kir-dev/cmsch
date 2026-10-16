@@ -112,6 +112,9 @@ class UserController(
     override fun onEntityPreSave(entity: UserEntity, auth: Authentication): Boolean {
         profileService.generateProfileIdForUser(entity)
 
+        if (entity.email.isNullOrBlank()) entity.email = null
+        if (entity.secondaryEmail.isNullOrBlank()) entity.secondaryEmail = null
+
         if (entity.groupName.isNotBlank()) {
             transactionManager.transaction(readOnly = true) { groups.findByName(entity.groupName) }.ifPresentOrElse({
                 entity.group = it
@@ -154,6 +157,7 @@ class UserController(
                     neptun = it.neptun,
                     groupName = it.groupName,
                     email = it.email,
+                    secondaryEmail = it.secondaryEmail,
                     guild = it.guild
                 )
             }

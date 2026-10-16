@@ -45,7 +45,8 @@ class AppConfig {
                     return source
                 }
                 try {
-                    return URI("https://$source").toURL()
+                    val issuer = source.toString()
+                    return URI(if (issuer.contains("://")) issuer else "https://$issuer").toURL()
                 } catch (_: Exception) {
                     // Ignore
                 }

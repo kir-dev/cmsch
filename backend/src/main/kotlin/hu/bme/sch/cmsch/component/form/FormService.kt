@@ -426,7 +426,7 @@ class FormService(
             val email = submission[form.emailFieldName]
             if (!email.isNullOrBlank()) return email
         }
-        return user?.email
+        return user?.deliveryEmail
     }
 
     @Transactional(readOnly = true)

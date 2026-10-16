@@ -79,6 +79,7 @@ swaggerEnabled: false
 superusers:
   pekIds: ""
   googleEmails: ""
+  authschEmails: ""
 
 resources:
   storageClassName: memory-ssd
