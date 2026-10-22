@@ -9,6 +9,7 @@ import { EnableNotifications } from '../EnableNotifications'
 import { Footer } from '../footer/Footer'
 import { Navbar } from '../navigation/Navbar'
 import { Warning } from '../Warning'
+import { Popup } from './Popup'
 import { ScrollToTop } from './ScrollToTop'
 
 export const CmschLayout = ({ children }: PropsWithChildren) => {
@@ -25,17 +26,19 @@ export const CmschLayout = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <ScrollToTop />
-      <Navbar />
-      <main className="flex-1 pb-20">
-        <ErrorBoundary>
-          <Warning />
-          <EnableNotifications />
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </ErrorBoundary>
-      </main>
-      <Footer />
-    </div>
+    <Popup>
+      <div className="flex flex-col min-h-screen">
+        <ScrollToTop />
+        <Navbar />
+        <main className="flex-1 pb-20">
+          <ErrorBoundary>
+            <Warning />
+            <EnableNotifications />
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </ErrorBoundary>
+        </main>
+        <Footer />
+      </div>
+    </Popup>
   )
 }
