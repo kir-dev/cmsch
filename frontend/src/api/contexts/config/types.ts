@@ -43,6 +43,7 @@ export interface Components {
   communities?: Communities
   footer?: Footer
   support?: Support
+  popup?: Popup
 }
 
 export interface App {
@@ -448,4 +449,13 @@ export interface Communities {
   descriptionResort: string
   searchEnabledResort: boolean
   tinderEnabled: boolean
+}
+
+export interface Popup {
+  popupEnabled: boolean
+  popupUrls: string
+  popupBackground: string
+  popupOpacity: number
+  intervalLowBound: number
+  intervalHighBound: number
 }
