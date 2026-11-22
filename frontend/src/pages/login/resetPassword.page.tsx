@@ -59,7 +59,7 @@ const ResetPasswordPage = () => {
       <div className="flex flex-col items-center space-y-10 mb-10">
         <Card className="w-full max-w-md shadow-lg mt-10">
           <CardHeader>
-            <CardTitle className="text-center text-xl">Új jelszó megadása</CardTitle>
+            <CardTitle className="text-center text-xl leading-7">Új jelszó megadása</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleReset} className="space-y-4">

@@ -92,7 +92,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = (
         <div className="flex items-center mt-10 space-x-3">
           <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
-          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
+          <Label htmlFor={fieldProps.fieldName} className="text-xl leading-7 font-normal cursor-pointer">
             {fieldProps.label}
           </Label>
         </div>
@@ -135,7 +135,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = (
         <div className="flex items-center my-10 space-x-3">
           <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
-          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
+          <Label htmlFor={fieldProps.fieldName} className="text-xl leading-7 font-normal cursor-pointer">
             {fieldProps.label}
           </Label>
         </div>

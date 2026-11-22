@@ -19,10 +19,10 @@ jobs:
     - name: Check out Git repository
       uses: actions/checkout@v6
 
-    - name: Set up Node.js 25
+    - name: Set up Node.js 26
       uses: actions/setup-node@v6
       with:
-        node-version: 25
+        node-version: 26
 
     - name: Install Node.js dependencies
       run: npm ci

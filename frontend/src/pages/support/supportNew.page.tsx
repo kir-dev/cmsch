@@ -82,7 +82,7 @@ const SupportNewPage = () => {
       ) : (
         <form onSubmit={handleSubmit} className="w-full mx-auto mt-5">
           <div className="mt-5">
-            <Label htmlFor="title" className="text-xl">
+            <Label htmlFor="title" className="text-xl leading-7">
               Tárgy *
             </Label>
             <div className="mt-2">
@@ -90,7 +90,7 @@ const SupportNewPage = () => {
             </div>
           </div>
           <div className="mt-5">
-            <Label htmlFor="content" className="text-xl">
+            <Label htmlFor="content" className="text-xl leading-7">
               Üzenet *
             </Label>
             <div className="mt-2">
