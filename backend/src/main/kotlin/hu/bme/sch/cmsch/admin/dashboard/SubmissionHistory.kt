@@ -1,9 +1,9 @@
 package hu.bme.sch.cmsch.admin.dashboard
 
 import tools.jackson.core.type.TypeReference
-import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
-val historyMapper = ObjectMapper()
+val historyMapper = jacksonObjectMapper()
 val historyReader = historyMapper.readerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
 val historyWriter = historyMapper.writerFor(object : TypeReference<MutableList<SubmissionHistory>>() {})
 

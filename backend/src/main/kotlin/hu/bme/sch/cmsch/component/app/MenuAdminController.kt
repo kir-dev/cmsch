@@ -3,6 +3,7 @@ package hu.bme.sch.cmsch.component.app
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.dataformat.csv.CsvMapper
 import tools.jackson.dataformat.csv.CsvSchema
+import tools.jackson.module.kotlin.kotlinModule
 import hu.bme.sch.cmsch.admin.GenerateOverview
 import hu.bme.sch.cmsch.admin.OverviewBuilder
 import hu.bme.sch.cmsch.admin.OverviewType
@@ -235,7 +236,7 @@ class MenuAdminController(
         val menuEntries = mutableListOf<MenuService.MenuImportEntry>()
 
         try {
-            val csvMapper = CsvMapper()
+            val csvMapper = CsvMapper.builder().addModule(kotlinModule { }).build()
             val csvSchema = CsvSchema.emptySchema()
                 .withHeader()
                 .withColumnSeparator(',')
