@@ -1,12 +1,12 @@
 package hu.bme.sch.cmsch.component.form
 
 import com.fasterxml.jackson.annotation.JsonView
-import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectReader
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import hu.bme.sch.cmsch.dto.FullDetails
 import org.slf4j.LoggerFactory
 
-val readerForFields: ObjectReader = ObjectMapper().readerForListOf(FormElement::class.java)
+val readerForFields: ObjectReader = jacksonObjectMapper().readerForListOf(FormElement::class.java)
 
 data class FormEntityDto(
     @field:JsonView(FullDetails::class)
@@ -29,7 +29,7 @@ data class FormEntityDto(
         try {
             this.formFields = readerForFields.readValue(other.formJson)
         } catch (e: Throwable) {
-            LoggerFactory.getLogger(javaClass).warn("Invalid json string: {}", other.formJson)
+            LoggerFactory.getLogger(javaClass).warn("Invalid json string: {}", other.formJson, e)
         }
     }
 
