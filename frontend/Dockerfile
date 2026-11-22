@@ -1,5 +1,5 @@
 # Use a Node.js base image for building the application
-FROM docker.io/node:24-alpine AS build
+FROM docker.io/node:26-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app

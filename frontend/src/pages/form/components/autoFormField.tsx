@@ -1,6 +1,5 @@
 import Markdown from '@/common-components/Markdown'
 import { VotingField } from '@/common-components/VotingField'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,6 +11,7 @@ import { AlertTriangle, Info } from 'lucide-react'
 import { type ReactNode } from 'react'
 import { type Control, useController } from 'react-hook-form'
 import { GridField } from './GridField'
+import { getDefaultGridValue, type GridValue } from './gridField.util'
 
 interface AutoFormFieldProps {
   fieldProps: FormField
@@ -57,7 +57,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     else defaultValue = submittedValue
   } else if (isMultiCheckbox(fieldProps.type)) {
     defaultValue = parseMultiCheckboxValue(fieldProps.defaultValue)
-  } else if (!defaultValue) {
+  } else if (isGridField(fieldProps.type)) {
+    defaultValue = getDefaultGridValue(fieldProps, fieldProps.type === FormFieldVariants.CHOICE_GRID)
+  } else if (!defaultValue && !isCheckbox(fieldProps.type)) {
     if (fieldProps.type === FormFieldVariants.SELECT) defaultValue = selectValues[0]
     else defaultValue = ''
   }
@@ -92,7 +94,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = (
         <div className="flex items-center mt-10 space-x-3">
           <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
-          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
+          <Label htmlFor={fieldProps.fieldName} className="text-xl leading-7 font-normal cursor-pointer">
             {fieldProps.label}
           </Label>
         </div>
@@ -135,7 +137,7 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
       component = (
         <div className="flex items-center my-10 space-x-3">
           <Checkbox id={fieldProps.fieldName} checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
-          <Label htmlFor={fieldProps.fieldName} className="text-xl font-normal cursor-pointer">
+          <Label htmlFor={fieldProps.fieldName} className="text-xl leading-7 font-normal cursor-pointer">
             {fieldProps.label}
           </Label>
         </div>
@@ -184,22 +186,22 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
     }
     case FormFieldVariants.INFO_BOX:
       component = (
-        <Alert className="bg-info/10 border-l-4 border-l-info">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
+        <div className="flex items-start gap-3 rounded-lg border border-l-4 border-l-info bg-info/10 p-4 text-sm">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <div className="*:last:mb-0">
             <Markdown text={fieldProps.values} />
-          </AlertDescription>
-        </Alert>
+          </div>
+        </div>
       )
       break
     case FormFieldVariants.WARNING_BOX:
       component = (
-        <Alert className="bg-warning/10 border-l-4 border-l-warning">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
+        <div className="flex items-start gap-3 rounded-lg border border-l-4 border-l-warning bg-warning/10 p-4 text-sm">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          <div className="*:last:mb-0">
             <Markdown text={fieldProps.values} />
-          </AlertDescription>
-        </Alert>
+          </div>
+        </div>
       )
       break
     case FormFieldVariants.TEXT_BOX:
@@ -214,8 +216,9 @@ export const AutoFormField = ({ fieldProps, control, disabled, submittedValue }:
         <GridField
           disabled={disabled}
           field={fieldProps}
-          dirty={!!submittedValue}
           choice={fieldProps.type === FormFieldVariants.CHOICE_GRID}
+          value={field.value as GridValue | undefined}
+          onChange={field.onChange}
         />
       )
       break

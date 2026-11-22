@@ -84,7 +84,7 @@ const FormPage = () => {
                   {formField.type === FormFieldVariants.SECTION_START && <Separator className="mt-10 mb-5 h-px bg-border" />}
                   {formField.label && !isCheckbox(formField.type) && (
                     <Label
-                      className={formField.type === FormFieldVariants.SECTION_START ? 'text-3xl' : 'text-xl'}
+                      className={formField.type === FormFieldVariants.SECTION_START ? 'text-3xl leading-9' : 'text-xl leading-7'}
                       htmlFor={formField.fieldName}
                     >
                       {formField.label}

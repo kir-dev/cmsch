@@ -1,38 +1,29 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useFormContext } from 'react-hook-form'
 
 type Props = {
-  questionKey: string
   optionKey: string
-  fieldName: string
+  checked: boolean
+  onCheck: (checked: boolean) => void
   disabled: boolean
   radio: boolean
 }
 
-export function GridFieldItem({ questionKey, optionKey, fieldName, disabled, radio }: Props) {
-  const { setValue, watch } = useFormContext()
-
+export function GridFieldItem({ optionKey, checked, onCheck, disabled, radio }: Props) {
   if (radio) {
-    const currentValue = watch(fieldName)?.[questionKey]
     return (
-      <RadioGroup
-        value={currentValue}
-        onValueChange={(val) => setValue(fieldName, { ...watch(fieldName), [questionKey]: val })}
-        disabled={disabled}
-      >
-        <RadioGroupItem value={optionKey} className={currentValue === optionKey ? 'border-primary text-primary' : ''} />
+      <RadioGroup value={checked ? optionKey : ''} onValueChange={() => onCheck(true)} disabled={disabled}>
+        <RadioGroupItem value={optionKey} className={checked ? 'border-primary text-primary' : ''} />
       </RadioGroup>
     )
   }
 
-  const isChecked = watch(fieldName)?.[`${questionKey}_${optionKey}`]
   return (
     <Checkbox
-      checked={isChecked}
-      onCheckedChange={(checked) => setValue(fieldName, { ...watch(fieldName), [`${questionKey}_${optionKey}`]: checked })}
+      checked={checked}
+      onCheckedChange={(value) => onCheck(value === true)}
       disabled={disabled}
-      className={isChecked ? 'border-primary bg-primary' : ''}
+      className={checked ? 'border-primary bg-primary' : ''}
     />
   )
 }

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer
@@ -30,6 +31,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -45,6 +47,18 @@ import tools.jackson.databind.ObjectMapper
 import java.nio.charset.StandardCharsets
 import java.net.URLEncoder
 import java.util.*
+
+fun passwordAuthenticationProvider(
+    userDetailsService: UserDetailsService,
+    passwordEncoder: PasswordEncoder
+): DaoAuthenticationProvider {
+    val authProvider = DaoAuthenticationProvider(userDetailsService)
+    authProvider.setPasswordEncoder(passwordEncoder)
+    // Check account status only after the password matched
+    authProvider.setPreAuthenticationChecks { }
+    authProvider.setPostAuthenticationChecks(AccountStatusUserDetailsChecker())
+    return authProvider
+}
 
 @EnableWebSecurity
 @Configuration
@@ -73,11 +87,8 @@ class SecurityConfig(
     }
 
     @Bean
-    fun authenticationProvider(passwordEncoder: PasswordEncoder): DaoAuthenticationProvider {
-        val authProvider = DaoAuthenticationProvider(userDetailsService)
-        authProvider.setPasswordEncoder(passwordEncoder)
-        return authProvider
-    }
+    fun authenticationProvider(passwordEncoder: PasswordEncoder): DaoAuthenticationProvider =
+        passwordAuthenticationProvider(userDetailsService, passwordEncoder)
 
     @Bean
     fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {

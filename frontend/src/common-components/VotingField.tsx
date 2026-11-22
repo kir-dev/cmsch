@@ -16,7 +16,7 @@ export function VotingField({ options, onChange, value, required, disabled }: Vo
     <div className="flex flex-col space-y-5 items-start w-full">
       <div className="flex justify-end w-full min-h-[40px]">
         {!required && !!value && !disabled && (
-          <Button variant="outline" onClick={() => onChange('')}>
+          <Button type="button" variant="outline" onClick={() => onChange('')}>
             Választásom törlése
           </Button>
         )}
@@ -55,7 +55,7 @@ function VotingFieldElement({ onChange, selected, option }: VotingFieldElementPr
         <p>{option.text}</p>
       </div>
       <div className="absolute top-5 right-5">
-        <RadioGroupItem value={option.value} id={option.value} className="h-6 w-6" />
+        <RadioGroupItem value={option.value} className={cn('h-6 w-6', selected && 'border-primary-foreground text-primary-foreground')} />
       </div>
     </div>
   )
