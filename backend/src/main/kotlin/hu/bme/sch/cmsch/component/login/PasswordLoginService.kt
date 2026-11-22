@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -115,6 +116,9 @@ class PasswordLoginService(
                 authentication = authentication)
         } catch (e: DisabledException) {
             LoginResponse(LoginStatus.EMAIL_NOT_CONFIRMED, emailConfirmed = false)
+        } catch (e: BadCredentialsException) {
+            // Don't let users know the account exists if the credentials aren't correct
+            LoginResponse(LoginStatus.INVALID_CREDENTIALS)
         } catch (e: Exception) {
             log.error("Login failed for user ${request.email}", e)
             LoginResponse(LoginStatus.INVALID_CREDENTIALS)
